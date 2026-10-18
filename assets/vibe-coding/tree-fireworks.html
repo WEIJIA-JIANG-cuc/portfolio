@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>树上花火 · Tree Fireworks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <style>
+    body { margin:0; padding:0; display:flex; flex-direction:column; align-items:center; background:#f7f7f5;
+      font-family:"Noto Serif SC","Source Han Serif SC","SimSun","STSong",serif; }
+    h1 { margin:16px 0 4px; font-size:18px; color:#2c2c2a; font-weight:300; }
+    p { margin:0 0 16px; font-size:13px; color:#5f5e5a; font-weight:300; }
+    #canvas-container { box-shadow:0 4px 32px rgba(0,0,0,0.08); border-radius:12px; overflow:hidden; }
+  </style>
+</head>
+<body>
+  <h1>树上花火 / Tree Fireworks</h1>
+  <p id="subtitle">上半大花：鼠标滑过或点击 → 啪地炸开 → 自然飘落<br>下半小花：已炸开，拂过轻轻晃动</p>
+  <div id="canvas-container"></div>
+
+  <script>
+    const SEED = 20260803;
+    const BASE_Y = 800;
+
+    const F = { curve:false, weed:true, small:true };
+    const TWEAK = { bright:true, airy:true, focus:false };
+
+    // 炸开物理：利落炸开飘落，不自动恢复（v2.7.1 再提速+快淡出）
+    const BURST_MIN = 16.0;
+    const BURST_MAX = 28.0;
+    const GRAVITY = 0.78;
+    const DRAG = 0.955;
+    const BURST_DUR = 3;
+    const MAX_DELAY = 2;
+    const GLOW_W = 3.2;
+    const GLOW_A = 22;
+
+    let plants = [];
+    let smallPlants = [];
+    let fillers = [];
+    let weeds = [];
+
+    function setup() {
+      let cnv = createCanvas(540, 1080);
+      cnv.parent('canvas-container');
+      colorMode(HSB, 360, 100, 100, 100);
+      randomSeed(SEED);
+      noiseSeed(SEED);
+
+      // 1. 主茎 x 分布（花冠呼吸: 28 株），整体内收给左右留呼吸白 [95, 445]
+      let N = 28;
+      let xs = [];
+      let attempts = 0;
+      while (xs.length < N && attempts < N * 140) {
+        let t = random(0.05, 0.95);
+        let x = lerp(105, 435, t) + randomGaussian() * 12;
+        x = constrain(x, 95, 445);
+        let tooClose = false;
+        for (let ox of xs) if (abs(x - ox) < 9) { tooClose = true; break; }
+        if (!tooClose) xs.push(x);
+        attempts++;
+      }
+      xs.sort((a, b) => a - b);
+      while (xs.length < N) xs.push(random(115, 425));
+
+      // 2. 主茎（加入长短层次 + 底部错落：约 1/4 明显矮一截，底部不再齐平）
+      let plantData = [];
+      for (let x of xs) {
+        let distCenter = abs(x - width / 2);
+        let fan = map(distCenter, 0, 220, 1, 0.6, true);
+        let h = random(330, 500) * fan * random(0.92, 1.08);
+        // 长短层次：约 26% 的茎秆明显矮一截（0.5~0.82 倍），避免顶部像被齐平截断
+        if (random() < 0.26) h *= random(0.5, 0.82);
+        let baseY = BASE_Y + random(-26, 20);
+        let crownY = constrain(baseY - h, 300, 540);
+        h = baseY - crownY;
+        let scale = map(distCenter, 0, 220, 1.18, 0.72, true) * random(0.9, 1.08);
+        let tier = crownY < 350 ? 0 : crownY > 440 ? 2 : 1;
+        let depth = random();
+        let layer = depth < 0.5 ? 0 : 1;
+        plantData.push({ x, baseY, crownY, h, scale, tier, depth, layer });
+      }
+
+      // 景深后层：抬高、缩小、变淡
+      for (let d of plantData) {
+        if (d.layer === 0) {
+          d.scale *= random(0.62, 0.78);
+          d.crownY = constrain(d.crownY - random(14, 28), 260, 480);
+          d.h = d.baseY - d.crownY;
+        }
+      }
+
+      plantData.sort((a, b) => a.layer - b.layer);
+      for (let d of plantData) plants.push(new Plant(d.x, d.baseY, d.h, d.scale, d.tier, d.depth, d.layer));
+
+      // 3. 矮小烟花草（11 株，疏密有致 + 底部错落）—— 内收 [90, 450]
+      for (let i = 0; i < 6; i++) {
+        let x = lerp(96, 444, random()) + randomGaussian() * 20;
+        x = constrain(x, 90, 450);
+        let h = random(110, 210);
+        let baseY = BASE_Y + random(-18, 22);
+        let crownY = constrain(baseY - h, 540, 720);
+        h = baseY - crownY;
+        let scale = 0.34 + pow(random(), 1.8) * 0.42;
+        let sp = new Plant(x, baseY, h, scale, 2, random(0.6, 1), 1);
+        sp.staticScene = true;
+        smallPlants.push(sp);
+      }
+
+      // 4. 杂草/倾倒枯茎（22 丛）—— 内收 [75, 465]，尖端不越界
+      for (let i = 0; i < 22; i++) {
+        let x = lerp(82, 458, random()) + randomGaussian() * 12;
+        x = constrain(x, 75, 465);
+        let baseY = BASE_Y + random(-4, 28);
+        let tipX = constrain(x + random(-60, 60), 75, 465);
+        let tipY = random(640, 830);
+        let bend = (tipX - x) * random(0.35, 0.55) + random(-12, 12);
+        let w = random(0.6, 1.5);
+        let r = random();
+        let c;
+        if (r < 0.30) c = color(random(70, 100), random(16, 32), random(56, 76), random(55, 82));
+        else if (r < 0.70) c = color(random(35, 55), random(34, 54), random(58, 80), random(50, 78));
+        else c = color(random(38, 52), random(22, 38), random(66, 86), random(40, 65));
+        let forks = [];
+        let nf = floor(random(1, 4));
+        for (let k = 0; k < nf; k++) forks.push({ dx: random(-22, 22), dy: random(12, 42), t: random(0.3, 0.7) });
+        weeds.push({ x, baseY, tipX, tipY, bend, w, c, forks });
+      }
+
+      // 5. 前景短茎（6 株）—— 内收 [80, 460]，更矮更浅更弯
+      for (let i = 0; i < 6; i++) {
+        let x = lerp(86, 454, random()) + randomGaussian() * 12;
+        x = constrain(x, 80, 460);
+        let topY = random(680, 820);
+        if (x > 120 && x < 240) { x = random(240, 440); }
+        let baseY = BASE_Y + random(-6, 24);
+        let curve = random(-28, 28);
+        if (abs(curve) < 8) curve += (curve < 0 ? -10 : 10);
+        let w = random(0.7, 1.6);
+        let depth = random(0.78, 1.0);
+        let c = makeStemColor(depth);
+        c = color(hue(c), saturation(c) * 0.7, brightness(c) + 8, alpha(c) * 0.65);
+        fillers.push({ x, topY, baseY, curve, w, c });
+      }
+    }
+
+    function draw() {
+      background(40, 2, 98);
+
+      // 接地阴影
+      noStroke();
+      for (let i = 0; i < 3; i++) {
+        fill(70, 22, 42, 5);
+        ellipse(width / 2, 836, 360 - i * 44, 66 - i * 12);
+      }
+
+      for (let p of plants) p.update();
+      for (let p of smallPlants) p.update();
+
+      // 景深：后层
+      let back = plants.filter(p => p.layer === 0);
+      let front = plants.filter(p => p.layer === 1);
+      for (let p of back) p.displayStem();
+      for (let p of back) p.displayCrown();
+
+      // 薄雾（提亮版减弱：15%/6%）
+      noStroke();
+      fill(40, 2, 98, 15);
+      rect(0, 0, width, height);
+      fill(40, 2, 98, 6);
+      rect(0, 320, width, 360);
+
+      // 前景层
+      for (let p of front) p.displayStem();
+      for (let p of front) p.displayCrown();
+
+      if (F.small) {
+        for (let p of smallPlants) p.displayStem();
+        for (let p of smallPlants) p.displayCrown();
+      }
+
+      for (let f of fillers) drawFiller(f);
+      if (F.weed) { for (let w of weeds) drawWeed(w); }
+
+      // 标题
+      noStroke();
+      fill(75, 22, 26);
+      textAlign(CENTER, TOP);
+      textFont('Noto Serif SC');
+      textSize(44);
+      text("树上花火", width / 2, 70);
+
+      noStroke();
+      fill(80, 10, 35, 30);
+      textAlign(CENTER);
+      textSize(11);
+      text("鼠标滑过 / 点击大花触发炸开 · 拂过小花轻轻晃动", width / 2, 134);
+    }
+
+    function mousePressed() { triggerNear(mouseX, mouseY); }
+    function mouseMoved() { triggerNear(mouseX, mouseY); }
+
+    function triggerNear(mx, my) {
+      // 大花：保留点击/滑过爆炸
+      for (let p of plants) {
+        if (!p.exploded) {
+          let d = dist(mx, my, p.top.x, p.top.y);
+          if (d < 70 * p.scale) p.explode();
+        }
+      }
+      // 小花：已经炸开，拂过轻轻晃动
+      for (let p of smallPlants) {
+        let d = dist(mx, my, p.top.x, p.top.y);
+        if (d < 55 * p.scale && p.wiggle < 1) p.wiggle = 1;
+      }
+    }
+
+    function lerpAngle(a, b, t) {
+      let diff = b - a;
+      while (diff < -PI) diff += TWO_PI;
+      while (diff > PI) diff -= TWO_PI;
+      return a + diff * t;
+    }
+
+    function makeStemColor(depth) {
+      let h = random(70, 95);
+      let s = random(16, 30);
+      let b = lerp(58, 44, depth);
+      let a = lerp(58, 90, depth);
+      return color(h, s, b, a);
+    }
+
+    function drawFiller(f) {
+      stroke(f.c);
+      strokeWeight(f.w);
+      noFill();
+      beginShape();
+      vertex(f.x, f.baseY);
+      quadraticVertex(f.x + f.curve * 0.6, (f.baseY + f.topY) / 2, f.x + f.curve, f.topY);
+      endShape();
+    }
+
+    function drawWeed(w) {
+      stroke(w.c);
+      strokeWeight(w.w);
+      noFill();
+      beginShape();
+      vertex(w.x, w.baseY);
+      let midX = w.x + w.bend * 0.5;
+      let midY = (w.baseY + w.tipY) / 2 + random(-5, 5);
+      quadraticVertex(midX, midY, w.tipX, w.tipY);
+      endShape();
+      for (let fk of w.forks) {
+        let fx = lerp(w.x, w.tipX, fk.t) + w.bend * fk.t * (1 - fk.t);
+        let fy = lerp(w.baseY, w.tipY, fk.t);
+        stroke(w.c);
+        strokeWeight(w.w * 0.7);
+        line(fx, fy, fx + fk.dx, fy - fk.dy);
+      }
+    }
+
+    class Plant {
+      constructor(x, y, h, scale, tier, depth, layer) {
+        this.base = createVector(x, y);
+        this.h = h;
+        this.scale = scale;
+        this.tier = tier;
+        this.layer = layer;
+        this.faded = layer === 0;
+        this.swayOffset = random(1000);
+        this.top = createVector(x, y - h);
+        this.dir = (x - width / 2) >= 0 ? 1 : -1;
+        this.stemCol = makeStemColor(depth);
+        if (this.faded) {
+          this.stemCol = color(hue(this.stemCol), saturation(this.stemCol) * 0.65, brightness(this.stemCol) + 14, alpha(this.stemCol) * 0.5);
+        }
+        this.coreColor = color(random(72, 92), random(20, 34), random(58, 76), this.faded ? 6 : 10);
+        this.stemCurve = this.dir * random(10, 34) * scale + random(-7, 7) * scale;
+        this.exploded = false;
+        this.staticScene = false;
+        this.regrowTimer = 0;
+        this.flash = 0;
+        this.wiggle = 0;
+        this.filaments = [];
+        this.buildFilaments();
+      }
+      buildFilaments() {
+        this.filaments = [];
+        let density = (this.tier === 2) ? 1.2 : 1.0;
+        let fc = floor(random(80, 120) * this.scale * density);
+        for (let i = 0; i < fc; i++) this.filaments.push(new Filament(this.top, this.scale, this.tier, this.faded));
+      }
+      explode() {
+        this.exploded = true;
+        this.flash = 1;
+        for (let f of this.filaments) {
+          f.pending = true;
+          f.pendingTimer = 0;
+          f.delay = random(0, MAX_DELAY);
+        }
+      }
+      instantExplode(preSteps) {
+        this.exploded = true;
+        this.flash = 0;
+        for (let f of this.filaments) {
+          let origin = this.top.copy().add(p5.Vector.mult(f.crownOffset, this.scale));
+          f.detach(origin);
+          for (let i = 0; i < preSteps; i++) {
+            f.vel.add(f.acc);
+            f.vel.mult(DRAG);
+            f.pos.add(f.vel);
+            f.life -= 2.2;
+          }
+          // 小花初始已快落尽，避免下半部分铺满
+          f.life -= random(40, 60);
+        }
+      }
+      update() {
+        this.wiggle *= 0.90;
+        let wind = map(noise(frameCount * 0.005 + this.swayOffset), 0, 1, -10, 10) * this.scale;
+        let wig = sin(frameCount * 0.3 + this.swayOffset) * this.wiggle * 20 * this.scale;
+        this.top.x = this.base.x + wind + wig;
+        this.top.y = this.base.y - this.h;
+        if (this.flash > 0) this.flash -= 0.035;
+        if (!this.staticScene) for (let f of this.filaments) f.update(this.top);
+        // 炸后不再自动恢复，保留空茎秆与顶端小圆点
+      }
+      displayStem() {
+        stroke(this.stemCol);
+        noFill();
+        strokeWeight(2.2 * this.scale);
+        beginShape();
+        vertex(this.base.x, this.base.y);
+        quadraticVertex(this.base.x + this.stemCurve, this.base.y - this.h * 0.5, this.top.x, this.top.y);
+        endShape();
+      }
+      displayCrown() {
+        // 静态小花：只保留茎秆 + 顶端灰色小圆点，不画任何花丝，不做炸开过程
+        if (this.staticScene) {
+          noStroke();
+          fill(0, 0, 62, this.faded ? 50 : 60);  // HSB 模式下画灰色小圆点
+          ellipse(this.top.x, this.top.y, 8 * this.scale, 8 * this.scale);
+          return;
+        }
+        // 炸开瞬间的柔光环
+        if (this.flash > 0) {
+          let r = (1 - this.flash) * 60 * this.scale + 8;
+          noFill();
+          stroke(85, 18, 96, this.flash * 28);
+          strokeWeight(2 * this.scale);
+          ellipse(this.top.x, this.top.y, r * 2, r * 2);
+        }
+        // 草冠中心暗部
+        noStroke();
+        fill(this.coreColor);
+        ellipse(this.top.x, this.top.y, 88 * this.scale, 80 * this.scale);
+        noStroke();
+        fill(70, 26, this.faded ? 40 : 24);
+        ellipse(this.top.x, this.top.y, 7 * this.scale, 5 * this.scale);
+        // 花冠呼吸：边缘加飘逸长丝（仅静止时）
+        if (!this.exploded) {
+          for (let k = 0; k < 4; k++) {
+            let a = random(TWO_PI);
+            let o = p5.Vector.fromAngle(a).mult(40 * this.scale).add(this.top);
+            let len = random(150, 210) * this.scale;
+            stroke(80, 22, 92, this.faded ? 16 : 30);
+            strokeWeight(1.1 * this.scale); noFill();
+            let end = p5.Vector.fromAngle(a).mult(len).add(o);
+            let mid = p5.Vector.lerp(o, end, 0.5);
+            let perp = p5.Vector.fromAngle(a + HALF_PI).mult(len * 0.12);
+            let cp = p5.Vector.add(mid, perp);
+            beginShape();
+            vertex(o.x, o.y);
+            quadraticVertex(cp.x, cp.y, end.x, end.y);
+            endShape();
+          }
+        }
+        for (let f of this.filaments) f.display();
+      }
+    }
+
+    class Filament {
+      constructor(top, scale, tier, faded) {
+        this.top = top; this.scale = scale; this.tier = tier; this.faded = faded;
+        let a = random(TWO_PI);
+        if (a > HALF_PI - 0.16 && a < HALF_PI + 0.16) {
+          a = (a < HALF_PI) ? HALF_PI - 0.16 - random(0, 0.3) : HALF_PI + 0.16 + random(0, 0.3);
+        }
+        this.baseAngle = a;
+        let radial = 0.82 + 0.18 * sin(a * 3 + random(0, TWO_PI));
+        if (a > HALF_PI - 0.6 && a < HALF_PI + 0.6) radial *= 0.8;
+        this.length = random(72, 132) * radial;
+        this.thickness = random(0.7, 1.7);
+        this.crownOffset = p5.Vector.random2D().mult(random(0, 5));
+        this.pickColor();
+        this.sway = random(0.01, 0.026);
+        this.phase = random(1000);
+        this.attached = true;
+        this.pending = false;
+        this.pendingTimer = 0;
+        this.delay = 0;
+        this.impulse = 0;
+        this.burstAge = 0;
+        this.pos = createVector(0, 0);
+        this.vel = createVector(0, 0);
+        this.acc = createVector(0, GRAVITY);
+        this.life = 100;
+        this.rot = this.baseAngle;
+        this.tumbleSpeed = random(-0.03, 0.03);
+      }
+      pickColor() {
+        let r = random();
+        let hue, sat, bri;
+        // 绿色为主（80%）：浅绿 + 深绿
+        if (r < 0.40)      { hue = random(72, 86);  sat = random(18, 34); bri = random(82, 96); }
+        else if (r < 0.80) { hue = random(82, 100); sat = random(28, 48); bri = random(56, 74); }
+        // 黄 / 棕（15%）：金黄 + 偏黄的暖棕（不偏红）
+        else if (r < 0.88) { hue = random(38, 52);  sat = random(36, 54); bri = random(66, 84); }
+        else if (r < 0.95) { hue = random(30, 44);  sat = random(40, 58); bri = random(62, 78); }
+        // 深红 / 深棕（3%，调淡）：深橄榄暗棕 + 锈红
+        else if (r < 0.985){ hue = random(60, 82);  sat = random(24, 44); bri = random(44, 62); }
+        else               { hue = random(14, 28);  sat = random(32, 50); bri = random(42, 58); }
+        let briBoost = this.tier === 0 ? -4 : this.tier === 2 ? 5 : 0;
+        let satBoost = this.tier === 0 ? -3 : this.tier === 2 ? 3 : 0;
+        if (this.faded) { briBoost += 10; satBoost -= 6; }
+        briBoost += 4;
+        this.hue = hue;
+        this.sat = constrain(sat + satBoost, 8, 78);
+        this.bri = constrain(bri + briBoost, 32, 98);
+      }
+      detach(origin) {
+        this.attached = false;
+        this.pos = origin.copy();
+        let angle = this.baseAngle + random(-0.2, 0.2);
+        let speed = random(BURST_MIN, BURST_MAX);
+        this.vel = p5.Vector.fromAngle(angle).mult(speed);
+        this.vel.y -= random(2.5, 5.5);   // 更强的向上爆发，炸开更"啪"
+        this.rot = angle;
+        this.impulse = 1;
+      }
+      alive() {
+        return this.attached ? true : (this.life > 0);
+      }
+      update(currentTop) {
+        if (this.attached) {
+          this.top = currentTop;
+          let t = frameCount * this.sway + this.phase;
+          this.rot = this.baseAngle + sin(t) * 0.08;
+          if (this.pending) {
+            this.pendingTimer++;
+            if (this.pendingTimer > this.delay) {
+              let origin = this.top.copy().add(p5.Vector.mult(this.crownOffset, this.scale));
+              this.detach(origin);
+            }
+          }
+        } else {
+          this.vel.add(this.acc);
+          let drag = (this.impulse > 0) ? 0.992 : DRAG;
+          this.vel.mult(drag);
+          this.vel.x += map(noise(frameCount * 0.012 + this.phase), 0, 1, -0.04, 0.04);
+          if (this.vel.y < 1.2) this.vel.y += 0.06;
+          this.pos.add(this.vel);
+          if (this.impulse > 0) this.impulse -= 1.0 / BURST_DUR;
+          let targetRot = this.vel.heading();
+          this.rot = lerpAngle(this.rot, targetRot, 0.04);
+          this.rot += sin(frameCount * 0.1 + this.phase) * 0.10 + this.tumbleSpeed;
+          this.life -= 2.2;
+        }
+      }
+      display() {
+        let aAlpha = this.faded ? 55 : 96;
+        let alpha = this.attached ? aAlpha : map(this.life, 0, 100, 0, aAlpha, true);
+        if (alpha <= 0) return;
+        let len = this.attached ? this.length : this.length * 0.92;
+        let curve;
+        let origin;
+        if (this.attached) {
+          curve = this.length * 0.14;
+          origin = this.top.copy().add(p5.Vector.mult(this.crownOffset, this.scale));
+        } else {
+          curve = lerp(this.length * 0.14, this.length * 0.5, map(this.life, 100, 0, 0, 1, true));
+          origin = this.pos;
+        }
+        // 柔光外框
+        stroke(this.hue, this.sat * 0.7, min(this.bri + 10, 100), this.faded ? 14 : GLOW_A);
+        strokeWeight(this.thickness * GLOW_W); noFill();
+        this.drawCurve(origin, this.rot, len, curve);
+        // 主线
+        stroke(this.hue, this.sat, this.bri, alpha);
+        strokeWeight(this.thickness); noFill();
+        this.drawCurve(origin, this.rot, len, curve);
+      }
+      drawCurve(origin, angle, len, curve) {
+        let end = p5.Vector.fromAngle(angle).mult(len).add(origin);
+        let mid = p5.Vector.lerp(origin, end, 0.5);
+        let cp;
+        if (this.attached) {
+          let perpAngle = angle + (cos(angle) >= 0 ? -HALF_PI : HALF_PI);
+          let outward = p5.Vector.fromAngle(perpAngle).mult(curve);
+          cp = p5.Vector.add(mid, outward);
+        } else {
+          cp = createVector(mid.x, mid.y + curve);
+        }
+        beginShape();
+        vertex(origin.x, origin.y);
+        quadraticVertex(cp.x, cp.y, end.x, end.y);
+        endShape();
+      }
+    }
+  </script>
+</body>
+</html>

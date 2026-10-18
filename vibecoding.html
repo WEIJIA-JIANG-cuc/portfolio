@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibe Coding — 蒋维嘉作品集</title>
+  <link rel="stylesheet" href="css/light.css" />
+  <link rel="stylesheet" href="css/tf-nav.css" />
+</head>
+<body>
+
+  <!-- TrueFocus 导航（右上角弱化，与全站统一） -->
+  <nav class="tf-nav">
+    <div class="tf-container" id="tfContainer">
+      <a class="tf-word" href="hero.html">Home</a>
+      <a class="tf-word" href="game.html">Game</a>
+      <a class="tf-word on" href="vibecoding.html">Vibe</a>
+      <a class="tf-word" href="writing.html">Write</a>
+      <a class="tf-word" href="photography.html">Photo</a>
+      <div class="tf-frame" id="tfFrame">
+        <span class="c tl"></span><span class="c tr"></span>
+        <span class="c bl"></span><span class="c br"></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 页头 -->
+  <header class="page-header fade-up">
+    <span class="section-label">Vibe Coding</span>
+    <h1>Vibe Coding</h1>
+    <p>用代码做艺术——从粒子到交互，让算法开出花来。</p>
+  </header>
+
+  <!-- 项目展示 -->
+  <main class="page-content project-showcase">
+
+    <!-- 树上花火 · 已完成 -->
+    <article class="project-item">
+      <div class="project-visual tall">
+        <!-- 树上花火：p5.js 实例模式直接内嵌，无需 iframe -->
+        <div id="tree-fireworks-canvas"></div>
+      </div>
+      <div class="project-info fade-up">
+        <span class="section-label">p5.js · 交互艺术</span>
+        <h3>树上花火</h3>
+        <p>去普洱旅行时，看见路边有一种草，开花的样子很像烟花——于是用 p5.js 做了一棵"数字树"，让那些永远不会凋谢的烟花在屏幕上永远绽放。上半大花随点击炸开飘落，下半小花静静摇曳，每一朵都是随机种子锁定的独一无二。</p>
+        <div class="project-tags">
+          <span>p5.js</span>
+          <span>粒子系统</span>
+          <span>交互艺术</span>
+          <span>randomSeed 可复现</span>
+        </div>
+        <a href="assets/vibe-coding/tree-fireworks.html" target="_blank" rel="noopener" class="project-link">新标签页打开体验 →</a>
+      </div>
+    </article>
+
+    <!-- OC 灵感骰子 · 已完成(从 2026-08-10 项目整段搬入) -->
+    <article class="project-item">
+      <div class="project-visual dice-frame">
+        <a class="frame-exit" href="assets/vibe-coding/oc-dice.html" target="_blank" rel="noopener">新窗口 ↗</a>
+        <iframe src="assets/vibe-coding/oc-dice.html" loading="lazy" title="OC 灵感骰子 · 完整交互版"></iframe>
+      </div>
+      <div class="project-info fade-up">
+        <span class="section-label">HTML · 创作工具</span>
+        <h3>OC 灵感骰子</h3>
+        <p>原创角色的"卡壳"时刻：他/她到底是个什么样的人?这一颗骰子从 7 个维度(印象 / 内核 / 外貌 / 习惯 / 矛盾 / 追求 / 恐惧)各抽一条中文短句,加一句核心意象,合成一张种子卡。给名字、按按钮,几秒钟出来一个"人"。</p>
+
+        <details class="project-explainer">
+          <summary>📖 它是怎么工作的</summary>
+          <ul>
+            <li><b>词库</b>≈ 450 条手写短句,分 8 类,从词池随机抽</li>
+            <li><b>随机</b>每次抽都不同,组合几乎不重样</li>
+            <li><b>收藏</b>抽到喜欢的可以"收藏"到本机(localStorage),关浏览器还在</li>
+            <li><b>复制</b>一键复制整张卡的纯文本,可贴去写作软件</li>
+            <li><b>零依赖</b>单文件 HTML,不开网络也能用,可离线、可右键另存</li>
+            <li><b>最初动机</b>写给晋江创作者做角色灵感工具,后开源给同人圈</li>
+          </ul>
+          <p class="explainer-note">这次搬进作品集做了完整迁移——所有词条、抽卡逻辑、收藏机制原汁原味。点击左侧直接玩,或展开下方看一张示例卡。</p>
+        </details>
+
+        <details class="project-explainer">
+          <summary>📋 看一张抽到的示例卡(第 247 抽)</summary>
+          <div class="dice-static-example">
+            <span class="oc-card-title">角色卡 · 第 247 抽</span>
+            <ul class="oc-card-rows">
+              <li><span>角色印象</span><span>看起来好说话,其实很有距离感</span></li>
+              <li><span>气质内核</span><span>外冷内热,慢熟</span></li>
+              <li><span>外貌锚点</span><span>手指细长,老爱转笔;刘海遮住一只眼睛</span></li>
+              <li><span>小习惯</span><span>走路无意识数地砖;思考时咬笔帽</span></li>
+              <li><span>矛盾点</span><span>怕黑却偏爱上深夜散步</span></li>
+              <li><span>精神追求</span><span>自由地爱</span></li>
+              <li><span>恐惧</span><span>安静</span></li>
+            </ul>
+            <div class="oc-core">把世界关在门外,留一条缝给风。</div>
+          </div>
+        </details>
+
+        <div class="project-tags">
+          <span>零依赖</span>
+          <span>localStorage</span>
+          <span>角色卡</span>
+          <span>开源</span>
+          <span>450+ 词条</span>
+        </div>
+        <a href="assets/vibe-coding/oc-dice.html" target="_blank" rel="noopener" class="project-link">新标签页打开完整版(可交互) →</a>
+      </div>
+    </article>
+
+  </main>
+
+  <script src="js/main.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="js/tree-fireworks-embed.js"></script>
+  <script src="js/tf-nav.js"></script>
+</body>
+</html>

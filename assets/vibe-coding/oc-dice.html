@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OC 灵感骰子 · 角色卡抽取器</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    background:#ffffff;color:#333;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:48px 16px 64px;
+  }
+  h1{font-size:22px;font-weight:600;letter-spacing:2px;margin-bottom:6px}
+  .sub{font-size:13px;color:#999;margin-bottom:28px}
+
+  .wrap{width:100%;max-width:440px}
+  .ctrl{display:flex;gap:10px;margin-bottom:18px}
+  .ctrl input{
+    flex:1;border:1px solid #ddd;background:#fff;padding:10px 12px;
+    border-radius:8px;font-family:inherit;font-size:14px;color:#333;
+  }
+  .ctrl input::placeholder{color:#bbb}
+  button{
+    border:none;cursor:pointer;font-family:inherit;
+    background:#333;color:#fff;padding:10px 18px;border-radius:8px;
+    font-size:14px;letter-spacing:1px;transition:.18s;
+  }
+  button:hover{background:#000}
+  button.ghost{background:#fff;color:#333;border:1px solid #333}
+  button.ghost:hover{background:#f2f2f2}
+
+  .card{
+    background:#fff;border:1px solid #e6e6e6;border-radius:12px;
+    padding:24px;min-height:260px;
+    font-family:"Songti SC","STSong","FangSong","仿宋",serif;
+  }
+  .card h2{text-align:center;font-size:15px;letter-spacing:2px;margin-bottom:18px;font-weight:600}
+  .row{margin-bottom:13px;animation:fadeIn .5s ease both}
+  .row .lab{font-size:12px;color:#c0392b;letter-spacing:2px;margin-bottom:2px;font-weight:600}
+  .row .val{font-size:16px;line-height:1.5}
+  .core{margin-top:16px;padding-top:12px;border-top:1px dashed #ddd;
+    font-style:italic;text-align:center;font-size:15px;line-height:1.6;animation:fadeIn .7s ease both}
+  .foot{margin-top:16px;text-align:center;font-size:12px;color:#bbb;letter-spacing:1px;animation:fadeIn .9s ease both}
+  .tip{text-align:center;color:#ccc;font-size:13px;padding-top:90px}
+  .hidden{display:none}
+
+  .actions{display:flex;gap:10px;margin-top:16px}
+  .actions button{flex:1}
+
+  .saved{margin-top:34px;border-top:1px solid #eee;padding-top:18px}
+  .saved h3{font-size:13px;color:#999;letter-spacing:2px;margin-bottom:12px;font-weight:600}
+  .item{border:1px solid #eee;border-radius:10px;padding:12px 14px;margin-bottom:10px;cursor:pointer;transition:.15s}
+  .item:hover{border-color:#ccc;background:#fafafa}
+  .item .t{font-size:14px;font-weight:600;margin-bottom:4px}
+  .item .p{font-size:12px;color:#999;line-height:1.5}
+  .item .del{float:right;font-size:12px;color:#c0392b;border:none;background:none;cursor:pointer;padding:0 4px}
+  .item .del:hover{text-decoration:underline}
+
+  .toast{
+    position:fixed;left:50%;bottom:40px;transform:translateX(-50%);
+    background:#333;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;
+    opacity:0;pointer-events:none;transition:.25s;
+  }
+  .toast.show{opacity:1}
+
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(6px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  /* 手机适配：更宽松的间距 + 触屏友好的按钮尺寸 */
+  @media (max-width:520px){
+    body{padding:26px 14px 44px}
+    h1{font-size:21px;letter-spacing:1.5px}
+    .sub{font-size:12px;margin-bottom:22px}
+    .wrap{max-width:100%}
+    .ctrl{margin-bottom:14px}
+    .ctrl input,
+    button{padding:13px 16px;min-height:46px;font-size:15px}
+    .ctrl input{border-radius:10px}
+    .card{padding:18px 16px;min-height:220px;border-radius:14px}
+    .card h2{font-size:14px;margin-bottom:16px}
+    .row{margin-bottom:14px}
+    .row .val{font-size:16px;line-height:1.6}
+    .core{font-size:15px;line-height:1.7;margin-top:14px;padding-top:14px}
+    .actions{gap:12px;margin-top:14px}
+    .actions button{min-height:46px}
+    .saved{margin-top:28px}
+    .item{padding:14px;margin-bottom:12px}
+    .item .del{min-height:auto;padding:4px 8px}
+    .toast{bottom:28px;font-size:14px;padding:11px 20px}
+  }
+  /* 桌面端也保证输入框/按钮点击舒适 */
+  @media (min-width:521px){
+    button,.ctrl input{min-height:42px}
+  }
+</style>
+</head>
+<body>
+  <h1>OC 灵感骰子</h1>
+  <div class="sub">抽一张角色种子卡，去创造一个「人」</div>
+
+  <div class="wrap">
+    <div class="ctrl">
+      <input id="ocName" type="text" placeholder="给角色起个名字（可留空）" maxlength="12">
+      <button onclick="draw()">抽一张</button>
+    </div>
+
+    <div class="card" id="card">
+      <div class="tip" id="placeholder">— 点击上方按钮开始 —</div>
+      <div id="content" class="hidden"></div>
+    </div>
+
+    <div class="actions" id="actions" style="display:none">
+      <button class="ghost" onclick="copyCard()">复制文案</button>
+      <button class="ghost" onclick="saveCard()">收藏这张</button>
+    </div>
+
+    <div class="saved">
+      <h3 id="savedTitle">我的收藏</h3>
+      <div id="savedList"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+const BANK = {
+  印象:["看起来好说话，其实很有距离感","安静地待在角落，眼神却一直在观察","笑起来很暖，转身就忘了你是谁","话不多，一开口就戳到点子上","永远在收拾东西，像随时要出发","对小动物比对人热情","看着散漫，关键时刻很靠谱","喜欢把话说一半，留你自己琢磨","淡淡的，像隔着一层玻璃","认真起来有点笨拙的可爱","没事就盯着窗外发呆","对喜欢的事特别执着，别人劝不动","第一眼很好欺负的样子，其实很有数","跟谁都能聊两句，但没几个走心的","总是带头起哄的那个，自己却最怕出风头","看起来很冷淡，却总在主动关心别人","笑得很大声，眼泪却往肚子里咽","在人堆里最吵，独处时最安静","永远在帮别人兜底，自己的事往后排","表面无所谓，其实把每句话都记着","慢半拍，但从不掉链子","看着像好学生，抽屉里全是乱七八糟的涂鸦","不爱争，被逼急了比谁都硬","很有礼貌，分寸感却让人不敢靠近","嘴上嫌弃，手脚却很诚实地帮忙","看着没心没肺，敏感得要命","总在替别人着想，把自己忘了","笑眯眯的，心里的小算盘打得响","看着柔弱，扛事的时候一个顶俩","话痨，但真正的心事一句不提","存在感很低，一开口所有人安静","看着很乖，主意比谁都正","总是最后一个睡，说在看会儿手机","表面上谁都不得罪，其实心里有杆秤","很有活力，累的时候也不让人看出来","看着大大咧咧，细节记得比谁都清楚","不爱麻烦别人，自己默默扛","人缘很好，知心朋友没几个","看着很独立，其实很怕一个人吃饭","总是照顾别人，轮到自己就随便","看着很普通，熟了发现是个宝藏","表面很酷，其实很想被人哄","看着很忙，其实在发呆","总是点头说好，过后按自己想法来","看着很开朗，夜里容易emo","很有主见，却总在问别人：你说呢","看着很稳，心里慌得一批","话很少，一个眼神谁都懂","看着很乖，其实叛逆期迟到","看着很佛，被惹毛了不好惹","看着很淡，但护短","人前笑嘻嘻，人后emo到凌晨","看着很靠谱，其实也会偷懒","第一眼冷淡，熟了黏得像猫","看着很清醒，其实在装","看着很怂，护起人来不要命","看着很普通，其实身怀绝技","看着很爱笑，笑容里藏着疲惫","看着很热闹，其实没什么真朋友","看着很听话，转头我行我素","看着很散漫，其实自有章法","看着很坚强，哭起来没声","看着很普通，身边的人却都离不了","看着很随便，重要的东西护得死死的","看着很安静，心里戏多到能拍剧","看着很温柔，底线碰了绝不退让"],
+  内核:["外冷内热","嘴硬心软","看着懒，其实什么都门儿清","表面乖，背地里野","温柔但很有主见","慢热，熟了就话痨","看起来佛系，占便宜不行","敏感，但藏得很好","倔，认准了不回头","有点丧，但仍在往前走","毒舌但心善","表面淡定，内心戏很多","看着乐天，其实想得很多","安静，但一旦开口就停不下来","很轴，认死理","表面开朗，独处时很沉默","看着糙，其实心思很细","很有耐性，急起来六亲不认","表面洒脱，其实很在意评价","看着戏谑，认真起来很吓人","很淡，但护短","看着佛，被惹毛了不好惹","表面随和，原则性极强","看着慢吞吞，关键时刻特别快","很要强，但从不说","表面倔强，其实很容易被感动","看着冷淡，记恩比谁都久","很直，说话不绕弯","表面无所谓，暗地里使劲","看着温柔，骨子里很傲","很有骨气，不轻易低头","表面聪明，其实傻得很真诚","看着世故，其实很天真","很稳，天塌下来先睡一觉","表面叛逆，其实很重规矩","看着脆弱，韧性惊人","很清醒，但选择装糊涂","表面热情，保持距离","看着散漫，自有章法","很倔强，但认错很快","表面冷淡，占有欲很强","看着普通，野心藏得深","很理性，偶尔感性泛滥","表面随性，其实是计划控","看着乖巧，叛逆期迟到","很沉默，但观察入微","表面强硬，心软得一塌糊涂","看着豁达，其实放不下","很固执，但为重要的人让步","表面淡然，胜负欲爆棚","看着慵懒，责任感重","很温柔，但绝不圣母","看着很凶，其实最怕吓到人","看着很随和，惹急了六亲不认","很清醒，清醒到有点残忍","表面松弛，心里一直绷着","看着很天真，其实活得最明白","很钝感，钝到委屈自己都不觉","看着很独立，其实很需要被肯定","表面很酷，崩溃了也一声不吭","看着很淡，记仇记一辈子","很温柔，温柔到没有边界"],
+  外貌:["手指细长，老爱转笔","头发总是乱糟糟的","戴一副戴了很久的旧眼镜","笑起来有单边酒窝","身上总有点淡淡的味道","肩膀很窄，像没长开","眼睛很亮，像猫","手上有一道旧疤","习惯低头，不太敢对视","穿衣服很随意，但很干净","虎牙有点明显","站姿松松垮垮的","手指有薄茧，像练过什么","刘海遮住一只眼睛","耳垂上有个小耳钉","笑起来眼角有细纹","皮肤偏冷白，像很少晒太阳","手腕很细，戴什么都晃荡","后颈有一小块胎记","走路有点外八","鼻梁上有一道浅浅的晒痕","总穿着同一件外套","指甲剪得很短，很干净","笑的时候会眯起一只眼","锁骨很明显","头发扎得很随意，几缕碎发","嘴角有颗小痣","手背青筋明显","总是赤脚或踩着拖鞋","眼神有点散，像没睡醒","戴一串褪色的红绳","眉尾有个小疤","笑起来牙龈会露一点","指节突出，手很大","耳尖容易红","留着很短的指甲，爱抠桌角","身上总带着一支没盖的笔","发尾微卷，懒得打理","站着想事会咬下唇","手腕上戴着串便宜的珠子","眼白有点泛红，像常熬夜","笑起来脸颊鼓鼓的","脖子上总挂着耳机","左撇子，用筷子很特别","皮肤上有几颗小雀斑","总戴一顶压低的帽子","手指沾着洗不掉的颜料","走路习惯插兜","唇色很淡，像贫血","耳后有颗淡痣","笑起来会先低一下头","总穿着磨破边的帆布鞋","手指关节突出，像常握东西","鼻尖微微发红，像冻的","笑起来会有小酒窝，不在同一边","手很凉，像冰","留着刚到肩膀的短发，懒得剪","脚踝细，戴一串细银链","眼睛下面有淡淡青影","笑的时候会先抿一下嘴","手背上有一小块烫伤的印","总戴着一条别人送的旧手绳","耳朵很薄，透着光","站姿微微歪着，重心在一只脚","虎牙一边尖一点","发旋很明显，头发总往一边翘","指尖总是凉的，握久了才暖","脖子上有一道很淡的疤","笑起来会先别过脸"],
+  习惯:["走路无意识数地砖","给路过的每只猫都起名字","把喜欢的叶子夹书里","拍照前会屏住呼吸","转笔能转一整节课","雨天就数雨滴","攒各种票根和糖纸","在笔记本边角画小人","蹲下来跟花平视","听见鸟叫就抬头找","把喜欢的句子抄在手腕上","耳机永远挂在脖子上","思考时咬笔帽","等人时在地上画圈","喝饮料总留最后一口","睡前把明天穿的摆好","看到好看的光就拍照","无聊就撕便利贴的边","手指总在桌面敲节奏","把糖含化了才舍得咬","走路盯着自己的影子","收到消息先截图再回","吃饭把不爱吃的拨一边","下雨天故意踩水坑","看书折角，绝不书签","空调房里也裹着外套","等人时反复看时间","把硬币抛着玩","写错字就涂黑一大片","路过镜子要看一眼","坐车靠窗，看外面发呆","紧张就摸耳垂","把吸管咬扁","拍照前整理一下头发","睡前刷一遍未读消息","走路哼着没词的调","把快递盒留着不扔","等电梯时盯着数字跳","喝水总咬杯沿","看到虫子先拍照再处理","把喜欢的歌设成闹铃","写字很用力，纸会凹","路过花店要停一下","无聊就编顺口溜","把手机亮度调到最低","坐着的时腿总抖","把便签贴满显示器边","喝汤前吹三下","走路踢小石子","睡前把闹钟按掉又设","看到云就给它们起名","总把钥匙攥在手心里","等人时把鞋带系了又解","喝奶茶非要插两根吸管","看到楼梯就数级数","无聊时把笔在指间翻来翻去","拍照后要先自己看一遍才给别人看","走路总落后半步","睡前把明天要说的台词过一遍","看到喜欢的东西会先摸一摸再买","坐下来先调整椅子高度","紧张时把手指掰得咔咔响","总在包里备着一支笔和一本小本子","看到夕阳会停下脚步","喝水前要先吹一下才敢碰唇","把喜欢的贴纸贴在手机背面","等人时点开又关掉音乐","走路时不自觉哼起旧歌","把不用的纸折成方块塞进口袋"],
+  矛盾:["怕黑却偏爱上深夜散步","社恐却偷偷写满整本日记","讨厌吵却循环同一首歌","嘴上说随缘，计划表却排到月底","想被看见又躲开目光","爱自由，却为某个人停下了脚步","理性得近乎冷酷，却为一只死去的麻雀难过","会安慰别人，自己崩了却沉默","嘴上说不在乎，转发前看了三遍","想靠近又假装路过","渴望被爱，有人靠近就逃","说好了不哭，转头掉眼泪","想说话，张嘴又咽回去","嫌麻烦，却把细节做到极致","想被记住，又怕被看透","说走就走，行李却收拾三遍","想独立，生病了想有人陪","嘴上狠话，手下留情","想安静，又怕太安静","说不想过生日，蛋糕偷偷买了","想努力，又想躺平","嫌弃小孩，逗猫比谁都欢","想省钱，买起喜欢的东西眼都不眨","想早睡，手机刷到两点","说不在意排名，下来就查","想坦诚，话到嘴边变玩笑","想被需要，被需要了又想逃","讨厌等人，自己总迟到","想大方，记账记到分","想坚强，看了温情片就破防","想简单，把事情想复杂","说随便，其实很挑","想自由，又想要个归宿","嘴上无所谓，心里记仇","想表达，写出来全删了","怕孤单，又享受独处","想相信人，又忍不住怀疑","说不想卷，半夜还在改","想放下，又偷偷关注","嫌仪式感，自己偷偷过","想被夸，被夸了又别扭","想帮忙，怕帮倒忙就缩回手","想安静离开，又回头看一眼","说不爱吃，最后抢光","想说真话，变成了客套","想依赖，又不想欠人情","想遗忘，备忘录存满","想勇敢，手在抖","说无所谓，截图保存","想联系，打了字又删掉","想普通，又怕平庸","想被理解，解释了又后悔","怕黑却养了一阳台的植物","嘴上嫌弃矫情，自己偷偷写诗","想被爱，又怕被爱束缚","说不想考了，资料打印最全","嫌弃拍照，相册里自己最少","想安静，手机一响就秒回"],
+  追求:["自由","安定","创作","有钱","被认可","被需要","纯粹的爱","平静","超越自己","守护谁","不被遗忘","痛快地活","被理解","有意义","真实","掌控感","安全感","被看见","简单","热烈","清醒","无憾","陪伴","被爱","自由地爱","不后悔","成为自己","被记住","喘息的空间","一个家","证明自己","不孤单","做喜欢的事","被信任","平等","不被定义","远方","真相","温柔以待","不留遗憾","自在","被选择","内心秩序","光","一个答案","放下","重新出发","被原谅","慢慢来","不将就","真诚的关系","属于自己的角落","热烈地活过","被听见","不必懂事","被坚定地选择","可以脆弱","被公平对待","说走就走的勇气","干净的关系","不被比较","做回小孩","一个能停靠的人","不再讨好","被允许平凡","自己的节奏","不必解释","被放在心上","活得像自己"],
+  恐惧:["孤独","被抛弃","失控","平庸","被看穿","鬼","虫子","深海","失去重要的人","时间流逝","被遗忘","亲密关系","黑暗","承诺落空","被审视","失败","被比较","生病","高架桥","密闭空间","被辜负","遗忘重要的事","变老","被孤立","蛇","火","高","噪声","被误解","失去声音","雷雨","血","针","被人期待","空荡的房间","镜子里的自己","失去记忆","被控制","坠落","安静","被丢下","一成不变","改变","被爱后离开","末班车的错过","众人注视","谎言","失去联系","天黑","自己变成讨厌的人","无人应答","被遗忘的承诺","被人忘记生日","手机没电","失去方向","秃头","被当众点名","电梯骤停","停电","被追问","考试","医生","父母的失望","被丢在人群里","失去嗅觉","再也写不出东西","被当成透明人","时间不够用","无可挽回的错","被替代","安静的告别","长胖","被说「你变了」"],
+  内核句:["是那种把钥匙攥出汗也不敢进门的人。","像一本被翻旧了、却始终没人借走的书。","把一生过成了一封没寄出的信。","温柔，只肯分给凌晨和猫。","是旧巷里最后一盏还亮着的灯。","习惯把自己活成背景板，又偷偷期待被看见。","像一场总在别人散场后才开始的雨。","把世界当成一座安静的、无需门票的展厅。","认准的路，下暴雨也走。","平静，是很多次崩溃叠出来的。","是那种嘴上嫌弃、手里却递糖的人。","把日子过成了可以反复回放的老胶片。","像一只停在窗台的鸟，随时会飞，也随时会留。","勇敢，是怕得发抖还往前迈的那一步。","是深夜便利店的常客，买的多是别人不需要的东西。","把心事折成纸船，从不放进水里。","像一句被写歪了的诗，自己读着也觉得别扭。","孤独很具体，比如一张永远只坐一边的长椅。","把没关系三个字，说成了一种本能。","像被翻到最后一页才被发现彩蛋的书。","把喜欢藏进照片的暗角，自己偶尔翻看。","是那种在人群里笑着、灵魂却在门口等的人。","像一杯放凉了也舍不得倒掉的水。","浪漫，全给了路边没人看的花。","是把歉意写成便签、又撕掉的人。","像一台总在录、却从不回放的相机。","把答案写在手心，再握成拳。","是那种推开门前要先深呼吸三次的人。","像被遗忘在抽屉里的旧车票，日期早已过期。","倔，是明明可以退、却偏要站着的人。","把名字签得很轻，像怕留下痕迹。","像一片落在别人肩头、自己却不知道的雪。","是把承诺看得很重、所以很少开口的人。","像深夜电台，只播给一个想象中的听众。","把伤口捂得很严，好了也留道印。","是那种替所有人撑伞、自己淋着的人。","像一首没写完的歌，副歌停在喉咙里。","把想说出口的话咽下去的次数，比说出来的多。","是旧书店里最角落那本，落灰却被人珍爱。","像一只总是慢半拍的钟，却从不出错。","把世界关在门外，留一条缝给风。","是那种笑容练到挑不出错、却没人看穿的人。","像被反复折叠又展开的地图，痕迹清晰。","把心爱之物，都养成了习惯。","是雨里走得最慢、却最先到家的人。","像一盏不灭的灯，照着的却是空房间。","把锋芒收进袖口，只露出柔软的那面。","是那种在告别现场、最后才松手的人。","像一杯永远温着的茶，等人来喝。","把心事说给镜子，镜子从不回应。","是走在队伍末尾、却记得所有人背影的人。","像被风吹乱又自己理顺的线。","把再见说得像明天见一样轻。","是那种把委屈写成日记、再锁进抽屉的人。","像一棵长在墙缝里的树，不给光也活。","把情绪调成静音，只自己听得见。","是那种在热闹里最安静、在安静里最清醒的人。","像一封被退回的信，地址没错，只是人不在。","把最好的话，留给了还没写出的下一句。","是那种把随便说得很重的人。","像旧收音机，调准了就只有一首歌。","把名字写在书页边缘，怕被翻到，又怕不被翻到。","是那种宁愿绕远、也不走那条有人等着的路的人。","像被晒褪色的海报，字还在，颜色淡了。","总把我在说成我走了，怕被留下。","像一只收起刺的刺猬，把软肚皮对着世界。","把遗憾折成纸飞机，从不扔出去。","是那种在别人的故事里当配角、自己却演得最真的人。","像被按了暂停键的午后，时间忘了走。","把可以念成都行，把不行咽回肚子里。","是那种在末班车上、望着窗外不说话的人。","像一本没有结局的小说，作者懒得收尾。","把钥匙挂在门上，进不进都行。","是那种把在乎伪装成无所谓的高手。","像被雨水泡软的信封，字模糊了，情还在。","把日子过成了一条没有目的地的路。","是那种把怕说成累的人。","像一盏路灯，亮着，却照不亮自己。","把最好的自己，留在了没人翻到的草稿页。","是那种在人群里找出口、眼睛却看着入口的人。","像被反复修改的画，底层还是第一笔。","总把想念说成在忙，把牵挂说成晚安。","是那种把伞倾向别人、自己半边湿透的人。","像一句迟到的台词，说出口时戏已散。","把名字念得很轻，怕惊动什么。","像被风吹走又自己回来的门牌。","把世界看成一场不必参与的展览。","是那种在喧闹里，自己给自己按了静音的人。","像被洗了很多次的衬衫，软了，也旧了，却最舒服。","把再见说得很轻，怕被听见舍不得。","是那种把喜欢藏在背影里的人，不回头。","像一杯没人喝完的酒，醉的是倒的人。","把心事写成没人看的博客，更新到一半就删。","是那种在别人都睡了之后，才真正醒过来的人。","像被反复涂写的墙，最后只留下最初的那个字。","那份想说出口的愿意，最后都变成了随便你。","是那种把温柔当盔甲、把锋利留给自己的人。","像一封永远在路上的信，收件人写得很清楚。","把日子过成了一场没有观众的独舞。","是那种在所有人面前都体面、唯独对自己潦草的人。","像被风吹皱又抚平的湖面，痕迹很淡。","把想被记住说成了忘了我吧。","是那种把最好的脾气，留给擦肩而过的人。","像一只停在肩头又飞走的鸟，温度还在。","把名字写在沙上，潮来就散，写下的人不在乎。","是那种在故事开头就准备好了结尾的人。","像被翻旧了的地图上，唯一没被标注的城。","把我在听说得很真，其实在别处。","是那种把脆弱藏进笑里、自己都信了的人。","像一盏熄了又亮的灯，没人注意到中间那秒黑。","把世界关在门外，却留一盏灯给可能回来的人。","是那种把那句我很好说给空气听的人。","像被反复读旧了的书页，边角卷了，字却更清楚。"]
+};
+
+const LAB = {印象:"角色印象",内核:"气质内核",外貌:"外貌锚点",习惯:"小习惯",矛盾:"矛盾点",追求:"精神追求",恐惧:"恐惧"};
+const KEYS = ["印象","内核","外貌","习惯","矛盾","追求","恐惧"];
+const STORE = "oc_cards_v1";
+
+let current = null;
+
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+function draw(){
+  const name = document.getElementById("ocName").value.trim();
+  const title = name ? ("角色卡 · " + name) : ("角色卡 · 第 " + (Math.floor(Math.random()*900)+100) + " 抽");
+  const lines = KEYS.map(k => ({lab:LAB[k], val:pick(BANK[k])}));
+  const core = pick(BANK.内核句);
+  current = {title, lines, core};
+  renderCard(current);
+}
+
+function renderCard(c){
+  document.getElementById("placeholder").classList.add("hidden");
+  const box = document.getElementById("content");
+  box.classList.remove("hidden");
+  document.getElementById("actions").style.display = "flex";
+  let html = `<h2>${c.title}</h2>`;
+  for(const ln of c.lines){
+    html += `<div class="row"><div class="lab">${ln.lab}</div><div class="val">${ln.val}</div></div>`;
+  }
+  html += `<div class="core">${c.core}</div>`;
+  html += `<div class="foot">—— 去创造一个「人」吧 ——</div>`;
+  box.innerHTML = html;
+}
+
+function copyCard(){
+  if(!current) return;
+  let txt = current.title + "\n";
+  for(const ln of current.lines){ txt += ln.lab + "：" + ln.val + "\n"; }
+  txt += "\n" + current.core;
+  navigator.clipboard.writeText(txt).then(()=>toast("已复制 ✓")).catch(()=>toast("复制失败，请手动选择"));
+}
+
+function saveCard(){
+  if(!current) return;
+  const data = JSON.parse(localStorage.getItem(STORE) || "[]");
+  data.unshift({...current, time: Date.now()});
+  localStorage.setItem(STORE, JSON.stringify(data));
+  renderSaved();
+  toast("已收藏 ★");
+}
+
+function renderSaved(){
+  const data = JSON.parse(localStorage.getItem(STORE) || "[]");
+  const list = document.getElementById("savedList");
+  document.getElementById("savedTitle").textContent = "我的收藏 (" + data.length + ")";
+  if(!data.length){
+    list.innerHTML = '<div class="tip" style="padding:14px 0">还没有收藏，抽到喜欢的就点「收藏这张」</div>';
+    return;
+  }
+  list.innerHTML = data.map((c,i)=>{
+    const prev = c.lines.slice(0,2).map(l=>l.lab+"："+l.val).join("；");
+    return `<div class="item" onclick="loadSaved(${i})">
+      <button class="del" onclick="event.stopPropagation();delSaved(${i})">删除</button>
+      <div class="t">${c.title}</div>
+      <div class="p">${prev}</div>
+    </div>`;
+  }).join("");
+}
+
+function loadSaved(i){
+  const data = JSON.parse(localStorage.getItem(STORE) || "[]");
+  const c = data[i];
+  if(c){ current = c; renderCard(c); toast("已载入"); }
+}
+
+function delSaved(i){
+  const data = JSON.parse(localStorage.getItem(STORE) || "[]");
+  data.splice(i,1);
+  localStorage.setItem(STORE, JSON.stringify(data));
+  renderSaved();
+}
+
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.classList.remove("show"), 1400);
+}
+
+renderSaved();
+</script>
+</body>
+</html>

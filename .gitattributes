@@ -1,0 +1,14 @@
+* text=auto
+*.js text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.glb -text
+*.pdf -text
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.mp4 -text
+*.webm -text
+*.woff -text
+*.woff2 -text
+*.wasm -text
