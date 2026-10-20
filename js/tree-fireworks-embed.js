@@ -306,9 +306,8 @@
   new p5(function (p) {
 
     p.setup = function () {
-      let cnv = p.createCanvas(540, window.innerHeight);
+      let cnv = p.createCanvas(540, 900);
       cnv.parent('tree-fireworks-canvas');
-      window.addEventListener('resize', () => p.resizeCanvas(540, window.innerHeight));
       p.colorMode(p.HSB, 360, 100, 100, 100);
       p.randomSeed(SEED);
       p.noiseSeed(SEED);

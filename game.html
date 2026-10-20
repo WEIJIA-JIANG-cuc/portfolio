@@ -1,253 +1,34 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>游戏与产品 — 蒋维嘉作品集</title>
-  <link rel="stylesheet" href="css/light.css" />
-  <link rel="stylesheet" href="css/tf-nav.css" />
-</head>
-<body>
-
-  <!-- TrueFocus 导航（右上角弱化，与全站统一） -->
-  <nav class="tf-nav">
-    <div class="tf-container" id="tfContainer">
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>游戏研究与策划 — 蒋维嘉作品集</title><link rel="stylesheet" href="css/light.css"><link rel="stylesheet" href="css/tf-nav.css"><link rel="stylesheet" href="css/section-pages.css"></head><body class="section-site"><nav class="tf-nav" aria-label="主导航"><div class="tf-container" id="tfContainer">
       <a class="tf-word" href="hero.html">Home</a>
+      <a class="tf-word" href="product.html">Product</a>
       <a class="tf-word on" href="game.html">Game</a>
       <a class="tf-word" href="vibecoding.html">Vibe</a>
       <a class="tf-word" href="writing.html">Write</a>
       <a class="tf-word" href="photography.html">Photo</a>
-      <div class="tf-frame" id="tfFrame">
-        <span class="c tl"></span><span class="c tr"></span>
-        <span class="c bl"></span><span class="c br"></span>
-      </div>
-    </div>
-  </nav>
+<div class="tf-frame" id="tfFrame"><span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span></div></div></nav><main class="sp-wrap" id="main">
+<header class="sp-header"><p class="sp-kicker">GAME / PLAY · ANALYZE · DESIGN</p><p class="sp-page-name">游戏研究与策划</p><h1>把“好玩”拆成<br>可以讨论的设计。</h1><p class="sp-intro">从关卡数据到局内行为，从内容体验到验证方案。比起给游戏贴标签，我更想解释：玩家为什么停下、为什么继续，以及设计可以改变什么。</p><nav class="sp-toc" id="game-index" aria-label="游戏案例目录"><a href="#water-sort">水排序</a><a href="#water-sources">原文与评分</a><a href="#validation">方案与验证</a><a href="#otome">乙女卡牌</a><a href="#play-notes">喜欢的游戏</a></nav></header>
+<section class="sp-section" id="water-sort"><p class="sp-kicker">01 / WATER SORT</p><h2>《水排序》：<br>指标看起来相近，体验就相同吗？</h2><p class="sp-intro">基于笔试提供的前 100 关数据与测试包，完成数据作答、参与感分析和 AB 测试方案。以下是对三份原始交付的重组与复盘，不是已上线项目。</p>
+<div class="sp-three"><article><h3>我的任务</h3><p>定位异常关卡，结合实际玩法解释参与感，再提出可验证的优化方案。</p></article><article><h3>我的交付</h3><p>数据分析报告、参与感分析报告、AB 测试方案三份文档。</p></article><article><h3>证据边界</h3><p>有题目数据和方案文档；没有真实实验结果、用户访谈或上线收益证明。</p></article></div>
 
-  <!-- 页头 -->
-  <header class="page-header fade-up">
-    <span class="section-label">Games & Product Thinking</span>
-    <h1>游戏与产品</h1>
-    <p>1000h+ 的玩家体感，一次完整的策划闭环，和一些让我真正沉迷的设计。</p>
-  </header>
-
-  <!-- ===== 第一部分：我的游戏画像 ===== -->
-  <main class="page-content">
-
-    <section class="fade-up" style="margin-bottom: 3rem;">
-      <h2 style="font-size:1.3rem; color:var(--text-primary); margin-bottom:1rem;">关于我</h2>
-      <p style="color:var(--text-secondary); line-height:1.8; max-width:720px;">
-        中国传媒大学 · 通信工程（2027 届）——工科逻辑 + 玩家直觉。<br />
-        偏爱品类：休闲解谜 / 叙事解谜 / 音游 / 二次元养成。<br />
-        玩游戏的习惯：边玩边拆——这一关为什么好玩？我为什么想继续？设计者做了什么把我留下来？
-      </p>
-      <div style="display:flex; gap:1.5rem; margin-top:1.5rem; flex-wrap:wrap;">
-        <div style="background:var(--bg-card); padding:1rem 1.5rem; border-radius:12px; border:1px solid var(--line-light);">
-          <span style="font-size:2rem; font-weight:700; color:var(--accent);">1000h+</span><br />
-          <span style="font-size:0.85rem; color:var(--text-secondary);">累计游戏时长</span>
-        </div>
-        <div style="background:var(--bg-card); padding:1rem 1.5rem; border-radius:12px; border:1px solid var(--line-light);">
-          <span style="font-size:2rem; font-weight:700; color:var(--accent);">15+</span><br />
-          <span style="font-size:0.85rem; color:var(--text-secondary);">款深度体验游戏</span>
-        </div>
-        <div style="background:var(--bg-card); padding:1rem 1.5rem; border-radius:12px; border:1px solid var(--line-light);">
-          <span style="font-size:2rem; font-weight:700; color:var(--accent);">6</span><br />
-          <span style="font-size:0.85rem; color:var(--text-secondary);">大品类覆盖</span>
-        </div>
-        <div style="background:var(--bg-card); padding:1rem 1.5rem; border-radius:12px; border:1px solid var(--line-light);">
-          <span style="font-size:2rem; font-weight:700; color:var(--accent);">1</span><br />
-          <span style="font-size:0.85rem; color:var(--text-secondary);">个完整深度研究案例</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== 第二部分：深度案例 · 水排序 ===== -->
-    <section class="fade-up" style="margin-bottom:3rem;">
-      <span class="section-label">深度案例 · 核心研究</span>
-      <h2 style="font-size:1.6rem; color:var(--text-primary); margin:0.5rem 0 1rem;">《水排序》关卡诊断与体验优化研究</h2>
-      <p style="color:var(--text-secondary); line-height:1.8; max-width:800px; margin-bottom:1.5rem;">
-        把一款玩了很久的游戏，做成一次完整的策划练习——从 100 关数据里找问题，到给出可验证的解决方案。<br />
-        <em style="color:var(--accent);">个人深度研究项目 · 2026.06-07</em>
-      </p>
-
-      <!-- 三步骤流程 -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.2rem; margin-bottom:2rem;">
-        <div style="background:var(--bg-card); padding:1.5rem; border-radius:12px; border-left:4px solid var(--accent);">
-          <strong style="color:var(--accent);">Step 1 · 数据诊断</strong>
-          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">提取前 100 关后台数据，建立分阶段、多指标的评估体系，定位好关卡与坏关卡。产出：关卡质量评估体系。</p>
-        </div>
-        <div style="background:var(--bg-card); padding:1.5rem; border-radius:12px; border-left:4px solid var(--accent);">
-          <strong style="color:var(--accent);">Step 2 · 体验拆解</strong>
-          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">以「参与感」为核心，用三层框架解释好坏关卡在体验上的根本差异。产出：参与感三维分析框架。</p>
-        </div>
-        <div style="background:var(--bg-card); padding:1.5rem; border-radius:12px; border-left:4px solid var(--accent);">
-          <strong style="color:var(--accent);">Step 3 · 方案落地</strong>
-          <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.5rem;">针对高流失关卡设计优化方案，配套 AB 测试验证有效性与商业化影响。产出：可执行的 AB 测试方案。</p>
-        </div>
-      </div>
-
-      <!-- 核心发现 -->
-      <div style="background:linear-gradient(135deg,#EEF3F8,#E3EBF3); padding:1.5rem; border-radius:12px; margin-bottom:1.5rem;">
-        <strong style="color:var(--text-primary);">核心发现：分钟流失低 ≠ 好关卡</strong>
-        <p style="color:var(--text-secondary); font-size:0.92rem; margin-top:0.6rem; line-height:1.8;">
-          坏关卡的分钟流失率（0.46%）与阶段均值持平——看似正常。但 823s 的超长耗时来自玩家反复看广告拿空瓶：广告撑大了分母，掩盖了 82% 的卡关放弃。<br />
-          好关卡 vs 坏关卡的本质差异：<strong>信息过载 / 唯一窄路 / 一步错即死局</strong> vs <strong>布局一眼理清 / 多条解题路径 / 每步都有进展</strong>。
-        </p>
-      </div>
-
-      <!-- 参与感三层框架 -->
-      <h3 style="font-size:1.1rem; color:var(--text-primary); margin:1.5rem 0 0.8rem;">参与感三层框架</h3>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem;">
-        <div style="padding:1.2rem; background:var(--bg-card); border-radius:10px;">
-          <strong style="color:var(--accent); font-size:0.95rem;">内容厚度 — 有东西可玩</strong>
-          <p style="color:var(--text-secondary); font-size:0.87rem; margin-top:0.4rem;">新机制渐进解锁，单关密度匹配阶段认知；多数关卡不设唯一解，玩家能自己规划倾倒顺序。</p>
-        </div>
-        <div style="padding:1.2rem; background:var(--bg-card); border-radius:10px;">
-          <strong style="color:var(--accent); font-size:0.95rem;">难度适配 — 操作有意义</strong>
-          <p style="color:var(--text-secondary); font-size:0.87rem; margin-top:0.4rem;">难度贴着能力爬坡，每次倾倒都能看到进展；撤回/重置降低试错成本——敢尝试才敢投入。</p>
-        </div>
-        <div style="padding:1.2rem; background:var(--bg-card); border-radius:10px;">
-          <strong style="color:var(--accent); font-size:0.95rem;">心流体验 — 不知不觉沉浸</strong>
-          <p style="color:var(--text-secondary); font-size:0.87rem; margin-top:0.4rem;">「倾倒—归集—清空」小循环持续给反馈；难易穿插、节奏松紧交替；无时间压力，随时停下随时继续。</p>
-        </div>
-      </div>
-
-      <div style="margin-top:1rem; padding:1rem; background:#FFF8E7; border-radius:8px; border-left:4px solid #E6B84D;">
-        <span style="font-size:0.88rem; color:#7A6A30;">💡 这套「数据诊断 → 体验拆解 → 实验验证」的方法，可以复用到任何休闲品类的关卡分析。</span>
-      </div>
-    </section>
-
-    <!-- ===== 第三部分：我真正喜欢的游戏 ===== -->
-    <section class="fade-up" style="margin-bottom:3rem;">
-      <span class="section-label">玩家视角 · 我真正喜欢的</span>
-      <h2 style="font-size:1.6rem; color:var(--text-primary); margin:0.5rem 0 1.5rem;">那些让我沉迷的设计</h2>
-
-      <!-- 纪念碑谷 -->
-      <article class="project-item" style="margin-bottom:2rem;">
-        <div class="project-info fade-up" style="max-width:100%;">
-          <span class="section-label">艺术解谜 · 全系列 · 合计约 60h</span>
-          <h3>纪念碑谷</h3>
-          <p>视觉错位的核心玩法第一眼就很新鲜，每一关都在开脑洞。简洁的几何美学配上恰到好处的音效——玩它不像在"过关"，更像在欣赏一件件小艺术品。整个过程就是享受。</p>
-          <p style="color:var(--accent); font-style:italic; margin-top:0.5rem;">一个足够独特的核心机制，可以撑起整个系列。</p>
-          <div class="project-tags">
-            <span>视觉错觉</span>
-            <span>极简美学</span>
-            <span>零门槛</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- 锈湖系列 -->
-      <article class="project-item" style="margin-bottom:2rem;">
-        <div class="project-info fade-up" style="max-width:100%;">
-          <span class="section-label">叙事解谜 · 系列多部 · 约 50h</span>
-          <h3>锈湖 Rusty Lake</h3>
-          <p>谜题常常反常识、反直觉，解开时会心一笑，带点黑色幽默。更妙的是谜题背后的讽刺与暗示——玩完整个系列，碎片拼出一个庞大的世界观和完整的故事。追系列的代入感，很像追一部长篇剧集。</p>
-          <p style="color:var(--accent); font-style:italic; margin-top:0.5rem;">用隐喻讲故事，让玩家自己"破案"，比直接灌输剧情高级得多。</p>
-          <div class="project-tags">
-            <span>隐喻叙事</span>
-            <span>碎片化悬疑</span>
-            <span>世界观构建</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- 雨世界 -->
-      <article class="project-item" style="margin-bottom:2rem;">
-        <div class="project-info fade-up" style="max-width:100%;">
-          <span class="section-label">生存探索 · 像素风 · 约 50h</span>
-          <h3>雨世界 Rain World</h3>
-          <p>像素画面，场面却很宏大。最着迷的是它的生态系统——捕食者有自己的作息和狩猎逻辑，不完全围着玩家转，世界因此特别"活"。在食物链里挣扎求生，既有生存压力，也有探索自由，沉浸感和参与感都很强。</p>
-          <p style="color:var(--accent); font-style:italic; margin-top:0.5rem;">完整自洽的生态，比任何任务指引都更能让玩家主动投入。</p>
-          <div class="project-tags">
-            <span>生态模拟</span>
-            <span>生存探索</span>
-            <span>沉浸感</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- 音游 -->
-      <article class="project-item" style="margin-bottom:2rem;">
-        <div class="project-info fade-up" style="max-width:100%;">
-          <span class="section-label">音乐游戏 · 合计 300h+</span>
-          <h3>音游：最沉浸的 300 小时</h3>
-          <p>音游是全感官的即时奖励——眼睛盯谱面、耳朵跟音乐、手指打节奏，完美击中的瞬间跳出 Perfect，三种感官同时被奖励一次。难度合适的谱面会让我很快进入心流，常常抬起头才发现一小时已经过去了。</p>
-          <p style="color:var(--text-secondary); margin-top:0.6rem;"><strong>三款，三种打法：</strong>节奏大师做大众休闲，Phigros 用高难谱面圈住硬核玩家，Cytus II 把剧情揉进音乐——同一品类，三种生存方式。分层难度是生命线：新手不被劝退，大佬永远有的刷。</p>
-          <div class="project-tags">
-            <span>节奏大师</span>
-            <span>Phigros</span>
-            <span>Cytus II</span>
-            <span>心流体验</span>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <!-- ===== 第四部分：产品分析 ===== -->
-    <section class="fade-up" style="margin-bottom:3rem;">
-      <span class="section-label">Product Analysis · 竞品调研</span>
-      <h2 style="font-size:1.6rem; color:var(--text-primary); margin:0.5rem 0 1.5rem;">产品分析精选</h2>
-      <p style="color:var(--text-secondary); margin-bottom:1.5rem;">从深度游玩延伸出的产品思考——不只分析游戏，也研究让我好奇的产品形态。</p>
-
-      <!-- AI对话陪伴产品调研 -->
-      <article class="project-item" style="margin-bottom:2rem;">
-        <div class="project-info fade-up" style="max-width:100%;">
-          <span class="section-label">竞品调研 · AI 产品</span>
-          <h3>AI 对话陪伴类产品调研</h3>
-          <p>针对当前市场上主流的 AI 对话/陪伴类产品（如 Character.ai、Talkie、星野等）进行的系统性竞品分析。从产品定位、核心功能、交互设计、商业化模式、用户情感连接等维度拆解，关注点包括：</p>
-          <ul style="color:var(--text-secondary); font-size:0.92rem; line-height:1.8; padding-left:1.2rem; margin-top:0.6rem;">
-            <li><strong>角色塑造差异</strong>——不同产品的 AI 人格设定策略，从"万能助手"到"专属伴侣"的光谱定位</li>
-            <li><strong>对话体验设计</strong>——记忆系统、情感反馈机制、长对话连贯性等技术与体验的结合方式</li>
-            <li><strong>留存与付费转化</strong>——免费层 vs 付费层的体验边界如何划定，用户愿意为什么样的"陪伴"买单</li>
-          </ul>
-          <div class="project-tags">
-            <span>AI 产品</span>
-            <span>竞品分析</span>
-            <span>用户体验</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- 乙游卡牌内容调研 -->
-      <article class="project-item" style="margin-bottom:2rem;">
-        <div class="project-info fade-up" style="max-width:100%;">
-          <span class="section-label">内容调研 · 乙女游戏</span>
-          <h3>乙游卡牌内容体系调研</h3>
-          <p>以多款主流乙女游戏的卡牌系统为研究对象，从内容设计的角度进行横向对比。聚焦卡牌作为"角色叙事载体"的功能——不只是数值卡片，更是剧情碎片、情感节点和收集动力的集合体。</p>
-          <ul style="color:var(--text-secondary); font-size:0.92rem; line-height:1.8; padding-left:1.2rem; margin-top:0.6rem;">
-            <li><strong>卡牌叙事功能</strong>——卡面插画、获取文案、进化文本如何共同构建角色形象</li>
-            <li><strong>内容节奏控制</strong>——卡牌投放频率、稀有度分布与玩家期待值管理之间的关系</li>
-            <li><strong>情感投入设计</strong>——通过卡牌系统让玩家对虚拟角色产生真实情感连接的方法论</li>
-          </ul>
-          <div class="project-tags">
-            <span>乙女游戏</span>
-            <span>内容体系</span>
-            <span>卡牌设计</span>
-          </div>
-        </div>
-      </article>
-
-      <p style="color:var(--text-secondary); font-size:0.88rem; font-style:italic; text-align:center; margin-top:1rem;">
-        * 产品分析板块内容持续更新中，后续会补充更多我真正喜欢的产品的深度分析
-      </p>
-    </section>
-
-    <!-- ===== 第五部分：我的游戏观 ===== -->
-    <section class="fade-up" style="margin-bottom:2rem;">
-      <div class="game-manifesto">
-        <h2 style="font-size:1.4rem; margin-bottom:1rem;">我的游戏观</h2>
-        <p style="font-size:1.05rem; line-height:2; max-width:600px; margin:0 auto;">
-          玩游戏时我总在想三个问题——<br />
-          这一关为什么好玩？我为什么还想继续？设计者做了什么把我留下来？<br />
-          <strong>玩家视角负责找到乐趣，策划视角负责拆解机制。<br />我希望自己，两个都有。</strong>
-        </p>
-      </div>
-    </section>
-
-  </main>
-
-  <script src="js/main.js"></script>
-  <script src="js/tf-nav.js"></script>
-</body>
-</html>
+<div class="sp-source-box" id="water-sources"><div><h3>三轮笔试，三个逐步深入的问题</h3><p>先诊断关卡，再解释参与感，最后设计验证方案。以下评分来自招聘方正式反馈，三轮均记录为通过。</p></div><dl class="sp-feedback"><div><dt>数据与体验诊断</dt><dd>89<span>/100</span></dd></div><div><dt>参与感分析</dt><dd>91<span>/100</span></dd></div><div><dt>AB 测试方案</dt><dd>91<span>/100</span></dd></div></dl><a class="sp-link" href="https://bcnwepi0106r.feishu.cn/wiki/Qm87w3pxyiq2LtkpyjVcQYUencg?from=from_copylink" target="_blank" rel="noopener">打开飞书原文与三轮反馈 ↗</a><p class="sp-note">阅读顺序：左侧“笔试结果”查看评分，再依次阅读题 1、题 2、题 3 的题目与作答。笔试评价不代表方案已上线或 AB 实验已执行。</p></div>
+<div class="sp-rounds">
+<details class="sp-details" open><summary>第一轮：从指标异常走向关卡诊断</summary><p><b>问题：</b>面对前 100 关，先建立阶段基准，而不是把所有关卡放在一条线上比较。再对照尝试次数、耗时、关流失与无结果流失，寻找值得回到测试包中复查的位置。</p><p><b>判断：</b>用 33 / 34、91 / 92 等对照，把数值变化和可操作空间联系起来。分钟流失较低，可能只是耗时分母较大，并不自动等于体验好。</p><p><b>反馈与改进：</b>招聘方肯定审题完整性和判断框架；数据理解是需要继续加强的部分。复盘中，我保留了“观察到异常”和“解释其成因”之间的证据边界。</p></details>
+<details class="sp-details"><summary>第二轮：从“好坏关卡”切换到“操作是否有意义”</summary><p><b>问题：</b>同样是重复倾倒，为什么有时是推理，有时只是消耗？我按题目提供的内容厚度、难度适配和心流框架，重新解释玩家能否看懂局面、做出选择，并从操作中得到推进反馈。</p><p><b>判断：</b>空瓶周转、隐藏信息和障碍机制需要结合讨论。重复点击不是参与感本身；需要看每次尝试是否让玩家获得新信息或形成可解释的局面变化。</p><p><b>修正：</b>不把完成率简单归为无效指标，也不说“每次倾倒都有效”。它们需要结合测试包规则、尝试过程和其他指标解释。招聘方反馈也提醒，广告依赖等成因需要埋点或实测支持。</p></details>
+<details class="sp-details"><summary>第三轮：将体验目标转成可观察的方案</summary><p><b>问题：</b>目标不只是让关卡更容易，而是让自主判断、局面推进与持续闯关变得更有可能。我将方案组织为关卡、操作提示与广告、奖励、视觉四类改动。</p><p><b>取舍：</b>先处理卡死和空间不足等核心问题，再考虑奖励与表现层；同时把广告收入放入护栏，避免把体验和商业化割裂。</p><p><b>下一步：</b>招聘方认可方案完整性，也指出关卡数量上限需要数据校准、随机分流和显著性口径需要细化。下面保留原方案，并补充更利于归因的验证思路。</p></details>
+</div>
+<h3 class="sp-subhead">先看分母，再谈结论</h3><p>原始口径中的“分钟流失”为关流失除以总耗时。耗时增大可能压低这个比值，因此不能只用它给关卡体验排序。</p>
+<div class="sp-table-wrap"><table class="sp-data"><caption>原题数据对照 · 第 33 / 34 关与 11-40 关均值</caption><thead><tr><th scope="col">指标</th><th scope="col">第 33 关</th><th scope="col">第 34 关</th><th scope="col">区间均值</th></tr></thead><tbody><tr><th scope="row">分钟流失</th><td>0.46%</td><td>0.31%</td><td>0.46%</td></tr><tr><th scope="row">总耗时</th><td>823 秒</td><td>217 秒</td><td>295.07 秒</td></tr><tr><th scope="row">无结果流失</th><td>82%</td><td>18%</td><td>45.27%</td></tr></tbody></table></div>
+<div class="sp-decision"><b>我的判断</b><p>第 33 关不能因为分钟流失接近均值就被判为“正常”。更长的耗时、更高的尝试压力与无结果流失，应一起触发局内行为排查。</p></div>
+<details class="sp-details"><summary>为什么这次复盘没有沿用原稿的全部解释？</summary><p>原稿将第 33 关长耗时与反复观看激励广告联系起来。但缺少广告事件与时间戳，不能据此确认因果。新版将其保留为待验证假设：需要区分操作时间、广告时间和停留时间，再观察瓶位与道具使用路径。</p><p>“无结果流失”与“关流失”也不是同一指标：前者描述局内未产生结果的退出，后者按原题口径指完成本关后未进入下一关。不能把 82% 写成整体玩家流失率。</p></details>
+<h3 class="sp-subhead">再把数据翻译回玩家正在做的事</h3><div class="sp-three"><article><h3>内容是否有变化</h3><p>颜色、瓶位与障碍带来的是新策略，还是只是更长的重复操作？用阶段变化看内容厚度，而不只看关卡数。</p></article><article><h3>操作是否有意义</h3><p>空瓶决定腾挪空间。难度应来自可理解的取舍，而不是玩家难以预判、只能反复试错的局面。</p></article><article><h3>挑战是否贴近能力</h3><p>成长阶段需要逐步引入压力；成熟阶段再组合规则。持续紧张与偶尔放松共同影响参与节奏。</p></article></div><p class="sp-note">以上沿用题目提供的参与感框架并结合玩法作答；不是我独立提出的理论，也不等于已验证的玩家心理。</p>
+<h3 class="sp-subhead" id="validation">从“改很多”走向“能解释为什么有效”</h3>
+<p>原方案把关键关卡的处理落到了具体对象，而不是只写“降低难度”。下列都是拟议改动，参数仍需测试校准。</p>
+<div class="sp-table-wrap"><table class="sp-data sp-plan-table"><caption>第三轮提出的关卡调整方向</caption><thead><tr><th scope="col">对象</th><th scope="col">拟改什么</th><th scope="col">希望验证什么</th></tr></thead><tbody><tr><th scope="row">33 关</th><td>减少瓶子与遮挡，留出腾挪空间</td><td>降低早期卡死，提高可判断性</td></tr><tr><th scope="row">62 关</th><td>缩减颜色，增加空瓶</td><td>让难度回到有意义的空间规划</td></tr><tr><th scope="row">92 关</th><td>减少叠加机制，增加空瓶</td><td>避免多种压力同时遮蔽推进目标</td></tr></tbody></table></div><div class="sp-two"><div class="sp-callout"><h3>当时的验证计划 · 未执行</h3><p>设计 7 天、四组新用户对照：原版、关卡调整、叠加提示与广告调整、再叠加奖励与视觉调整；关注关键关卡通过、中途退出、道具使用与广告收入。</p><p class="sp-note">原方案提出每组一万人，但没有基于基线与最小可检测效应计算样本量，不能当作已论证的实验规模。</p></div><div class="sp-callout"><h3>现在的复盘补充</h3><p>原方案可以比较组合改动的增量，但 C 组同时调整提示与广告，D 组叠加奖励与视觉，无法拆出每个子改动的贡献。我会先收敛到一个关键关卡的机制调整，以下一关进入、无结果退出为观察口径，以收入、留存等为护栏。</p><p>先补基线、分组和埋点，再估算样本量与观察周期。实验没有运行前，不写通过率提升或商业收益。</p></div></div>
+</section>
+<section class="sp-section" id="otome"><p class="sp-kicker">02 / OTOME CONTENT</p><h2>乙女卡牌：<br>被收集的，不只是稀有度。</h2><p class="sp-intro">基于乙游卡牌内容调研表及修改版的问题整理，从卡牌定位、获取机制、价值锚点和反馈方式梳理内容体验。</p><div class="sp-three"><article><h3>吸引从哪里发生</h3><p>立绘是入口，但语音、故事和关系语境决定这张卡能否形成完整的情感体验。</p></article><article><h3>付出是否可理解</h3><p>获取规则与门槛影响预期。需要把“内容吸引力”和“获取摩擦”分开讨论。</p></article><article><h3>获得之后留下什么</h3><p>收藏反馈、剧情回看和关系表达，让卡牌价值不只在抽取瞬间完成。</p></article></div><div class="sp-source-box sp-source-compact"><h3>回到原始表格看依据</h3><p>建议先读“问题整理”，再看“竞品卡牌调研”中的卡牌内容与获取机制，最后结合“互动类型参考”理解内容形式。网页保留分析主线，细节放在原表中查阅。</p><a class="sp-link" href="assets/research/otome-research.xlsx" download="乙游卡牌内容调研报告_修改版.xlsx">下载原始调研表（Excel） ↓</a></div><p class="sp-note">历史桌面调研与问题归纳，无上线改动或付费转化验证；不将个人理解冒充用户访谈结果。</p></section>
+<section class="sp-section" id="play-notes"><h2>三款最喜欢的游戏，<br>三种不同的学习方式。</h2><p class="sp-intro">我想继续沿着具体体验往下拆：玩家如何理解线索、改变空间认知，又怎样在一个不围着自己转的世界里生存。以下先整理分析视角，具体关卡与操作复盘会单独展开。</p>
+<article class="sp-game-note" id="rusty-lake"><div><p class="sp-page-name">锈湖 / Rusty Lake</p><h3>线索的作用，不只是告诉玩家答案。</h3></div><div><p>在点击解谜中，物件既可以是工具，也可以承载叙事。一个值得追问的问题是：玩家解开谜题时，是否同时对人物、事件或场景形成了新的解释？</p><p><b>分析重点：</b>线索出现的顺序、误读后的可恢复性、道具使用与故事信息的关系。设计上要保留诡异感，也要让解题后的回看能够成立。</p><p><b>可继续验证：</b>为一个具体谜题画出“看见线索 → 形成假设 → 尝试 → 收到反馈”的链路，区分推理困难和反馈不足。</p><a class="sp-reference" href="https://www.rustylake.com/" target="_blank" rel="noopener">官方作品资料 ↗</a></div></article>
+<article class="sp-game-note" id="monument-valley"><div><p class="sp-page-name">纪念碑谷 / Monument Valley</p><h3>视角变化，也是一种规则教学。</h3></div><div><p>不可能建筑把视觉判断变成玩法的一部分：场景不只是路径背景，还影响玩家如何理解连接、方向与可行走范围。</p><p><b>分析重点：</b>第一次发现规则时的“看懂”，与熟悉规则后的“运用”如何区分？颜色、构图、机关和移动反馈能否承担提示，而不把答案说破？</p><p><b>可继续验证：</b>选一个转折关卡，记录操作前后的路径理解，比较直接文字提示与空间提示各自损失了什么。</p><a class="sp-reference" href="https://monumentvalleygame.squarespace.com/blog/2014/5/9/how-we-made-monument-valley-what-do-you-want-to-know-1" target="_blank" rel="noopener">开发团队谈不可能建筑 ↗</a></div></article>
+<article class="sp-game-note" id="rain-world"><div><p class="sp-page-name">雨世界 / Rain World</p><h3>玩家学习的，可以是生态而不是通关脚本。</h3></div><div><p>角色既捕食也被捕食，这个出发点让生存不只依赖操作，还涉及对环境、其他生物和行动风险的判断。</p><p><b>分析重点：</b>一次失败是否带来可迁移的认识？面对相似局面，玩家能否因为更理解规则，而选择观察、等待、绕行或尝试其他策略？</p><p><b>可继续验证：</b>围绕同一片区域的几次尝试，区分操作失误、信息未知与环境变化，再讨论提示应该补在哪里，才不会抹平探索的价值。</p><a class="sp-reference" href="https://www.rainworldgame.com/" target="_blank" rel="noopener">官方游戏介绍 ↗</a></div></article>
+<p class="sp-note">机制背景参考官方资料；设计判断为分析观点，不是开发者意图或用户测试结论。具体游玩复盘将围绕关卡截图与操作记录展开。</p></section><footer class="sp-footer"><a href="hero.html">← 返回首页</a><span>蒋维嘉 · 作品集</span><a href="#main">回到顶部 ↑</a></footer></main><script src="js/tf-nav.js"></script></body></html>

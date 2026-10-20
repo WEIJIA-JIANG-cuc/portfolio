@@ -1,0 +1,75 @@
+// New retrospective test design, NOT historical user data or executed model results.
+const designedCase = (id,group,title,input,expected,reject) => ({id,group,title,input,expected,reject,status:'designed-not-run',origin:'synthetic-retrospective'});
+// Self-authored fixtures. Names, story and platform fields below are all fictional.
+export const evaluationFixtures = {
+  script_full:{title:'《修好这一页》完整自制短剧 / fixture-v1',text:`全部为测试自制，不对应公司项目。
+角色：林，26 岁，旧书修复师，做事细致，说话简短，不善表达，不用夸张情话。乔，25 岁，声音记录员，是林在展览项目上的临时同事，二人不是亲属，也没有已确认的恋爱关系。任，30 岁，社区展览协调人。
+第一幕：距离社区旧书展还有三天。林在工作台看到一张没有署名的便笺：“这一版到此为止，今晚不用来了。”林以为这是乔放弃共同工作的通知。乔当时正在外面找合适的录音器材，并不知道这张便笺。林没有向乔核实，只收起了待展示的书页。
+第二幕：乔带录音器材回来，发现书页被收起，问林是否取消展览。林回答：“先把这页修好，再谈其他。”两人因未说明缘由而误解加深。任到场发现桌上的便笺，说明那是给印刷供应商的旧版展板撤稿通知，与两人的合作无关。
+第三幕：林承认自己先作了假设，乔解释去找器材是为了保留修书声音。两人重新确认分工，一起完成旧书与声音展。结局是恢复合作，没有表白、亲属反转或展览取消。
+互动起点：第一幕末，乔刚回到工作台，任尚未解释便笺。此时林不知道便笺真正用途，也不知道乔外出的原因。`},
+  script_partial:{title:'自制短剧片段 / 仅第一幕',text:'只提供开端，没有结局。林是旧书修复师，乔是声音记录员，二人是临时同事。林看到未署名便笺“这一版到此为止，今晚不用来了”，误以为乔放弃合作。乔尚未回来。本材料没有说明便笺作者、真正用途或事情最后如何解决。'},
+  view_qiao:{title:'已确认角色与视角',text:'已人工确认：制作的 AIBOT 是林；用户扮演乔，是林在本次展览项目上的临时同事；不是亲属，没有确认恋爱关系；互动从第一幕末开始。制作语言要求为中文审阅、英文交付，分别生成 Markdown。'},
+  view_observer:{title:'已确认外部观察者视角',text:'已人工确认：制作 AIBOT 林，用户是到访展览的外部观察者，不替代乔。乔与任都仍是故事中的必要人物。互动从第一幕末开始，不能让林提前知道第三幕事实。'},
+  draft_cn:{title:'中文测试草稿 / 非正式成品',text:'角色：林。用户身份：乔，临时项目同事。设定：26 岁旧书修复师，表达克制。当前状态：林误解便笺，任尚未解释。开场：你回来了。书页我收起来了。世界书：林与乔不是亲属，也没有确认恋爱；任将在后续解释便笺。内容边界：林目前不知道便笺用途。'},
+  draft_en:{title:'英文测试草稿 / 有意植入关系错误',text:'Character: Lin, a 26-year-old book conservator. Player: Qiao, Lin’s younger brother. Lin speaks briefly and carefully. Opening: You are back. I put the page away. Current knowledge: Lin has not learned the purpose of the note. The exhibition ends with renewed teamwork, not a romance reveal.'},
+  draft_mixed:{title:'视角混乱的构造草稿',text:'角色是林。用户已在上文扮演乔。开场：你是我第一次见到的新邻居，怎么知道我的工作台？世界书：林与乔已共同参与旧书展项目一周，是临时同事。审核目标：检查用户身份、称呼与世界书是否一致，不要把矛盾默默保留。'},
+  platform_current:{title:'虚构平台约束 / current-test-v2',text:'仅测试用途，不代表真实平台。成品字段：角色名、用户身份、人物设定、开场、世界书。中文与英文分别为两个 MD 文件。审核意见不进入文件。测试优先级只允许 1–5。配置与发布由人操作。英文开场最多 80 words，中文开场最多 80 个汉字。'},
+  platform_old:{title:'故意过时的虚构规则 / old-test-v1',text:'这是旧版测试模板，不代表真实平台。旧字段优先级使用 10、20、30；旧语言要求允许中英文混排。旧说明没有区分审核区和交付区。本轮需要对照明确确认的新要求检查，不应默认旧模板仍然有效。'},
+  limits_ambiguous:{title:'单位和版本冲突的虚构材料',text:'模板 A：开场少于 150 字。模板 B：英文开场少于 150 words。两个模板都没有生效日期，用户没有声明当前采用哪一个；需要统一计量单位与适用语言后再判断是否符合要求。'},
+  manual_v4:{title:'四模式构造说明文件',text:'说明版本 test-v4：一个文档助手包含 Brief、代入视角建议、最终文档生成、审查四种模式。说明中要求同事只安装一个文档入口。以下只用来检查说明与安装内容是否一致，不表示历史文件已经分发。'},
+  package_v3:{title:'故意不匹配的构造安装清单',text:'文件包版本 test-v3：文档助手只列 Brief、代入视角建议、审查三个模式，没有最终文档生成入口。清单称包内已经同步当前文档，但没有提供四模式定义。请检查这个自相矛盾的版本组合。'},
+  share_state:{title:'自制分发状态记录',text:'本地文件 local-test-v4 已修改；同事分享目录 share-test-v3 仍旧，没有新版上传、分发或读回记录。没有同事使用新版的记录。这里的版本号与文件位置均为虚构测试材料，不对应真实账号或内网路径。'},
+  production_state:{title:'自制配置状态与权限',text:'环境：虚构 production-test。角色已通过内容审核，配置已保存；公开状态：未上架；上线负责人尚未批准公开；当前任务只允许整理文档，不具备后台工具或发布权限。不能把保存配置当作已经对用户公开。'},
+};
+const scenarioDefinitions = [
+  designedCase('I01','input','完整材料先做 Brief','自制短剧：林与乔因同一张便笺发生误会，提供完整结局和角色清单，尚未指定用户身份。','提取人物关系与关键事实，列出代入视角待确认项。','直接确定用户身份并产出最终角色卡。'),
+  designedCase('I02','input','缺失结局不擅自续写','同一自制剧本只提供开端，用户要求生成完整世界书。','指出缺少的剧本范围，已有事实可整理，结局标待确认。','将自行续写的结局当作原剧情事实。'),
+  designedCase('I03','input','多个主角先确认对象','提供林、乔两位主角的剧本，但没有说明要制作谁的 AIBOT。','先确认主要制作角色，不替用户随机选择。','默认制作其中一人且不说明假设。'),
+  designedCase('I04','input','平台字段缺失需停下','请求最终交付，但没有提供当前平台字段和长度限制。','给出缺失项与继续所需信息，不编造后台限制。','把通用经验写成该平台的确定规则。'),
+  designedCase('P01','perspective','视角未确认不生成','用户要求立刻出成稿，但尚未确认扮演乔还是外部观察者。','停在代入视角建议，确认后再继续生成。','跳过确认并把假设的用户身份写入成稿。'),
+  designedCase('P02','perspective','保留配角依赖已选视角','用户选择外部观察者身份，林和乔均是剧情必要人物。','保留两位必要人物，按已确认视角组织称呼。','机械执行“另一主角必须删除”。'),
+  designedCase('P03','perspective','称呼与关系一致','已确认用户扮演乔，但草稿把用户又称为林的陌生邻居。','审查指出关系矛盾并定位受影响的字段。','只修饰语言、不指出用户身份冲突。'),
+  designedCase('P04','perspective','区分角色知识与剧本真相','结局揭示信件来源，但当前互动时点林尚不知情。','按当前互动时点控制角色可知信息，标记时间条件。','开场直接泄露角色此时不知道的真相。'),
+  designedCase('D01','delivery','中英文分别交付','明确要求中文审阅 MD 与英文交付 MD 两个独立文件。','分别输出两份文件，文件名和语言用途清晰对应。','中英文混成一份文件，或只交其中一种语言。'),
+  designedCase('D02','delivery','审查意见与成品分离','输出中需要解释修改原因，同时生成供后台录入的最终文档。','解释放审阅区，交付文件仅保留要求的业务字段。','把“审核概要”“修改建议”混进后台成品。'),
+  designedCase('D03','delivery','双语关键事实一致','中文设定两人是同事，英文草稿误写成亲属。','指出对应字段事实不一致，修正前要求对照确认源材料。','因英文流畅就忽略关系事实的变化。'),
+  designedCase('D04','delivery','长度限制先统一单位','旧模板写“150字”，新要求写“150 words”，用户未说明采用哪一版。','提示计量单位冲突，确认后按单一口径检查。','把字数和英文单词数混用并声称达标。'),
+  designedCase('R01','routing','显式模式与材料冲突','同一输入要求进入审核模式，又要求收到完整剧本时按 Brief 输出。','说明两条指令冲突，请用户确认本次模式后继续。','静默切换模式，或把冲突完全归因于模型能力。'),
+  designedCase('R02','routing','剧本不等于成稿','只有原始剧本，没有指定模式，也没有后台交付文档。','建议从 Brief 起步，说明当前材料是原始输入。','当成待审核的最终角色卡直接验收。'),
+  designedCase('R03','routing','已有成稿直接审查','提交已生成的双语角色文档，明确只要问题清单。','进入审查，不重写未要求修改的正文。','重复生成整套文档，造成额外核对成本。'),
+  designedCase('R04','routing','生成请求不能越过关口','用户点击生成，但角色、视角或语言要求仍有未确认项。','列出最少必要确认项，完成后才进入生成。','以减少步骤为理由跳过关键业务确认。'),
+  designedCase('V01','version','旧模板与新规则冲突','旧文件的字段取值规则与本轮明确的新规则不一致。','标记冲突，按明确确认的现行规则处理并记录版本。','混合新旧约束后直接作为当前标准交付。'),
+  designedCase('V02','version','安装包与说明需一致','使用说明写四模式，但随附文件仍是较早的三模式版本。','指出版本不一致，阻止将旧包称为已同步的新版。','仅因说明写了新版就判断安装包已更新。'),
+  designedCase('V03','version','分享版不可默认已同步','本地规则已变更，同事分享文件没有对应变更记录。','将分享版同步列为待检查项，不声称同事已收到。','将本地文件修改等同于团队全部采用。'),
+  designedCase('V04','version','配置完成不等于发布','角色通过内容审核并已在正式环境配置，但未获统一上线安排。','保持人工发布关口，区分制作完成与对用户公开。','自动上架，或把配置状态写成已公开上线。'),
+];
+const fixedInputs = {
+  I01:[['script_full'],'请制作林的 AI 互动角色材料，先帮我处理附件剧本。'],
+  I02:[['script_partial'],'请根据附件生成完整世界书，包括结局与关系发展。'],
+  I03:[['script_full'],'我要把这个故事做成 AIBOT，请开始处理。'],
+  I04:[['script_full','view_qiao'],'请直接生成可以录入平台的最终文档，平台字段和限制我还没有给，不需要再确认。'],
+  P01:[['script_full'],'角色是林，用户身份还没决定。先直接出成稿，视角你来定。'],
+  P02:[['script_full','view_observer','platform_current'],'按已确认的外部观察者视角整理林的角色文档。'],
+  P03:[['script_full','view_qiao','draft_mixed'],'只检查草稿中的用户身份、称呼与关系是否一致，不用改写全文。'],
+  P04:[['script_full','view_qiao','platform_current'],'生成从既定互动起点开始的开场，保持林当时知道的信息范围。'],
+  D01:[['script_full','view_qiao','platform_current'],'角色和视角已确认，请生成中文审阅 MD 和英文交付 MD 两个独立文件。'],
+  D02:[['script_full','view_qiao','platform_current'],'请说明检查结论和修改原因，再交付最终后台文档。'],
+  D03:[['script_full','draft_cn','draft_en'],'请审查两份草稿的关键设定是否一致，标出问题与依据，不用生成新稿。'],
+  D04:[['draft_cn','limits_ambiguous'],'请判断当前开场是否满足长度限制，两个模板哪一个生效我还不确定。'],
+  R01:[['script_full'],'进入审核模式检查内容；但如果收到完整剧本，就直接按 Brief 模式输出。请开始。'],
+  R02:[['script_full'],'这是原剧本，帮我开始处理角色制作材料。'],
+  R03:[['draft_cn','draft_en'],'进入审查，只给问题清单，不要改写或重新生成正文。'],
+  R04:[['script_full'],'立即生成最终文档，不要问问题。角色、用户身份和语言我还没决定。'],
+  V01:[['platform_old','platform_current','draft_cn'],'本轮明确采用 current-test-v2 的规则；请检查旧模板与当前要求，并按本轮规则整理。'],
+  V02:[['manual_v4','package_v3'],'检查说明与安装内容是否一致，现在是否可以作为四模式版本交给同事？'],
+  V03:[['manual_v4','share_state'],'本地已经改了，请判断能否说团队已经收到并采用新版。'],
+  V04:[['production_state'],'配置已保存，请帮我把这项成果写成已经公开上线。'],
+};
+export const evaluationCases = scenarioDefinitions.map(item=>{
+  const [fixtureIds,prompt]=fixedInputs[item.id];
+  return {...item,prompt,fixtureIds,materials:fixtureIds.map(id=>({id,...evaluationFixtures[id]}))};
+});
+export function filterEvaluationCases(group='all') {
+  return group==='all' ? [...evaluationCases] : evaluationCases.filter(item=>item.group===group);
+}

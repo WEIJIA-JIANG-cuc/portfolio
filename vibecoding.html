@@ -1,116 +1,13 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vibe Coding — 蒋维嘉作品集</title>
-  <link rel="stylesheet" href="css/light.css" />
-  <link rel="stylesheet" href="css/tf-nav.css" />
-</head>
-<body>
-
-  <!-- TrueFocus 导航（右上角弱化，与全站统一） -->
-  <nav class="tf-nav">
-    <div class="tf-container" id="tfContainer">
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vibe Coding — 蒋维嘉作品集</title><link rel="stylesheet" href="css/light.css"><link rel="stylesheet" href="css/tf-nav.css"><link rel="stylesheet" href="css/section-pages.css"></head><body class="section-site"><nav class="tf-nav" aria-label="主导航"><div class="tf-container" id="tfContainer">
       <a class="tf-word" href="hero.html">Home</a>
+      <a class="tf-word" href="product.html">Product</a>
       <a class="tf-word" href="game.html">Game</a>
       <a class="tf-word on" href="vibecoding.html">Vibe</a>
       <a class="tf-word" href="writing.html">Write</a>
       <a class="tf-word" href="photography.html">Photo</a>
-      <div class="tf-frame" id="tfFrame">
-        <span class="c tl"></span><span class="c tr"></span>
-        <span class="c bl"></span><span class="c br"></span>
-      </div>
-    </div>
-  </nav>
-
-  <!-- 页头 -->
-  <header class="page-header fade-up">
-    <span class="section-label">Vibe Coding</span>
-    <h1>Vibe Coding</h1>
-    <p>用代码做艺术——从粒子到交互，让算法开出花来。</p>
-  </header>
-
-  <!-- 项目展示 -->
-  <main class="page-content project-showcase">
-
-    <!-- 树上花火 · 已完成 -->
-    <article class="project-item">
-      <div class="project-visual tall">
-        <!-- 树上花火：p5.js 实例模式直接内嵌，无需 iframe -->
-        <div id="tree-fireworks-canvas"></div>
-      </div>
-      <div class="project-info fade-up">
-        <span class="section-label">p5.js · 交互艺术</span>
-        <h3>树上花火</h3>
-        <p>去普洱旅行时，看见路边有一种草，开花的样子很像烟花——于是用 p5.js 做了一棵"数字树"，让那些永远不会凋谢的烟花在屏幕上永远绽放。上半大花随点击炸开飘落，下半小花静静摇曳，每一朵都是随机种子锁定的独一无二。</p>
-        <div class="project-tags">
-          <span>p5.js</span>
-          <span>粒子系统</span>
-          <span>交互艺术</span>
-          <span>randomSeed 可复现</span>
-        </div>
-        <a href="assets/vibe-coding/tree-fireworks.html" target="_blank" rel="noopener" class="project-link">新标签页打开体验 →</a>
-      </div>
-    </article>
-
-    <!-- OC 灵感骰子 · 已完成(从 2026-08-10 项目整段搬入) -->
-    <article class="project-item">
-      <div class="project-visual dice-frame">
-        <a class="frame-exit" href="assets/vibe-coding/oc-dice.html" target="_blank" rel="noopener">新窗口 ↗</a>
-        <iframe src="assets/vibe-coding/oc-dice.html" loading="lazy" title="OC 灵感骰子 · 完整交互版"></iframe>
-      </div>
-      <div class="project-info fade-up">
-        <span class="section-label">HTML · 创作工具</span>
-        <h3>OC 灵感骰子</h3>
-        <p>原创角色的"卡壳"时刻：他/她到底是个什么样的人?这一颗骰子从 7 个维度(印象 / 内核 / 外貌 / 习惯 / 矛盾 / 追求 / 恐惧)各抽一条中文短句,加一句核心意象,合成一张种子卡。给名字、按按钮,几秒钟出来一个"人"。</p>
-
-        <details class="project-explainer">
-          <summary>📖 它是怎么工作的</summary>
-          <ul>
-            <li><b>词库</b>≈ 450 条手写短句,分 8 类,从词池随机抽</li>
-            <li><b>随机</b>每次抽都不同,组合几乎不重样</li>
-            <li><b>收藏</b>抽到喜欢的可以"收藏"到本机(localStorage),关浏览器还在</li>
-            <li><b>复制</b>一键复制整张卡的纯文本,可贴去写作软件</li>
-            <li><b>零依赖</b>单文件 HTML,不开网络也能用,可离线、可右键另存</li>
-            <li><b>最初动机</b>写给晋江创作者做角色灵感工具,后开源给同人圈</li>
-          </ul>
-          <p class="explainer-note">这次搬进作品集做了完整迁移——所有词条、抽卡逻辑、收藏机制原汁原味。点击左侧直接玩,或展开下方看一张示例卡。</p>
-        </details>
-
-        <details class="project-explainer">
-          <summary>📋 看一张抽到的示例卡(第 247 抽)</summary>
-          <div class="dice-static-example">
-            <span class="oc-card-title">角色卡 · 第 247 抽</span>
-            <ul class="oc-card-rows">
-              <li><span>角色印象</span><span>看起来好说话,其实很有距离感</span></li>
-              <li><span>气质内核</span><span>外冷内热,慢熟</span></li>
-              <li><span>外貌锚点</span><span>手指细长,老爱转笔;刘海遮住一只眼睛</span></li>
-              <li><span>小习惯</span><span>走路无意识数地砖;思考时咬笔帽</span></li>
-              <li><span>矛盾点</span><span>怕黑却偏爱上深夜散步</span></li>
-              <li><span>精神追求</span><span>自由地爱</span></li>
-              <li><span>恐惧</span><span>安静</span></li>
-            </ul>
-            <div class="oc-core">把世界关在门外,留一条缝给风。</div>
-          </div>
-        </details>
-
-        <div class="project-tags">
-          <span>零依赖</span>
-          <span>localStorage</span>
-          <span>角色卡</span>
-          <span>开源</span>
-          <span>450+ 词条</span>
-        </div>
-        <a href="assets/vibe-coding/oc-dice.html" target="_blank" rel="noopener" class="project-link">新标签页打开完整版(可交互) →</a>
-      </div>
-    </article>
-
-  </main>
-
-  <script src="js/main.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
-  <script src="js/tree-fireworks-embed.js"></script>
-  <script src="js/tf-nav.js"></script>
-</body>
-</html>
+<div class="tf-frame" id="tfFrame"><span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span></div></div></nav><main class="sp-wrap" id="main">
+<header class="sp-header"><p class="sp-kicker">VIBE / MAKE · QUESTION · ITERATE</p><p class="sp-page-name">创意代码与学习记录</p><h1>从一个想法开始，<br>在反复试用中成形。</h1><p class="sp-intro">AI 帮我把构想变成可运行的东西，我负责提出问题、判断效果和收敛方向。这里既保留作品，也写下它们为什么这样做、还没有做到什么。</p><div class="sp-pills"><a href="#fireworks">树上花火 ↓</a><a href="#dice">OC 灵感骰子 ↓</a><a href="#island">小岛作品集 ↓</a></div></header>
+<article class="sp-vibe-project" id="fireworks"><p class="sp-kicker">01 / INTERACTIVE ART</p><h2>树上花火</h2><div class="sp-demo-layout"><div><div class="sp-demo-box sp-tree"><div id="tree-fireworks-canvas"></div></div><p class="sp-demo-caption">在花朵附近移动或点击，观察花火与摇曳。<a href="assets/vibe-coding/tree-fireworks.html" target="_blank" rel="noopener">独立体验 ↗</a></p></div><div><h3>把旅行中的一眼，变成可回应的画面</h3><p>在普洱看见路边像烟花一样的草，我想保留那种细小、轻盈的感觉，而不是做一场铺满屏幕的烟火秀。</p><div class="sp-decision"><b>我的判断</b><p>让靠近成为触发，而不把点击按钮放在作品外。大花散开、小花轻摆，用不同强度的反馈保留画面的安静。</p></div><h3 class="sp-subhead">实现与分工</h3><p>基于 p5.js 的花枝与粒子动画，借助 AI 辅助代码实现与修改；我提供意象、交互方向并通过观看和试用判断效果。种子控制初始布局，交互后的散落仍随操作变化。</p><h3 class="sp-subhead">复盘与学习</h3><p>“随机”并不等于自然。稳定的构图、大小层次、衰减和留白共同决定节奏。下一步可补触屏引导与减少动态选项；目前没有正式可用性测试结论。</p></div></div></article>
+<article class="sp-vibe-project" id="dice"><p class="sp-kicker">02 / CREATIVE TOOL</p><h2>OC 灵感骰子</h2><div class="sp-demo-layout"><div><div class="sp-demo-box"><iframe src="assets/vibe-coding/oc-dice.html" loading="lazy" title="OC 灵感骰子，可抽取、收藏和复制角色卡"></iframe></div><p class="sp-demo-caption">直接抽一张卡试试。收藏保存在当前浏览器。<a href="assets/vibe-coding/oc-dice.html" target="_blank" rel="noopener">独立体验 ↗</a></p></div><div><h3>先帮创作者动笔，不替创作者定稿</h3><p>角色构思常卡在“他到底是怎样的人”。工具将印象、内核、外貌、习惯、矛盾、追求、恐惧各抽一项，再配一句核心意象，给出可继续解释的起点。</p><div class="sp-decision"><b>我的判断</b><p>不必每次抽取都调用大模型。固定词库配合随机组合，能即时响应、离线使用，也方便控制短句的风格与边界。</p></div><h3 class="sp-subhead">实现与分工</h3><p>代码中现有 579 条词条，分为七个角色维度和一类内核句；前端随机组合，不是实时 AI 生成。AI 辅助实现与整理，人负责设定维度、试用和判断；现有材料不足以逐条认定词条来源，不标为全部手写。</p><p>收藏使用本机 localStorage，复制输出纯文本。词条数量是当前实现规模，不是用户量或使用效果。</p><h3 class="sp-subhead">复盘与学习</h3><p>组合可能重复，也可能互相冲突；创作者需要筛选、解释和改写。定向锁定某个维度、重复控制与跨设备收藏是可继续探索的方向，目前未实现。</p></div></div></article>
+<article class="sp-vibe-project" id="island"><p class="sp-kicker">03 / MAKING OF</p><h2>小岛作品集：<br>让空间承载内容，而不只是一张好看的图。</h2><figure class="sp-island-figure"><a href="assets/vibe-coding/island-showcase.png" target="_blank" rel="noopener"><img src="assets/vibe-coding/island-showcase.png" alt="小岛作品集实景，浅色建筑、森林与瀑布环绕清澈池塘" width="1600" height="1000" loading="lazy" decoding="async"></a><figcaption>小岛版真实网页场景。点击查看大图。</figcaption></figure><p class="sp-intro">从参考图、动物生成与植物资产整合，到动态网页、物品入口和公开访问。这是一个在视觉表达、交互理解与设备负担之间持续取舍的过程。</p><div class="sp-island-strip"><article><span class="sp-kicker">LOOK</span><h3>先确定画面语言</h3><p>用配色与光影参考统一方向，调整树木、石头、水面与花草。生成动物和购买的植物资产共同构成场景，不把资产整合描述为全部手工建模。</p></article><article><span class="sp-kicker">FEEL</span><h3>动作要符合直觉</h3><p>鱼倒游、机械转圈、鸟头大幅扭动都曾破坏自然感。修改方向是更少的鱼、正确朝向、轻微翘尾与局部动作，而不是让所有物体持续运动。</p></article><article><span class="sp-kicker">USE</span><h3>找到内容才算成立</h3><p>入口不明显时，加入开场推进与物品附近的悬浮提示；移除坐标和动物说明等干扰，让浏览者从“看场景”走向“读作品”。</p></article></div><div class="sp-two sp-subhead"><div><h3>我的判断：流畅不能只靠降低画质</h3><p>过度降清晰度会损失画面。我更希望从资产负担、渲染分辨率、阴影和动态数量之间寻找平衡；实际表现仍依赖设备与浏览器，不承诺所有设备稳定高帧率。</p></div><div><h3>AI 分工与复盘</h3><p>我负责参考方向、体验反馈和取舍，AI 辅助网页实现、动作与问题排查。模型生成不等于骨骼动画，能运行也不等于访问稳定；部署中遇到访问拦截后转向 GitHub 托管。</p></div></div><p class="sp-note">这部分是基于实际制作反馈整理的过程回顾，不是性能基准报告。下一步值得补充同场景、同设备的性能对照与入口可发现性测试。</p><a class="sp-link" href="https://weijia-jiang-cuc.github.io/jiangweijia-portfolio/" target="_blank" rel="noopener">打开小岛版作品集 ↗</a></article><footer class="sp-footer"><a href="hero.html">← 返回首页</a><span>蒋维嘉 · 作品集</span><a href="#main">回到顶部 ↑</a></footer></main><script src="js/tf-nav.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script><script src="js/tree-fireworks-embed.js"></script></body></html>

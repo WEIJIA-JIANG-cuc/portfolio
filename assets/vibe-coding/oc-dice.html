@@ -148,7 +148,7 @@ function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 
 function draw(){
   const name = document.getElementById("ocName").value.trim();
-  const title = name ? ("角色卡 · " + name) : ("角色卡 · 第 " + (Math.floor(Math.random()*900)+100) + " 抽");
+  const title = name ? ("角色卡 · " + name) : "角色卡 · 灵感种子";
   const lines = KEYS.map(k => ({lab:LAB[k], val:pick(BANK[k])}));
   const core = pick(BANK.内核句);
   current = {title, lines, core};

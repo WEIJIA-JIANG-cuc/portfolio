@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="蒋维嘉的 StoReel 实习案例：从 Canvas 体验问题，到新手引导原型、AIBOT SOP 与 Skill 工作流迭代。">
+  <title>StoReel · 从问题到工作流 — 蒋维嘉作品集</title>
+  <link rel="stylesheet" href="css/light.css">
+  <link rel="stylesheet" href="css/tf-nav.css">
+  <link rel="stylesheet" href="css/storeel.css">
+  <script src="js/tf-nav.js" defer></script>
+  <script src="js/storeel-app.js" defer></script>
+</head>
+<body class="storeel-page">
+  <a class="sr-skip" href="#main">跳到正文</a>
+  <nav class="tf-nav" aria-label="作品集导航">
+    <div class="tf-container" id="tfContainer">
+      <a class="tf-word" href="hero.html">Home</a>
+      <a class="tf-word on" href="product.html">Product</a>
+      <a class="tf-word" href="game.html">Game</a>
+      <a class="tf-word" href="vibecoding.html">Vibe</a>
+      <a class="tf-word" href="writing.html">Write</a>
+      <a class="tf-word" href="photography.html">Photo</a>
+      <div class="tf-frame" id="tfFrame" aria-hidden="true"><span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span></div>
+    </div>
+  </nav>
+
+  <main id="main" class="sr-wrap">
+    <header class="sr-hero">
+      <div class="sr-eyebrow">INTERNSHIP / 2026.07—09</div>
+      <div class="sr-hero-grid">
+        <div>
+          <h1>StoReel<span>从问题，到工作流。</span></h1>
+          <p class="sr-deck">把「这里不好用」说清楚，<br>再把 AI 能做的事，变成别人也能用的流程。</p>
+          <p class="sr-intro">从真实制作和试用中发现问题，到拆分 AI 与人工的任务，再通过原型、SOP 和 Skill 迭代交付。本页进一步展开选型取舍、失败记录和质量判断，让工作过程不止停在「做出了一个 Demo」。</p>
+          <div class="sr-actions"><a class="sr-button" href="#canvas">阅读案例 <span aria-hidden="true">↘</span></a><a class="sr-text-link" href="assets/storeel/StoReel-Case-Study.pdf" target="_blank" rel="noopener">PDF 查阅版 ↗</a></div>
+        </div>
+        <figure class="sr-hero-image">
+          <div class="sr-image-top"><span>CANVAS / ONBOARDING</span><span>原型存档</span></div>
+          <a href="assets/storeel/canvas-entry.png" target="_blank" rel="noopener" aria-label="查看 Canvas 两类入口原型的大图（新窗口）"><img src="assets/storeel/canvas-entry.png" width="1440" height="900" alt="Canvas 新手引导 HTML 原型，首页保留一键短剧与自由画布两个入口。" fetchpriority="high"></a>
+          <figcaption>不是增加更多入口，而是帮用户找到第一步。<span>点击查看原图 ↗</span></figcaption>
+        </figure>
+      </div>
+      <dl class="sr-meta">
+        <div><dt>我的角色</dt><dd>海外 AI 互动运营实习生</dd></div>
+        <div><dt>工作范围</dt><dd>体验反馈 · 引导原型 · 内容工作流</dd></div>
+        <div><dt>协作方式</dt><dd>人工定义与审核 + AI 辅助产出</dd></div>
+        <div><dt>交付形态</dt><dd>反馈文档 / HTML / SOP / Skill</dd></div>
+      </dl>
+    </header>
+
+    <nav class="sr-section-nav" aria-label="案例目录">
+      <a href="#canvas">01 <span>产品体验</span></a><a href="#sop">02 <span>流程标准化</span></a><a href="#skill">03 <span>AI 与评估</span></a><a href="#practice">04 <span>内容与协作</span></a>
+    </nav>
+
+    <section class="sr-overview sr-section" aria-labelledby="overview-title">
+      <div class="sr-eyebrow">THE THROUGHLINE</div>
+      <h2 id="overview-title">我的工作，不止于「做出来」。</h2>
+      <p class="sr-section-lead">业务一端是把剧本与角色素材转成可互动的 AIBOT，另一端是让创作者理解并使用 Canvas。我经常站在流程中间：自己先走一遍，找出卡点，再把经验转成可讨论的问题、可体验的方案和可复用的规则。</p>
+      <div class="sr-deliverables">
+        <a href="#canvas"><span class="sr-no">01</span><h3>把问题讲清楚</h3><p>从教程难找、操作无提示，到起步路径的重新组织。</p><span class="sr-delivery">结构化反馈 + 引导原型 ↘</span></a>
+        <a href="#sop"><span class="sr-no">02</span><h3>把经验交接出去</h3><p>不只写生成步骤，也写审核、测试和正式配置的边界。</p><span class="sr-delivery">制作 SOP + 新人导引 ↘</span></a>
+        <a href="#skill"><span class="sr-no">03</span><h3>把 AI 放在合适的位置</h3><p>从一键生成的期待，走向分阶段辅助与人工确认。</p><span class="sr-delivery">Skill 试用与迭代 ↘</span></a>
+      </div>
+      <div class="sr-reading-note"><strong>怎么读这份案例</strong><p>先看问题和取舍，再看实现与失败。历史工作依据原始存档；选型分析是本次复盘补充；20 条评估用例是本次新设计、尚未运行模型评测。三者不混写成同一阶段的成果。</p><a href="#evaluation">直接看质量标准与测试设计 ↘</a></div>
+    </section>
+
+    <section id="canvas" class="sr-section sr-case" aria-labelledby="canvas-title">
+      <div class="sr-case-heading"><span class="sr-case-number">01</span><div><div class="sr-eyebrow">CANVAS / PRODUCT EXPERIENCE</div><h2 id="canvas-title">新手需要的不是更多入口，<br>而是知道从哪里开始。</h2><p>产品体验反馈 · 竞品观察 · 新手路径与 HTML 原型</p></div></div>
+      <div class="sr-two-col sr-case-context">
+        <div><h3>从一个具体障碍开始</h3><p>一位使用过其他 AI 创作工具的客户，仍然需要 Canvas 的完整操作培训；而我初次接触节点画布，只想先做一张图或一段图生视频。这不是同一种任务，也不应该被推入同一条完整短剧流程。</p></div>
+        <div class="sr-note"><span class="sr-small-label">原始反馈里的两个细节</span><p>教程放在自动轮播 Banner 里，切走后不容易再找到；画布缺少「右键创建节点」的提示。</p><p class="sr-note-last">教程存在，不代表用户能在需要时找到它。</p></div>
+      </div>
+      <h3 class="sr-subtitle">先拆问题，再提方案</h3>
+      <div class="sr-problem-rows">
+        <div><span>发现入口</span><p>把帮助内容从「偶然看见」改为随时可达的固定入口。</p></div>
+        <div><span>理解操作</span><p>在创建节点、查看结果等当下步骤给提示，而不是让用户通读文档。</p></div>
+        <div><span>匹配任务</span><p>完整短剧保留流程引导；单点生成提供轻量起步路径，并允许跳过。</p></div>
+      </div>
+      <div class="sr-decision"><span class="sr-small-label">一次真实的取舍</span><h3>我把自己增加的入口，又合并了回去。</h3><p>早期原型尝试按任务增加多个首屏按钮。查看后，我发现其中几个最终都通向自由画布，「示例」也与一键短剧重叠。于是保留原有两类模式，将具体任务放进自由画布内部；一键短剧则把「可以使用示例剧本」说清楚。</p><p>竞品调研提供了任务分流、跟练、可复制教学画布等方向，但我没有把这些能力全部叠上去。这个阶段更需要减少重复选择，保留熟练用户的自由操作。</p></div>
+      <div class="sr-demo" aria-labelledby="canvas-demo-title">
+        <div class="sr-demo-head"><div><span class="sr-small-label">交互示意</span><h3 id="canvas-demo-title">如果你现在想……</h3></div><span class="sr-demo-tag">仅演示路径，不调用生成服务</span></div>
+        <div class="sr-choice-row" role="group" aria-label="选择创作任务">
+          <button type="button" data-canvas="image" aria-pressed="true">先生成一张图</button><button type="button" data-canvas="reference" aria-pressed="false">让参考图动起来</button><button type="button" data-canvas="drama" aria-pressed="false">体验完整短剧</button>
+        </div>
+        <div class="sr-route" aria-live="polite" aria-atomic="true"><span class="sr-route-from">你的目标</span><span class="sr-route-arrow" aria-hidden="true">→</span><strong id="canvas-entry">自由画布</strong><span class="sr-route-arrow" aria-hidden="true">→</span><strong id="canvas-start">快速生图</strong></div>
+        <p id="canvas-explanation" class="sr-demo-explanation">先完成一次单点生成，再按需要探索节点；不必先准备完整剧本。</p>
+      </div>
+      <figure class="sr-evidence-image"><a href="assets/storeel/canvas-free.png" target="_blank" rel="noopener" aria-label="查看自由画布轻启动原型的大图（新窗口）"><img src="assets/storeel/canvas-free.png" width="1440" height="900" loading="lazy" alt="原始 HTML 原型中的自由画布轻启动面板，含快速生图、参考图生视频和角色三视图等选项。"></a><figcaption><span>原始 HTML 原型实拍 · 点击可放大 ↗</span>自由画布内再按任务分流，首屏不重复设入口。截图为方案原型，并非正式产品上线画面。</figcaption></figure>
+      <div class="sr-outcome"><div><span class="sr-small-label">我的判断与工作</span><p>整理实际反馈、比较竞品起步方式，提供业务逻辑和修改要求，评审 AI 实现的页面并收敛入口。</p></div><div><span class="sr-small-label">交付与状态</span><p>已交付反馈与优化建议、方案说明、HTML 交互原型及 Banner 原型。本案例的交付范围是方案与原型，后续仍需正式开发与任务测试验证。</p></div></div>
+      <div class="sr-method-note"><strong>复盘判断：这里不需要再加一个 AI。</strong><p>教程难找和入口重复，优先靠信息层级、固定入口和清晰提示解决。AI 辅助实现原型，不等于产品需要用模型替用户决定创作目标。验证应看用户能否选对路径、找到下一步，而不是模型生成得是否流畅。</p></div>
+    </section>
+
+    <section id="sop" class="sr-section sr-case" aria-labelledby="sop-title">
+      <div class="sr-case-heading"><span class="sr-case-number">02</span><div><div class="sr-eyebrow">AIBOT / KNOWLEDGE TRANSFER</div><h2 id="sop-title">SOP 要交接的，<br>不只是「下一步点哪里」。</h2><p>制作流程归纳 · 双重审核 · 测试与正式环境检查</p></div></div>
+      <p class="sr-section-lead">在实际跟做角色、熟悉团队既有规范后，我将制作过程整理成新人可以查阅的 SOP。AI 帮我搭建文档框架，我负责补齐真实操作、截图、字段和风险提示，再组织成新人导引与资料索引。</p>
+      <ol class="sr-process" aria-label="AIBOT 制作流程">
+        <li><span>01</span><h3>准备输入</h3><p>按世界观归档剧本、角色参考图，区分文字和图片输入。</p></li>
+        <li><span>02</span><h3>生成与筛选</h3><p>文字、图片分支处理，人工检查设定与画面适配。</p></li>
+        <li><span>03</span><h3>双重审核</h3><p>先自审，再提交负责人；通过后进入测试配置。</p></li>
+        <li><span>04</span><h3>测试与交付</h3><p>实聊测试、跨端检查，再配置正式环境并登记 ID。</p></li>
+      </ol>
+      <div class="sr-two-col sr-environments">
+        <div><span class="sr-small-label">测试环境</span><h3>上架，才能进入测试。</h3><p>检查世界书与好感度绑定，实际对话验证角色表现，再用手机确认背景的裁切与显示。</p></div>
+        <div><span class="sr-small-label">正式环境</span><h3>配置完成，不等于公开上线。</h3><p>按 SOP 配置后保持下架，等待统一安排。两套后台外观接近，因此把环境辨识与状态检查写成明确关口。</p></div>
+      </div>
+      <div class="sr-decision"><span class="sr-small-label">为什么这件事值得写</span><h3>把隐性的出错点，变成显性的检查点。</h3><p>图片比例正确，也可能在手机端被截掉；内容审核通过，也可能绑定错世界书；表格里填「已完成」，也不代表角色已经对用户开放。SOP 的价值，是把这些状态区别写清楚，让交付能被核对，而不是依赖口头提醒。</p></div>
+      <div class="sr-outcome"><div><span class="sr-small-label">我的贡献</span><p>将亲身制作经验与团队规范整理为完整步骤，补充审核责任、环境状态、跨端检查与角色 ID 追踪。</p></div><div><span class="sr-small-label">交付与状态</span><p>交付完整 SOP，供新人带教与同类制作任务查阅，继续整理新人导引及资料索引；未对培训耗时和错误率做量化测量。</p></div></div>
+    </section>
+
+    <section id="skill" class="sr-section sr-case" aria-labelledby="skill-title">
+      <div class="sr-case-heading"><span class="sr-case-number">03</span><div><div class="sr-eyebrow">AIBOT / AI WORKFLOW</div><h2 id="skill-title">好的 Skill，<br>也要知道什么时候停下来。</h2><p>输入约束 · 输出边界 · 实际试用反馈驱动的迭代</p></div></div>
+      <p class="sr-section-lead">初代 Skill 希望把剧本处理成可交付的角色文档。但在试用中，「能生成」与「同事能省心地使用」之间出现了距离：中英文输出不符合要求、审查信息混入成品，以及新人觉得改动成本仍然偏高。</p>
+      <div class="sr-decision"><span class="sr-small-label">AI OPPORTUNITY / 复盘补充</span><h3>适合 AI 的是语义整理，适合规则的是交付边界。</h3><p>剧本之间人物关系和表达方式不同，拆解、候选视角和语言改写适合让 AI 辅助；文件语言、必填字段、环境状态和审核权限则需要明确规则。目标不是让 AI 包办一切，而是减少重复整理，同时不把关键业务判断交出去。</p></div>
+      <div class="sr-table-wrap"><table class="sr-ownership sr-selection"><caption>复盘中的方案比较，不冒充当时进行过正式选型实验</caption><thead><tr><th scope="col">做法</th><th scope="col">适合什么 / 为什么这样取舍</th></tr></thead><tbody><tr><th scope="row">单次 Prompt</th><td>适合一次性的明确任务；但每次重述规则、共享版本和核对成品都依赖个人习惯。</td></tr><tr><th scope="row">Skill + 分阶段辅助</th><td>保留可复用约束与材料处理顺序，在不确定的位置停下来。实际工作中做过制作、试用和迭代，并不等于底层模型经过专门训练。</td></tr><tr><th scope="row">SOP + 人工检查</th><td>固定操作与审核责任用检查清单表达。后台配置、环境切换和最终发布不交给模型自行决定。</td></tr><tr><th scope="row">更复杂的系统</th><td>没有材料支持已实现 RAG、模型微调或多 Agent 自动化。本案例不补写这些架构；下一步先验证现有输入、输出和确认关口。</td></tr></tbody></table></div>
+      <div class="sr-timeline">
+        <article><span>08.05 / 初代制作</span><h3>先把产出格式约束住</h3><p>围绕角色文档和图片提示词搭建 Skill；从实际生成中发现双语输出与成品边界问题。</p></article>
+        <article><span>08.12 / 试用反馈</span><h3>从全自动，转向分步辅助</h3><p>新人反馈修改仍然费力，于是调整为 Brief、代入视角建议、审查三种辅助模式，把关键选择交还给人。</p></article>
+        <article><span>08.17 / 总入口迭代</span><h3>补齐生成，但不跳过判断</h3><p>再加入最终文档生成，形成四模式总入口，避免同事在两套 Skill 间切换。保留人工确认和最终审核。</p></article>
+      </div>
+      <div class="sr-demo sr-skill-demo" aria-labelledby="skill-demo-title">
+        <div class="sr-demo-head"><div><span class="sr-small-label">工作流演示</span><h3 id="skill-demo-title">同一个入口，不同的协助深度。</h3></div><span class="sr-demo-tag">规则示意，不是在线 AI</span></div>
+        <div class="sr-choice-row" role="group" aria-label="选择材料状态"><button type="button" data-skill="script" aria-pressed="true">我有原始剧本</button><button type="button" data-skill="draft" aria-pressed="false">我有待检查的成稿</button></div>
+        <ol class="sr-skill-stages" aria-label="Skill 四阶段"><li data-stage="brief" class="is-active"><span>01</span><strong>拆解 Brief</strong><small>提取角色与约束</small></li><li data-stage="perspective" class="is-active"><span>02</span><strong>代入视角建议</strong><small>给出选择与理由</small></li><li data-stage="generate"><span>03</span><strong>生成双语文档</strong><small>按确认结果交付</small></li><li data-stage="review"><span>04</span><strong>审查与人工复核</strong><small>问题清单与成品分离</small></li></ol>
+        <div class="sr-confirmation" id="skill-gate"><label><input type="checkbox" id="perspective-confirmed"> 我已人工确认角色与用户的代入关系</label></div>
+        <p id="skill-explanation" class="sr-demo-explanation" aria-live="polite">当前停在视角确认：先判断用户扮演谁、与角色是什么关系，再生成正式文档。</p>
+      </div>
+      <div class="sr-two-col sr-case-context"><div><h3>我设计的，不只是一段提示词</h3><p>输入需要说明材料、角色和用户关系；过程中需要确认门槛；输出要把审查意见与最终交付分开。对话测试暴露的问题，再回到规则和措辞里修改。</p></div><div><h3>哪些判断不能交给 AI</h3><p>角色是否符合原剧情、用户代入是否合理、语气是否稳定、生成图是否适配场景，都需要人工对照材料与实际测试。工具不能替负责人决定审核通过，也不能自行公开角色。</p></div></div>
+      <h3 class="sr-subtitle" id="failure-cases">从失败里，具体改了什么？</h3>
+      <p class="sr-section-lead">以下是历史反馈与迭代记录可支持的问题。原因栏是本次复盘分析，不把可能机制当作已定位的模型内部原因；改了规则，也不等于已经证明问题消失。</p>
+      <div class="sr-failures">
+        <article><div class="sr-failure-head"><span class="sr-small-label">08.05 / 交付格式</span><h4>要求两份文件，实际只拿到一份。</h4></div><dl><div><dt>问题</dt><dd>试用反馈指出中英文没有分别输出成 MD，后续交接还需要人工拆分。</dd></div><div><dt>判断</dt><dd>「双语」不能只作为内容要求，还要明确文件数量、命名和用途。</dd></div><div><dt>改动</dt><dd>强化中文审阅、英文交付两个文件的输出契约。</dd></div><div><dt>结果边界</dt><dd>规则修改有记录；未找到新版逐例通过率。</dd></div></dl></article>
+        <article><div class="sr-failure-head"><span class="sr-small-label">08.06 / 成品污染</span><h4>审核概览混进了最终文档。</h4></div><dl><div><dt>问题</dt><dd>解释和审核信息混入交付内容，不能直接作为目标成品使用。</dd></div><div><dt>判断</dt><dd>讨论用的说明与后台需要的正文，面向的读者和使用位置不同。</dd></div><div><dt>改动</dt><dd>审核说明留在对话中，最终文件只保留后台所需内容。</dd></div><div><dt>结果边界</dt><dd>交付边界已写入要求；是否稳定遵守仍需回归测试。</dd></div></dl></article>
+        <article><div class="sr-failure-head"><span class="sr-small-label">08.12 / 新人试用反馈</span><h4>工具能生成，新人却觉得改得更多。</h4></div><dl><div><dt>问题</dt><dd>当时本人转述新人反馈：修改仍费力，体验未必优于直接提示词；不是独立用户访谈结论。</dd></div><div><dt>判断</dt><dd>自动生成越多，不一定代表人工核对与返工越少。</dd></div><div><dt>改动</dt><dd>转向 Brief、视角和审查辅助，之后再将最终生成并入统一入口。</dd></div><div><dt>结果边界</dt><dd>产品方向与文件发生变化，未量化新人返工改善。</dd></div></dl></article>
+        <article><div class="sr-failure-head"><span class="sr-small-label">08.17 / 路由歧义</span><h4>显式审核指令，与剧本输入打架。</h4></div><dl><div><dt>问题</dt><dd>同一提示词同时要求审核模式和「完整剧本按 Brief 输出」，实际处理与本人期待不同。</dd></div><div><dt>判断</dt><dd>这是指令优先级与材料类型冲突，不能简单归因于模型不聪明。</dd></div><div><dt>补充设计</dt><dd>遇到冲突先说明并确认模式，新增为回归用例 R01。</dd></div><div><dt>结果边界</dt><dd>这条确认策略属于本次补充，未声称历史版本已修复并通过验证。</dd></div></dl></article>
+      </div>
+      <div id="evaluation" class="sr-evaluation">
+        <div class="sr-eyebrow">EVALUATION / 本次复盘新增设计</div><h3>先定义什么叫可用，再讨论 AI 做得好不好。</h3>
+        <p>当时有实际试用和审核，但没有找到完整评测集。本次补充一份可执行的评估方案，用于说明下一轮怎样验证，不补造历史分数。</p>
+        <div class="sr-table-wrap"><table class="sr-ownership sr-rubric"><caption>拟采用的五个观察维度</caption><thead><tr><th scope="col">维度</th><th scope="col">看什么证据</th></tr></thead><tbody><tr><th scope="row">素材忠实度</th><td>关键关系与剧情事实能对应输入；缺失信息要说明，不把续写当作原剧情。</td></tr><tr><th scope="row">代入视角一致性</th><td>用户身份、角色称呼、关系和可知信息符合已确认的视角与互动时点。</td></tr><tr><th scope="row">双语交付契约</th><td>文件分开、字段完整、双语关键事实一致，审查意见不进入成品。</td></tr><tr><th scope="row">模式与确认关口</th><td>材料与显式指令冲突时可解释；关键条件不清时不直接生成或发布。</td></tr><tr><th scope="row">人工返工与可用性</th><td>记录必须修改的字段、修改原因和时间；看接手者能否完成任务，不只看语言流畅。</td></tr></tbody></table></div>
+        <div class="sr-method-note"><strong>拟定验收规则</strong><p>每维可记 0「不可用」、1「需修改」、2「可用」，同时保留判断理由。关键事实无依据、必要确认被跳过、交付语言或文件缺失、越过发布权限，均应拦截；不能用平均分掩盖关键错误。这里定义的是规则，不是已经取得的评分结果。</p></div>
+        <div class="sr-demo sr-evaluation-bank" aria-labelledby="evaluation-bank-title">
+          <div class="sr-demo-head"><div><span class="sr-small-label">20 条构造用例 / 模型未评测</span><h3 id="evaluation-bank-title">用具体输入，检验规则有没有落地。</h3></div><a class="sr-text-link" href="assets/storeel/AIBOT-Evaluation-Plan.md" download>下载完整评估方案 ↓</a></div>
+          <p>配有完整自制短剧、双语草稿、虚构平台约束及固定提示词，点开每条即可查阅。它们不是原始商业剧本或用户原话；类别参考历史失败与版本问题，覆盖正常输入、缺失材料、视角、交付、路由和版本。</p>
+          <div class="sr-choice-row" role="group" aria-label="筛选评估设计用例"><button type="button" data-eval-filter="all" aria-pressed="true">全部</button><button type="button" data-eval-filter="input" aria-pressed="false">输入完整性</button><button type="button" data-eval-filter="perspective" aria-pressed="false">视角与事实</button><button type="button" data-eval-filter="delivery" aria-pressed="false">交付契约</button><button type="button" data-eval-filter="routing" aria-pressed="false">路由与关口</button><button type="button" data-eval-filter="version" aria-pressed="false">版本与配置</button></div>
+          <p id="evaluation-count" role="status" aria-live="polite">20 条设计用例 · 尚未运行模型评测</p>
+          <div id="evaluation-cases" class="sr-evaluation-grid"></div>
+          <button type="button" id="evaluation-more" class="sr-expand-button" aria-expanded="false" aria-controls="evaluation-cases">展开全部 20 条设计用例</button>
+          <noscript><p>用例浏览需要 JavaScript。也可通过上方下载链接阅读完整 Markdown 方案。</p></noscript>
+        </div>
+        <div class="sr-two-col"><div><h3>下一轮怎么执行</h3><p>固定模型、参数与输入，同一套用例对照不同版本，独立保留原始输出。相同输入重复运行，观察稳定性；人工按同一标准记录具体修改，而不是只写「优化了 Prompt」。</p></div><div><h3>怎样记录一个结果</h3><p>用例 ID → 输入与版本 → 实际输出 → 评分及理由 → 人工修改 → 再次结果。耗时和成本只有实测后才填写；20 条小样本用于找问题，不外推整体准确率。</p></div></div>
+        <p class="sr-evaluation-boundary">本页的路径切换与确认框是规则示意，不运行模型；网页功能测试不等于 AI 输出质量评测。目前不展示准确率、通过率或收益曲线。</p>
+      </div>
+      <div class="sr-outcome"><div><span class="sr-small-label">我的贡献</span><p>转译实际制作需求，设定输入与交付约束，依据试用问题调整模式、确认门槛和审查逻辑，组织 AI 辅助编排 Skill。</p></div><div><span class="sr-small-label">交付与状态</span><p>完成初代 Skill 制作、实际试用及四模式总入口迭代，围绕输出边界和人工确认持续调整。最终版持续采用与量化收益没有完整跟踪记录。</p></div></div>
+    </section>
+
+    <section id="practice" class="sr-section sr-case" aria-labelledby="practice-title">
+      <div class="sr-case-heading"><span class="sr-case-number">04</span><div><div class="sr-eyebrow">CONTENT / COLLABORATION</div><h2 id="practice-title">流程是否好用，<br>要回到内容和协作里检验。</h2><p>AI 互动角色 · 团队模式测试 · 内容运营</p></div></div>
+      <div class="sr-two-col sr-supporting"><article><h3>角色互动，不是人设堆砌</h3><p>参与多个短剧项目的 AIBOT 资料整理、角色卡与世界书制作、图片筛选、对话测试和后台配置。重点看用户以什么身份进入、角色知道什么、关系如何推进，以及回复有没有偏离设定。</p><p>AI 辅助草拟角色文档与图像提示词，我负责材料约束、选稿修改和实际测试。配置完成与公开发布分开记录，不把所有角色统称为已上线。</p></article><article><h3>团队协作，要有下一步</h3><p>团队模式资料与测试反馈中，我整理了三个具体问题：移除成员前如何批量交接资产；权限不足时如何给出可执行的下一步；消息如何支持批量已读处理。</p><p>同时参与团队模式使用指南的编写与完善，有分角色录屏及反馈文档存档。本地未恢复到完整指南正文，因此不将其包装成已核验的发布成果。</p></article></div>
+      <div class="sr-feedback-example"><div><span class="sr-small-label">产品反馈的表达方式</span><h3>从感受，走到可讨论的问题。</h3></div><ol><li><strong>现象</strong><p>点击「取消固定」后，导览没有立即收起。</p></li><li><strong>观察</strong><p>需要鼠标移开标签后才消失，新手容易误以为关不掉。</p></li><li><strong>建议</strong><p>点击后立即给出收起反馈，让动作与结果对应。</p></li></ol></div>
+      <p class="sr-section-lead">此外，我也参与竞品与卡包调研、故事内容改写、产品更新通知和中英文传播材料制作。这些工作共同训练了同一件事：先理解用户处于什么情境，再决定该给什么信息。</p>
+    </section>
+
+    <section class="sr-section" aria-labelledby="ownership-title">
+      <div class="sr-eyebrow">OWNERSHIP & REFLECTION</div><h2 id="ownership-title">AI 参与产出，我承担判断。</h2>
+      <div class="sr-table-wrap"><table class="sr-ownership"><caption class="sr-visually-hidden">个人、AI 与团队的工作边界</caption><thead><tr><th scope="col">分工</th><th scope="col">具体承担</th></tr></thead><tbody><tr><th scope="row">我</th><td>亲身体验、问题定义、业务约束、方案比较、原型评审、结果筛选、测试和文档交接。</td></tr><tr><th scope="row">AI 与工具</th><td>资料整理、候选内容、文档框架、图像提示词、HTML 实现与 Skill 编排。</td></tr><tr><th scope="row">负责人及协作同事</th><td>提供业务标准、带教与试用反馈，审核内容、协调上线；产品与研发负责正式实现和发布。</td></tr></tbody></table></div>
+      <blockquote class="sr-takeaway">这段实习让我更确信：<br>我擅长的不是「让 AI 多产出一点」，而是找到值得解决的问题，把任务拆到可执行、可检查、可交接。</blockquote>
+      <div class="sr-two-col"><div><h3>已经形成的方法</h3><p>先实际走流程，用现象和影响描述问题；比较方案时主动做减法；把依赖经验的规则写进流程；用真实试用纠正对自动化的预期。</p></div><div><h3>下一步如何验证</h3><p>若继续推进，我会记录新用户首个任务完成情况、SOP 高发返工点、Skill 每阶段的人工修改原因。这些是后续验证计划，不是本次已经实现的指标。</p></div></div>
+    </section>
+
+    <section id="evidence" class="sr-section sr-evidence" aria-labelledby="evidence-title">
+      <div class="sr-eyebrow">SOURCE NOTES</div><h2 id="evidence-title">每段故事，都能回到材料。</h2><p class="sr-section-lead">本页基于原始工作文档、HTML、Skill 文件及历史迭代记录整理。展示的是个人贡献与方法，不公开公司后台、内部链接或原始业务配置。</p>
+      <details><summary>Canvas：问题、方案与原型如何对应</summary><div><p>对应产品体验反馈、Canvas 新手导引与竞品观察材料、入口优化方案，以及 8 月 26—27 日的原型修改记录。两张截图均来自本地保存的《StoReel-Canvas-新手引导原型.html》实际页面。</p><p>历史记录可定位从多入口收敛为两模式的判断；HTML 是方案交付，不代表正式产品已完成开发。</p></div></details>
+      <details><summary>AIBOT：SOP、Skill 与实际制作的依据</summary><div><p>SOP 正文包含输入归档、自审与负责人审核、世界书绑定、测试上架、正式下架、跨端检查和 ID 登记。Skill 对照了 8 月 5 日、12 日、17 日的制作与试用反馈记录，并恢复到四模式文件的历史快照。</p><p>角色项目存在部分剧本、角色文档、世界书、测试及配置记录，但各项目证据完整程度不同；本页不使用无法闭环的上线数量、销量或提效指标。</p></div></details>
+      <details><summary>材料边界与本次新增内容</summary><div><p>团队模式反馈 PDF 及分角色录屏可以定位，完整指南正文未找到。SOP 的新人使用情况依据本人工作记录，不冒充第三方测评。</p><p>本次借鉴用户提供的 AI PM 作品集方法图，补充问题—选型—实现—评估—失败—迭代的论证。方案比较、评分维度、20 条构造用例和 R01 的冲突确认策略属于本次复盘设计，不是新发现的历史交付。</p><p>页面中的流程演示不连接产品后台，不提供模型输出。完整证据索引、未核实项与差异保留在内部复盘稿中，不作为公开业务附件。</p></div></details>
+      <div class="sr-ending"><div><span class="sr-small-label">THANK YOU FOR READING</span><h3>看结果，也看我怎么走到这里。</h3></div><a class="sr-button" href="assets/storeel/StoReel-Case-Study.pdf" target="_blank" rel="noopener">打开 PDF 查阅版 ↗</a></div>
+    </section>
+    <footer class="sr-footer"><a href="product.html">← 返回产品</a><span>蒋维嘉 · 作品集 / StoReel 实习案例</span><a href="#main">回到顶部 ↑</a></footer>
+  </main>
+</body>
+</html>

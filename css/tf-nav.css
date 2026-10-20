@@ -53,3 +53,13 @@
   .tf-container{ gap:1em; }
   .tf-word{ font-size:.7rem; }
 }
+/* Six-section navigation: retain readable, non-overlapping links on small screens. */
+@media(max-width:600px){
+  .tf-nav{left:20px;right:20px;width:auto}
+  .tf-container{gap:12px;justify-content:space-between;padding:6px 0}
+  .tf-word{font-size:10px;letter-spacing:.08em}
+}
+@media(max-width:360px){
+  .tf-nav .tf-container{gap:8px}
+  .tf-nav .tf-word{font-size:9px}
+}

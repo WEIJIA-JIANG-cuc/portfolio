@@ -3,7 +3,7 @@
 *.html text eol=lf
 *.css text eol=lf
 *.glb -text
-*.pdf -text
+*.pdf binary
 *.png -text
 *.jpg -text
 *.jpeg -text
@@ -12,3 +12,4 @@
 *.woff -text
 *.woff2 -text
 *.wasm -text
+*.xlsx binary
