@@ -1,0 +1,4658 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f3edda"><title>彩墨伙伴 Inky Pals</title><style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--desk:#f3edda;--paper:#fffdf6;--ink:#2f4a3a;--ink-soft:#667361;--line:#d8d2bd;--green:#3c5346;--mint:#e9eddf;--coral:#e2603f;--coral-dark:#ad4325;--y:#f2cf5b;--b:#8fbcdc;--g:#b5d18e;--r:#ec8a68;--o:#f2bd6e;--p:#c5aade;--mix:#79543b;--cell:#faf7ef;--wall:#969d90}
+html{height:100%;-webkit-text-size-adjust:100%}
+body{height:100vh;height:100dvh;overflow:hidden;background:var(--desk);color:var(--ink);font-family:'Microsoft YaHei',system-ui,sans-serif;overscroll-behavior:none}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:focus-visible{outline:3px solid #568db0;outline-offset:3px}
+button:disabled{opacity:.32;cursor:default}
+button:active:not(:disabled){transform:scale(.96)}
+[hidden]{display:none!important}
+#app{height:100%;max-width:480px;margin:auto;padding:max(10px,env(safe-area-inset-top)) 16px max(12px,env(safe-area-inset-bottom));position:relative}
+.screen{height:100%;display:none;min-height:0;flex-direction:column;gap:12px}
+.screen.active{display:flex}
+.btn{display:inline-flex;justify-content:center;align-items:center;min-height:48px;border:2px solid var(--ink);border-radius:16px;background:var(--paper);padding:10px 16px;font-weight:700;transition:transform .12s,background .12s}
+.btn.primary{background:var(--coral);border-color:var(--coral-dark);color:white}
+.btn.subtle{background:transparent;border-color:var(--line);font-size:13px}
+.bar{display:flex;align-items:center;gap:10px;flex:none;min-height:44px}
+.bar-title{flex:1;text-align:center;font-size:17px;font-weight:700;letter-spacing:1px}
+.bar-title small{display:block;font-size:10px;letter-spacing:0;font-weight:400;color:var(--ink-soft);margin-top:2px}
+.game-bar{display:grid;grid-template-columns:44px minmax(0,1fr) auto;min-height:54px}
+.game-heading{min-width:0;text-align:center}.game-heading .bar-title{font-size:16px;line-height:1.35}
+.game-nav{display:flex;gap:7px;align-items:center}
+.step-counter{display:flex;gap:12px;align-items:baseline;justify-content:center;white-space:nowrap;font-size:12px;line-height:1.3;margin-top:2px}
+.step-counter strong{font-size:21px;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
+.step-min{font-size:11px;color:var(--ink-soft)}.step-min b{font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+.icon-btn{height:44px;width:44px;flex:none;display:grid;place-items:center;border:2px solid var(--ink);border-radius:50%;background:var(--paper)}
+.ui-icon{width:24px;height:24px;display:block;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.stamp{display:inline-grid;place-items:center;flex:none;width:44px;height:44px}
+.stamp svg{width:100%;height:100%;display:block}
+#home{align-items:center;justify-content:center;gap:20px;padding-bottom:5vh}
+.home-art{display:flex;gap:10px;margin-bottom:2px}
+.home-art .stamp{width:66px;height:66px;transform:rotate(-5deg)}
+.home-art .stamp:nth-child(2){transform:rotate(4deg);margin-top:-10px}
+.home-art .stamp:nth-child(3){transform:rotate(-3deg)}
+.home-title{font-family:'Microsoft YaHei','PingFang SC',system-ui,sans-serif;font-size:36px;font-weight:800;letter-spacing:3px;text-align:center}
+.home-english{display:block;margin-top:10px;font-family:Arial,system-ui,sans-serif;font-size:23px;font-weight:700;letter-spacing:1px;text-align:center}
+.home-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:350px;margin-top:12px}
+.home-row .btn{font-size:16px;min-height:54px}
+.home-progress{height:18px;font-size:11px;color:var(--ink-soft)}
+#select{gap:20px}
+#select-progress{font-size:13px;line-height:1.6;font-weight:500;margin-top:5px}
+#select-groups{overflow-y:auto;min-height:0;padding:0 2px 16px;scrollbar-width:thin}
+.select-group{padding:16px 14px;margin-bottom:12px;border:1.5px solid var(--line);border-radius:18px;background:var(--paper)}
+.select-group:nth-child(2){background:#f4edd2}.select-group:nth-child(3){background:#e7eddf}.select-group:nth-child(4){background:#efe6dc}.select-group:nth-child(5){background:#e8e3ee}
+.select-group h3{font-size:13px;font-weight:700;display:flex;justify-content:space-between;gap:8px;margin-bottom:12px}
+.select-group h3 small{font-size:11px;font-weight:400;color:var(--ink-soft)}
+.select-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.lv{position:relative;aspect-ratio:1;min-height:44px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);font-size:18px;font-weight:700}
+.lv.done{border-color:#6d8765;background:#e2ebd7}.lv.done::after{content:'✓';position:absolute;bottom:3px;right:5px;font-size:10px}
+.lv.perfect::after{content:'★';font-size:14px;color:#9b741e;bottom:2px;right:4px}
+.lv.demo::after{content:'☆';position:absolute;bottom:3px;right:5px;font-size:10px;color:#977529}
+.lv.current{outline:2px solid var(--coral);outline-offset:1px}
+.select-group.extra{background:transparent}
+#tools{display:flex;gap:8px;flex:none}
+.tool{position:relative;display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:62px;flex:1;padding:6px 8px;border:2px solid var(--line);border-radius:17px;background:var(--paper);transition:background .12s,transform .12s}
+.tool.selected{border-color:var(--green);background:var(--mint)}
+.tool.selected::before{content:'';position:absolute;bottom:-6px;width:10px;height:10px;border-right:2px solid var(--green);border-bottom:2px solid var(--green);background:var(--mint);transform:rotate(45deg)}
+.tool .stamp{width:40px;height:40px}
+.tool strong{display:block;font-size:13px;white-space:nowrap}
+.tool small{display:block;font-size:10px;color:var(--ink-soft);margin-top:3px}
+.tool.placed small::before{content:'✓ ';color:var(--green)}
+.recipes{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:4px 0 2px}
+.recipe-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px 14px;min-height:22px;width:100%;max-width:100%;min-width:0}
+.recipe-row>.recipe{padding:4px 6px;border:1px solid var(--line);border-radius:9px;background:var(--paper)}
+.recipe{display:inline-flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap}
+.recipe .op{font-size:12px;color:var(--ink-soft)}
+.color-chip{display:inline-grid;place-items:center;width:19px;height:19px;border-radius:6px;border:1px solid rgba(47,74,58,.25);font-size:11px;font-style:normal;line-height:1;color:var(--ink)}
+.b0{background:#fff}.b1{background:var(--y)}.b2{background:var(--b)}.b3{background:var(--g)}.b4{background:var(--r)}.b5{background:var(--o)}.b6{background:var(--p)}.b7{background:var(--mix)}
+.b7{color:#fff;border-color:#61422e}
+.rule-summary{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink-soft);font-size:11px;min-height:24px;white-space:nowrap}
+.rule-summary .rule-dot{color:#b5b6a5;font-size:8px}
+.rule-help{display:grid;place-items:center;width:28px;height:28px;border:1.5px solid var(--line);border-radius:50%;background:var(--paper);font-size:13px;font-weight:700;flex:none}
+.legend-cell{width:18px;height:22px;border:1.5px solid var(--ink);border-radius:4px;background:var(--cell);position:relative;overflow:hidden}
+.legend-cell::before{content:'';position:absolute;inset:0 0 55%;background:var(--g);border-bottom:1px solid #9caf8b}
+.board-space{flex:1;min-height:0;width:100%;display:flex;justify-content:center;align-items:center;position:relative}
+#board{width:var(--board-side,320px);height:var(--board-side,320px);max-width:100%;display:grid;gap:5px;padding:8px;border:2px solid var(--line);border-radius:18px;background:#ebe6d4;flex:none;position:relative}
+.cell{position:relative;min-width:0;min-height:0;border-radius:8px;background:var(--cell);border:1.2px solid #dfdac8;display:grid;place-items:center;overflow:hidden;aspect-ratio:1}
+.cell.ink1{background:var(--y);border-color:#dfc359}.cell.ink2{background:var(--b);border-color:#83adc9}.cell.ink3{background:var(--g);border-color:#9ebc7c}.cell.ink4{background:var(--r);border-color:#db896c}.cell.ink5{background:var(--o);border-color:#daaf69}.cell.ink6{background:var(--p);border-color:#b59bcc}.cell.ink7{background:var(--mix);border-color:#b69d84}
+.cell.clue{border:2px solid var(--ink)}
+.cell.wall{background:var(--wall) repeating-linear-gradient(135deg,rgba(47,74,58,.22) 0 3px,transparent 3px 9px);border-color:#788172}
+.cell .stamp{width:70%;height:70%;max-width:54px;max-height:54px;z-index:2}
+.band{position:absolute;left:0;right:0;top:0;height:34%;border-bottom:1px solid rgba(47,74,58,.3);display:grid;place-items:center;font-size:clamp(9px,2.5vw,12px);line-height:1;pointer-events:none}
+.band.b0{border-bottom:1.5px dashed #9fa58e}
+.cell.dropped .stamp{animation:stamp-in .2s ease-out}
+.cell.pop{animation:ink-in .2s ease-out}
+#board.celebrate{animation:board-win .48s ease-out}
+#board.perfect{border-color:#bca04a;animation:board-perfect .5s ease-out}
+.hint-ghost{position:fixed;z-index:30;pointer-events:none;opacity:.9;animation:hint-place 3.4s ease-in-out both;filter:drop-shadow(0 2px 3px rgba(47,74,48,.2))}
+.hint-ghost .stamp{width:100%;height:100%;opacity:.88}
+#board .cell.hint-target{outline:3px solid var(--green);outline-offset:-4px;animation:hint-pulse .65s ease-in-out infinite}
+#board .cell.hint-target::after{content:'';position:absolute;inset:5px;border:2px dashed var(--ink);border-radius:50%;pointer-events:none;z-index:3}
+.tool.hint-source{border-color:#9a7d27;background:#f5e8bb}
+#board .cell.hint-focus{outline:3px solid #a77920;outline-offset:-4px;animation:hint-pulse .65s ease-in-out infinite}
+#board .cell.hint-focus .band{box-shadow:0 2px 0 #a77920}
+.hint-ray{position:absolute;pointer-events:none;z-index:3;background:#68a6a8;border:1px solid #fffdf2;border-radius:4px;box-shadow:0 0 5px #fffdf2;animation:ray-reveal .28s ease-out both;animation-delay:var(--ray-delay)}
+.hint-ray.row-ray{height:7px;left:-2px;right:-2px;top:calc(62% - 3px);--ray-scale:scaleX(0)}
+.hint-ray.col-ray{width:7px;top:-2px;bottom:-2px;left:calc(50% - 3px);--ray-scale:scaleY(0)}
+.hint-ray.hint-exclusion{background:repeating-linear-gradient(90deg,#939b8b 0 4px,transparent 4px 8px);box-shadow:none;opacity:.7}
+.hint-ray.col-ray.hint-exclusion{background:repeating-linear-gradient(0deg,#939b8b 0 4px,transparent 4px 8px)}
+.hint-meet{position:absolute;inset:12%;border:3px solid #b78c20;box-shadow:0 0 0 3px #fff8d6;background:#fff8d65c;border-radius:50%;z-index:4;pointer-events:none;animation:meet-reveal .4s ease-out both,meet-pulse 1.2s ease-in-out infinite;animation-delay:var(--meet-delay),calc(var(--meet-delay) + .4s)}
+@keyframes ray-reveal{from{opacity:0;transform:var(--ray-scale)}to{opacity:.85;transform:scale(1)}}
+@keyframes meet-reveal{from{opacity:0;transform:scale(1.35)}to{opacity:1;transform:scale(1)}}
+@keyframes meet-pulse{50%{transform:scale(.87);border-color:#dfb84a}}
+.actions{display:flex;justify-content:center;gap:30px;align-items:center;flex:none;padding:3px 0 2px}
+.actions .icon-btn{width:56px;height:56px;border-color:var(--line);border-width:1.5px;transition:transform .12s,background .12s}
+.actions .icon-btn .ui-icon{width:26px;height:26px}
+.actions #btn-hint{border-color:var(--ink);background:var(--paper)}
+.toast{position:fixed;z-index:25;bottom:calc(92px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:max-content;max-width:min(420px,calc(100% - 32px));background:var(--ink);color:var(--paper);padding:10px 15px;border-radius:14px;font-size:12px;line-height:1.5;text-align:center;pointer-events:none}
+.dialog{position:fixed;inset:0;background:rgba(47,64,48,.36);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.dialog-card{width:100%;max-width:380px;max-height:calc(100% - 16px);background:var(--paper);border:2px solid var(--ink);border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:16px;overflow:auto;position:relative}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dialog-head h2{font-size:18px;font-weight:700}
+.close-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;flex:none}
+.close-btn .ui-icon{width:18px;height:18px}
+.dialog-card p{font-size:13px;line-height:1.9}
+.dialog-actions{display:flex;gap:10px}
+.dialog-actions .btn{flex:1;padding-left:10px;padding-right:10px;font-size:14px}
+#howto{background:var(--desk);padding:max(12px,env(safe-area-inset-top)) 20px max(16px,env(safe-area-inset-bottom))}
+#howto .dialog-card{max-width:420px;max-height:100%;height:100%;border:0;background:transparent;border-radius:0;padding:0;overflow:hidden;gap:16px}
+.howto-header{display:flex;align-items:center;justify-content:space-between;flex:none;min-height:44px;font-size:13px;color:var(--ink-soft)}
+.howto-header-actions{display:flex;align-items:center;gap:10px}.howto-jump{font-size:12px;text-decoration:underline;text-underline-offset:3px;min-height:36px;padding:0 4px}
+.howto-body{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+#howto-title{font-size:25px;font-weight:500;text-align:center;letter-spacing:2px}
+.howto-step{min-height:160px;display:flex;align-items:center;justify-content:center;gap:12px}
+.howto-text{font-size:13px!important;text-align:center;max-width:310px;line-height:1.9}
+.howto-text b{font-weight:700}
+.howto-nav{display:flex;align-items:center;gap:12px;flex:none}
+.howto-nav .btn{flex:1}
+.howto-dots{display:flex;justify-content:center;gap:6px;flex:none;padding-bottom:5px}
+.howto-dots i{width:6px;height:6px;border-radius:50%;background:#d0ceb9}.howto-dots i.active{background:var(--ink);width:18px;border-radius:5px}
+.howto-stamps{display:flex;justify-content:center;gap:14px}.howto-stamps>span{display:flex;align-items:center;flex-direction:column;gap:7px;font-size:11px}.howto-stamps .stamp{width:56px;height:56px}
+.mini-board{display:grid;gap:3px;padding:6px;background:#ebe6d4;border:1.5px solid var(--line);border-radius:12px;width:max-content}
+.mini-board .cell{width:var(--mini-cell,28px);height:var(--mini-cell,28px);border-radius:5px;pointer-events:none}
+.mini-board .cell .stamp{width:88%;height:88%}.mini-board .band{font-size:9px}
+.teach-ink{position:absolute;inset:0;pointer-events:none;animation:teach-spread 3.5s ease-out infinite both;animation-delay:var(--flow-delay)}
+@keyframes teach-spread{0%,8%{opacity:0;transform:scale(.35)}25%,78%{opacity:1;transform:scale(1)}98%,100%{opacity:0;transform:scale(1)}}
+.mini-caption{font-size:11px;text-align:center;color:var(--ink-soft);margin-top:8px}
+.howto-recipes{display:flex;flex-direction:column;gap:18px;align-items:center}.howto-recipes .color-chip{width:32px;height:32px;font-size:15px}.howto-recipes .recipe{gap:10px;font-size:17px}
+.feature-card{gap:18px}.feature-card .dialog-head h2{font-size:18px;line-height:1.5}.feature-example{display:flex;align-items:center;flex-direction:column;gap:15px}#feature-art{display:flex;justify-content:center;min-width:0}#feature-art .howto-recipes .color-chip{width:27px;height:27px;font-size:13px}#feature-art .howto-recipes .recipe{gap:6px}#feature-art .mini-caption{margin-top:0}.howto-step .feature-example .howto-recipes .color-chip{width:27px;height:27px}.howto-step .feature-example .howto-recipes .recipe{gap:6px}
+.cell-examples{display:grid;grid-template-columns:1fr 1fr;gap:18px 28px}.cell-example{display:flex;align-items:center;gap:9px;font-size:12px}.cell-example .cell{width:48px;height:48px;pointer-events:none;flex:none}
+.feature-example .cell-examples .cell-example{flex-direction:column;text-align:center;gap:6px}
+.success-card{align-items:center;text-align:center;gap:16px;padding-top:28px}
+.success-seal{height:76px;width:76px;display:grid;place-items:center;border:3px solid #839966;border-radius:50%;background:#e7edda;color:var(--green);animation:seal-in .3s ease-out}
+.success-seal .ui-icon{width:38px;height:38px;stroke-width:2.5}
+.success-card h2{font-size:25px;letter-spacing:3px;font-weight:500}
+.success-card p{font-size:12px;color:var(--ink-soft)}
+.success-card .dialog-actions{width:100%;margin-top:6px}.success-card .close-btn{position:absolute;right:12px;top:12px}
+.perfect .success-card{border-color:#aa8c33;background:#fff9e8}
+.perfect .success-seal{border-color:#c29a33;background:#f8dfa0;color:#9a7022;animation:gold-seal .72s cubic-bezier(.2,.8,.2,1) both}
+.perfect #success-title{color:#8c681c}
+.success-card>*:not(.success-confetti){position:relative;z-index:1}.success-card>.close-btn{position:absolute}
+.success-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:22px}
+.success-confetti i{position:absolute;left:var(--x);top:-18px;width:7px;height:13px;background:#cfaa45;border-radius:2px;animation:confetti-fall 1.5s ease-out both;animation-delay:calc(var(--i) * 35ms)}
+.success-confetti i:nth-child(3n+1){background:var(--b);height:8px}.success-confetti i:nth-child(3n+2){background:var(--r);width:5px;transform:rotate(30deg)}
+@keyframes stamp-in{from{transform:translateY(-6px) scale(1.15)}to{transform:translateY(0) scale(1)}}
+@keyframes ink-in{from{opacity:.55}to{opacity:1}}
+@keyframes board-win{40%{transform:scale(1.018)}100%{transform:scale(1)}}
+@keyframes seal-in{from{opacity:0;transform:scale(1.3) rotate(-15deg)}to{opacity:1;transform:scale(1) rotate(-7deg)}}
+@keyframes hint-place{0%{opacity:0;transform:translate(0,0) scale(.8)}12%{opacity:.95;transform:translate(0,0) scale(1.08)}45%{opacity:.9;transform:translate(var(--hint-dx),var(--hint-dy)) scale(1.08)}56%{opacity:.9;transform:translate(var(--hint-dx),var(--hint-dy)) scale(.84)}67%,85%{opacity:.8;transform:translate(var(--hint-dx),var(--hint-dy)) scale(1)}100%{opacity:0;transform:translate(var(--hint-dx),var(--hint-dy)) scale(1)}}
+@keyframes hint-pulse{50%{outline-color:#c5a64d}}
+@keyframes gold-seal{0%{opacity:0;transform:scale(1.7) rotate(-30deg)}48%{opacity:1;transform:scale(.92) rotate(-6deg)}70%{transform:scale(1.1) rotate(4deg)}100%{transform:scale(1) rotate(-7deg)}}
+@keyframes confetti-fall{0%{opacity:0;transform:translateY(-12px) rotate(0)}15%{opacity:.9}100%{opacity:0;transform:translateY(300px) rotate(var(--spin))}}
+@keyframes board-perfect{35%{transform:scale(1.025);border-color:#e3bb48}100%{transform:scale(1)}}
+@media(max-width:370px){#app{padding-left:12px;padding-right:12px}.tool{padding:5px;gap:4px}.tool .stamp{width:36px;height:36px}.tool strong{font-size:12px}.rule-summary{font-size:10px;gap:5px}.recipe-row{gap:7px 14px}.color-chip{width:17px;height:17px}.home-title{font-size:30px}}
+@media(max-height:640px){.screen{gap:8px}#app{padding-top:8px;padding-bottom:max(8px,env(safe-area-inset-bottom))}.tool{min-height:53px}.tool .stamp{width:36px;height:36px}.actions .icon-btn{width:48px;height:48px}.recipes{gap:3px}.bar,.icon-btn{min-height:40px}.icon-btn{width:40px;height:40px}.howto-body{gap:12px}#howto-title{font-size:22px}.howto-step{min-height:130px}.howto-text{font-size:12px!important}#board{gap:4px;padding:6px}}
+@media(max-height:480px){.screen{gap:5px}.tool{min-height:46px}.tool small{display:none}.tool .stamp{width:32px;height:32px}.actions{padding:0;gap:24px}.actions .icon-btn{width:42px;height:42px}.recipes{padding:0;gap:1px}.howto-step{min-height:105px}.howto-body{gap:8px}.mini-board .cell{width:22px;height:22px}.howto-text{font-size:11px!important}.howto-header{min-height:32px}#howto .dialog-card{gap:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(prefers-reduced-motion:reduce){.hint-ghost{opacity:.85;transform:translate(var(--hint-dx),var(--hint-dy))}.success-confetti{display:none}}
+</style></head>
+<body>
+<main id="app">
+  <section id="home" class="screen" aria-label="首页">
+    <div class="home-art" id="home-art" aria-hidden="true"></div>
+    <h1 class="home-title">彩墨伙伴<span class="home-english" lang="en">Inky Pals</span></h1>
+    <div class="home-row"><button id="btn-continue" class="btn primary">开始游戏</button><button id="btn-levels" class="btn">选关</button></div>
+    <p id="home-progress" class="home-progress"></p>
+  </section>
+  <section id="select" class="screen" aria-label="选择关卡">
+    <header class="bar"><button id="select-back" class="icon-btn" aria-label="返回首页" data-icon="back"></button><h2 class="bar-title">选择印画<small id="select-progress"></small></h2><span style="width:44px" aria-hidden="true"></span></header>
+    <div id="select-groups"></div>
+  </section>
+  <section id="game" class="screen" aria-label="游戏">
+    <header class="bar game-bar"><button id="game-back" class="icon-btn" aria-label="返回首页" data-icon="home"></button><div class="game-heading"><h2 id="game-title" class="bar-title"></h2><div id="step-counter" class="step-counter" aria-live="polite" aria-atomic="true" title="摆放、移动、取下各计一步；撤销回退，重置清零"><span>步数 <strong id="move-count">0</strong></span><span class="step-min">最少 <b id="minimum-count">1</b></span></div></div><div class="game-nav"><button id="level-next" class="icon-btn" aria-label="下一关" title="下一关" data-icon="next" hidden></button><button id="game-levels" class="icon-btn" aria-label="选关" data-icon="grid"></button></div></header>
+    <div id="tools" role="group" aria-label="选择印章"></div>
+    <div id="recipes" class="recipes" aria-label="本关颜色配方与规则"></div>
+    <div class="board-space" id="board-space"><div id="board" role="group" aria-label="印章棋盘"></div></div>
+    <div class="actions" role="group" aria-label="操作">
+      <button id="undo" class="icon-btn" aria-label="撤销" title="撤销" data-icon="undo" disabled></button>
+      <button id="btn-hint" class="icon-btn" aria-label="提示" title="提示" data-icon="bulb"></button>
+      <button id="reset" class="icon-btn" aria-label="重置" title="重置" data-icon="reset" disabled></button>
+    </div>
+  </section>
+</main>
+<div id="hint-ghost" class="hint-ghost" hidden aria-hidden="true"></div>
+<div id="message" class="toast" role="status" aria-live="polite" hidden></div>
+<section id="feature-intro" class="dialog" hidden role="dialog" aria-modal="true" aria-labelledby="feature-title" aria-describedby="feature-text">
+  <div class="dialog-card feature-card"><div class="dialog-head"><h2 id="feature-title"></h2><button class="close-btn" data-close="feature-intro" aria-label="关闭教学" data-icon="close"></button></div><div id="feature-art"></div><p id="feature-text"></p><div class="dialog-actions"><button id="feature-skip" class="btn" data-close="feature-intro">跳过</button><button id="feature-start" class="btn primary">开始</button></div></div>
+</section>
+<section id="cell-info" class="dialog" hidden role="dialog" aria-modal="true" aria-labelledby="cell-info-title"><div class="dialog-card"><div class="dialog-head"><h2 id="cell-info-title">观察点</h2><button class="close-btn" data-close="cell-info" aria-label="关闭说明" data-icon="close"></button></div><p id="cell-info-text"></p><button id="cell-info-ok" class="btn">知道了</button></div></section>
+<section id="success" class="dialog" hidden role="dialog" aria-modal="true" aria-labelledby="success-title">
+  <div class="dialog-card success-card">
+    <button class="close-btn" data-close="success" aria-label="留在本关" data-icon="close"></button>
+    <div id="success-confetti" class="success-confetti" aria-hidden="true" hidden></div>
+    <div class="success-seal" aria-hidden="true" data-icon="check"></div><h2 id="success-title">恭喜通关！</h2><p id="success-copy"></p>
+    <div class="dialog-actions"><button id="success-stay" class="btn">留在这关</button><button id="success-next" class="btn primary">下一关</button></div>
+  </div>
+</section>
+<script>(function(root){
+// 印泥颜色身份与位掩码：黄=1 蓝=2 红=4。
+// 格子值 = 在场颜色按位或：0留白 1黄 2蓝 3绿(黄+蓝) 4红 5橙(红+黄) 6紫(红+蓝) 7三色。
+// 相同颜色重复不改变颜色；逻辑规则不使用透明度或RGB平均值。
+const BITS={y:1,b:2,r:4};
+const NAMES={0:'留白',1:'黄',2:'蓝',3:'绿',4:'红',5:'橙',6:'紫',7:'三色'};
+const SYMS={0:'○',1:'●',2:'◆',3:'⊕',4:'▲',5:'◉',6:'✚',7:'⊛'};
+function inkBits(l,count){
+  const n=count===undefined?l.count:count;
+  const out=[];
+  for(let k=0;k<n;k++){
+    const c=(l.inks&&l.inks[k])||(k===0?'y':'b'); // 兼容旧数据：无 inks 时按黄/蓝
+    if(!BITS[c])throw new Error('未知印泥颜色：'+String(c));
+    out.push(BITS[c]);
+  }
+  return out;
+}
+function paint(l,pos,blocking=true){
+  const n=l.size,out=Array(n*n).fill(0),walls=new Set(l.walls),bits=inkBits(l,pos.length);
+  pos.forEach((p,k)=>{if(p===null||p===undefined)return;const r=Math.floor(p/n),c=p%n;
+  for(const [dr,dc] of [[1,0],[-1,0],[0,1],[0,-1]]){let y=r+dr,x=c+dc;while(y>=0&&y<n&&x>=0&&x<n){const i=y*n+x;if(walls.has(i)||(blocking&&pos.includes(i)))break;out[i]|=bits[k];y+=dr;x+=dc;}}
+  });return out;
+}
+function solutions(l,limit=Infinity){
+  if(l.count>3)throw new Error('求解器当前只支持三枚印章以内（count='+l.count+'）');
+  const bits=inkBits(l),poss=bits.reduce((a,b)=>a|b,0);
+  for(const [,v] of l.clues){
+    if(!(v>=0&&v<=7))throw new Error('观察点目标值未知：'+v);
+    if(v&~poss)throw new Error('观察点目标值('+v+')需要当前关卡没有的印泥颜色');
+  }
+  // 通用递归枚举（1—3枚）：印章颜色互不相同（红线禁止同色多章），有序组合即不同布局
+  const forbidden=new Set([...l.walls,...l.clues.map(c=>c[0])]);
+  const cells=Array.from({length:l.size*l.size},(_,i)=>i).filter(i=>!forbidden.has(i));
+  const out=[],pos=Array(l.count);
+  (function rec(k){
+    if(out.length>=limit)return;
+    if(k===l.count){
+      const ink=paint(l,pos.slice());
+      if(l.clues.every(([i,v])=>ink[i]===v))out.push(pos.slice());
+      return;
+    }
+    for(const a of cells){
+      if(pos.slice(0,k).includes(a))continue;
+      pos[k]=a;rec(k+1);
+      if(out.length>=limit)return;
+    }
+  })(0);
+  return out;
+}
+const levels=[];
+const api={paint,solutions,levels,BITS,NAMES,SYMS,inkBits};if(typeof module!=='undefined')module.exports=api;root.StampEngine=api;
+})(typeof window==='undefined'?globalThis:window);
+</script>
+<script>StampEngine.levels.push(...[
+  {
+    "sid": "dingwei",
+    "size": 4,
+    "walls": [],
+    "answer": [
+      5
+    ],
+    "count": 1,
+    "inks": [
+      "y"
+    ],
+    "tag": "定位",
+    "title": "一枚印章，两条线索",
+    "note": "目标色签是证据。黄色必须到达，留白不能染色。",
+    "hint": "同一枚印章可以沿行或列到达观察点。把两处线索放在一起考虑。",
+    "clues": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        1,
+        4
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          1,
+          4
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "duyin",
+    "size": 6,
+    "walls": [
+      4,
+      13
+    ],
+    "answer": [
+      15
+    ],
+    "count": 1,
+    "inks": [
+      "y"
+    ],
+    "tag": "独印",
+    "title": "独自盖印",
+    "note": "只有一枚黄色印章。新看点：石块会截断色带，留白依然是禁区。",
+    "hint": "两处黄色观察点能同时够到的位置屈指可数；墙会截断一条路，留白堵住另一条。",
+    "clues": [
+      [
+        3,
+        1
+      ],
+      [
+        17,
+        1
+      ],
+      [
+        29,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        17,
+        3
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          17,
+          3
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "jiaoda",
+    "size": 4,
+    "walls": [
+      3,
+      12
+    ],
+    "answer": [
+      1,
+      14
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "交叠",
+    "title": "两种颜色，一个解释",
+    "note": "黄＋蓝＝绿。绿色观察点必须同时收到两种印泥。",
+    "hint": "先看哪些位置能同时解释交叠与单色，再检查留白。",
+    "clues": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        8,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        0,
+        2
+      ],
+      "b": [
+        2,
+        4,
+        8
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          0
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "b": {
+        "text": "高亮目标需要蓝色，小鸟要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          2
+        ],
+        "type": "combine",
+        "priority": 4
+      }
+    }
+  },
+  {
+    "sid": "zhedang",
+    "size": 5,
+    "walls": [
+      1,
+      9,
+      20
+    ],
+    "answer": [
+      11,
+      13
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "遮挡",
+    "title": "少掉的那一抹黄色",
+    "note": "另一枚印章也会挡住色带。单色，有时是遮挡的结果。",
+    "hint": "沿同一条直线找：为何这里是绿色，那里却只有一种颜色？",
+    "clues": [
+      [
+        0,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        12,
+        3
+      ],
+      [
+        14,
+        2
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        12,
+        2,
+        0
+      ],
+      "b": [
+        14,
+        12
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮目标需要黄色，兔兔要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          12
+        ],
+        "type": "combine",
+        "priority": 6
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          14,
+          12
+        ],
+        "type": "combine",
+        "priority": 3
+      }
+    }
+  },
+  {
+    "sid": "fenduan",
+    "size": 5,
+    "walls": [
+      7,
+      12,
+      17
+    ],
+    "answer": [
+      11,
+      13
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "分段",
+    "title": "一段一段看",
+    "note": "石块会把行和列截成小段，色带只在同一段里流动。留白观察点能排除一整段。",
+    "hint": "黄色必须到达第3行第1列，但第1列的任何格子都会染到左上角的留白——除非中间隔着墙。黄色只剩被墙截短的那一段。",
+    "clues": [
+      [
+        10,
+        1
+      ],
+      [
+        14,
+        2
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        10,
+        0
+      ],
+      "b": [
+        14,
+        4
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮目标需要黄色，兔兔要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          10
+        ],
+        "type": "combine",
+        "priority": 4
+      },
+      "b": {
+        "text": "高亮目标需要蓝色，小鸟要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          14
+        ],
+        "type": "combine",
+        "priority": 4
+      }
+    }
+  },
+  {
+    "sid": "xiaoxie",
+    "size": 4,
+    "walls": [],
+    "answer": [
+      4,
+      7
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "小歇",
+    "title": "喘口气，两个小交叉",
+    "note": "没有新东西，只有熟悉的配方。两个绿色手拉手，把一对印章请到了同一行。",
+    "hint": "两个绿色观察点在同一行相邻——两枚印章在这一行夹着它们。左上角要黄色，黄章就靠左；蓝章自然在另一头。",
+    "clues": [
+      [
+        5,
+        3
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        15,
+        2
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        5,
+        6
+      ],
+      "b": [
+        5,
+        6
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          5,
+          6,
+          0
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          5,
+          6,
+          15
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "dingxian",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      10,
+      2
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "定线",
+    "title": "两条线索，先定一条线",
+    "note": "绿色要求两种颜色同时到场。让同一枚印章解释两个观察点，先确定它所在的线。",
+    "hint": "黄色要同时到达绿色和黄色两处观察点——哪条线能一次穿过两格？定下线，再交给留白挑格。",
+    "clues": [
+      [
+        12,
+        3
+      ],
+      [
+        14,
+        1
+      ],
+      [
+        22,
+        2
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        8,
+        0
+      ],
+      [
+        18,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        12,
+        18,
+        21
+      ],
+      "b": [
+        12,
+        8,
+        18
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          12,
+          14
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          12,
+          22
+        ],
+        "type": "combine",
+        "priority": 3
+      }
+    }
+  },
+  {
+    "sid": "xiangjia",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      19,
+      22
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "相夹",
+    "title": "夹在两枚印章之间",
+    "note": "两枚印章同处一条线时：中间是绿色，两端各是自己的颜色。顺序换了，颜色也换。",
+    "hint": "两个绿色观察点把两枚印章都请到了这一行。黄色在绿区左侧之外，蓝色在右侧之外——中间还剩几格？",
+    "clues": [
+      [
+        18,
+        1
+      ],
+      [
+        23,
+        2
+      ],
+      [
+        20,
+        3
+      ],
+      [
+        21,
+        3
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        18,
+        20
+      ],
+      "b": [
+        23,
+        20
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          18,
+          20,
+          21
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          23,
+          20,
+          21
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "quse",
+    "size": 6,
+    "walls": [
+      15
+    ],
+    "answer": [
+      16,
+      2
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "缺色",
+    "title": "该绿的地方没有绿",
+    "note": "交点该是绿色却只有一色，多半是墙挡住了另一条线；也可能是印章站在了路上。",
+    "hint": "第3行的墙解释了那里为什么只有蓝。第1行第4列也只有蓝——黄章若在它右边，左向色带会把它染黄吗？",
+    "clues": [
+      [
+        17,
+        1
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        14,
+        2
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        17,
+        4,
+        3
+      ],
+      "b": [
+        4,
+        14
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          17,
+          4
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          3,
+          14
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "danglu",
+    "size": 7,
+    "walls": [],
+    "answer": [
+      19,
+      30
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "挡路",
+    "title": "谁在挡路",
+    "note": "印章会挡住彼此的色带。被挡住而缺失的颜色，本身就是证据。",
+    "hint": "先用三条线索把蓝章钉死在一列上。黄章只剩两个候选——其中一个的正上方，站着蓝章。",
+    "clues": [
+      [
+        16,
+        3
+      ],
+      [
+        40,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        34,
+        2
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        16,
+        40
+      ],
+      "b": [
+        16,
+        34
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          16,
+          40
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          16,
+          34,
+          2
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "hong-jiaoxue",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      11,
+      13
+    ],
+    "count": 2,
+    "inks": [
+      "r",
+      "b"
+    ],
+    "tag": "红·教学",
+    "title": "红色小狐来了",
+    "note": "新印泥：红＋蓝＝紫。老配方没变，只是多了一种可能。",
+    "hint": "和第8关同一个道理：两个观察点把两枚印章请到一行，端点颜色告诉你谁在左谁在右。",
+    "clues": [
+      [
+        10,
+        4
+      ],
+      [
+        12,
+        6
+      ],
+      [
+        14,
+        2
+      ]
+    ],
+    "focusHints": {
+      "r": [
+        10,
+        12
+      ],
+      "b": [
+        14,
+        12
+      ]
+    },
+    "tipHints": {
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          10,
+          12
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          12,
+          14
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "cheng-jiaoxue",
+    "size": 5,
+    "walls": [
+      5,
+      17
+    ],
+    "answer": [
+      7,
+      16
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "r"
+    ],
+    "tag": "橙·教学",
+    "title": "红加黄，是什么颜色",
+    "note": "新配方：红＋黄＝橙。橙色观察点需要两种印泥同时到场。",
+    "hint": "橙色在第2行第2列、黄色在第1行第3列——黄章要同时够到两格，行列交点只有一个（另一个是观察点本身）。红章同样找交点：其中一个交点正好是石块，放不进去。",
+    "clues": [
+      [
+        6,
+        5
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        15,
+        4
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        6,
+        2,
+        0
+      ],
+      "r": [
+        15,
+        6
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          2,
+          6
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位狐狸。",
+        "clues": [
+          15,
+          6
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "hun-jiaoxue",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      10,
+      12,
+      14
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "混·教学",
+    "title": "一枚蓝色，两种混色",
+    "note": "绿＝黄＋蓝，紫＝红＋蓝。两处混色共用同一枚蓝章——它站在两个交点的连线上。",
+    "hint": "两个混色观察点都需要蓝色到场，蓝章必在它们同处的那条线上；两端单色线索决定黄章、红章各在哪一侧。",
+    "clues": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        11,
+        3
+      ],
+      [
+        13,
+        6
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        11,
+        0,
+        2
+      ],
+      "b": [
+        11,
+        2
+      ],
+      "r": [
+        13,
+        4,
+        0
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          0,
+          11
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          2,
+          11,
+          13
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          4,
+          13
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "hun-shizi",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      13,
+      15,
+      25
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "混·十字",
+    "title": "横竖各一处混色",
+    "note": "绿色在横线上，紫色在竖线上，共用的是蓝色。遮挡照常成立。",
+    "hint": "绿色与两个蓝色观察点同排——蓝章在这一行；紫色又要求蓝色到场，行列交集定蓝章。红章的候选逐个看：有的会把绿变三色，有的会污染蓝色观察点。",
+    "clues": [
+      [
+        1,
+        1
+      ],
+      [
+        14,
+        3
+      ],
+      [
+        16,
+        2
+      ],
+      [
+        17,
+        2
+      ],
+      [
+        27,
+        6
+      ],
+      [
+        24,
+        4
+      ],
+      [
+        20,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        1,
+        14
+      ],
+      "b": [
+        16,
+        14
+      ],
+      "r": [
+        27,
+        24,
+        14
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          14,
+          1
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          14,
+          27,
+          16
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          27,
+          24
+        ],
+        "type": "combine",
+        "priority": 4
+      }
+    }
+  },
+  {
+    "sid": "hong-zhedang",
+    "size": 6,
+    "walls": [
+      9
+    ],
+    "answer": [
+      16,
+      3
+    ],
+    "count": 2,
+    "inks": [
+      "r",
+      "b"
+    ],
+    "tag": "红·遮挡",
+    "title": "该紫不紫",
+    "note": "这一排全是红，蓝色去哪了？墙会替你挡住一条本该到达的线。",
+    "hint": "整排红色观察点把红章按在行里；紫色的角落需要蓝章到场。蓝章的候选逐个看列——有一列被墙截断了。",
+    "clues": [
+      [
+        4,
+        6
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        12,
+        4
+      ],
+      [
+        13,
+        4
+      ],
+      [
+        14,
+        4
+      ],
+      [
+        15,
+        4
+      ]
+    ],
+    "focusHints": {
+      "r": [
+        4,
+        12
+      ],
+      "b": [
+        4,
+        13,
+        14
+      ]
+    },
+    "tipHints": {
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位狐狸。",
+        "clues": [
+          15,
+          4
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          0,
+          4,
+          5
+        ],
+        "type": "combine",
+        "priority": 3
+      }
+    }
+  },
+  {
+    "sid": "nuan-xiaoxie",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      6,
+      18
+    ],
+    "count": 2,
+    "inks": [
+      "r",
+      "y"
+    ],
+    "tag": "暖·小歇",
+    "title": "两处橙色，一次放松",
+    "note": "换个配方再歇一次。两处橙色一上一下斜对着，各自都在等一对印泥。",
+    "hint": "红章要同时够到两处橙色和左上的红——行列交点只有一个。黄章对称地找：两处橙色加右下的黄。",
+    "clues": [
+      [
+        16,
+        5
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        19,
+        1
+      ]
+    ],
+    "focusHints": {
+      "r": [
+        8,
+        16
+      ],
+      "y": [
+        16,
+        8
+      ]
+    },
+    "tipHints": {
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位狐狸。",
+        "clues": [
+          16,
+          8,
+          5
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          16,
+          8,
+          19
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "hun-dingxian-curve2",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      23,
+      1
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "交点回温",
+    "title": "先找确定的交点",
+    "note": "短复习：用两枚印章找直接交点，给18—20留出递进空间。",
+    "hint": "",
+    "clues": [
+      [
+        3,
+        3
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        20,
+        1
+      ],
+      [
+        21,
+        3
+      ]
+    ],
+    "previousSid": "hun-dingxian",
+    "revision": 2,
+    "designRole": "短复习：用两枚印章找直接交点，给18—20留出递进空间。",
+    "focusHints": {
+      "y": [
+        21,
+        3
+      ],
+      "b": [
+        21,
+        3
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          21,
+          3,
+          20
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          21,
+          3,
+          6
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "liansuo-curve2",
+    "size": 5,
+    "walls": [
+      0
+    ],
+    "answer": [
+      15,
+      22
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "半步复习",
+    "title": "确定一枚，再找另一枚",
+    "note": "轻复习：一枚有锚点，另一枚还需要一次排除。",
+    "hint": "",
+    "clues": [
+      [
+        1,
+        0
+      ],
+      [
+        17,
+        3
+      ],
+      [
+        20,
+        3
+      ],
+      [
+        23,
+        2
+      ]
+    ],
+    "previousSid": "liansuo",
+    "revision": 2,
+    "designRole": "轻复习：一枚有锚点，另一枚还需要一次排除。",
+    "focusHints": {
+      "y": [
+        20,
+        17
+      ],
+      "b": [
+        20,
+        17
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          20,
+          17
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          20,
+          17,
+          23
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "yuyan-curve2",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      4,
+      32,
+      31
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "三章轻练",
+    "title": "一枚带出另外两枚",
+    "note": "三枚轻复习：保留一个明确入口，不要求同时猜三个位置。",
+    "hint": "",
+    "clues": [
+      [
+        1,
+        5
+      ],
+      [
+        26,
+        2
+      ],
+      [
+        28,
+        1
+      ],
+      [
+        30,
+        4
+      ],
+      [
+        34,
+        3
+      ]
+    ],
+    "previousSid": "yuyan",
+    "revision": 2,
+    "designRole": "三枚轻复习：保留一个明确入口，不要求同时猜三个位置。",
+    "focusHints": {
+      "y": [
+        1,
+        28
+      ],
+      "b": [
+        34,
+        26
+      ],
+      "r": [
+        30,
+        1
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          28,
+          1,
+          34
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          34,
+          26
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          30,
+          1
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "heliu-curve2",
+    "size": 6,
+    "walls": [
+      16
+    ],
+    "answer": [
+      19,
+      1,
+      34
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "联合推理",
+    "title": "三枚印章互相证明",
+    "note": "章末联合：每枚单独看都不唯一，必须合并缺色、交点与互挡。",
+    "hint": "",
+    "clues": [
+      [
+        7,
+        3
+      ],
+      [
+        10,
+        0
+      ],
+      [
+        13,
+        3
+      ],
+      [
+        28,
+        4
+      ],
+      [
+        31,
+        5
+      ]
+    ],
+    "previousSid": "heliu",
+    "revision": 2,
+    "designRole": "章末联合：每枚单独看都不唯一，必须合并缺色、交点与互挡。",
+    "focusHints": {
+      "y": [
+        31,
+        28
+      ],
+      "b": [
+        13,
+        7
+      ],
+      "r": [
+        31,
+        28
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          13,
+          7,
+          31
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          13,
+          7
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          28,
+          31
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "huiwen",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      4,
+      20
+    ],
+    "count": 2,
+    "inks": [
+      "r",
+      "b"
+    ],
+    "tag": "回温",
+    "title": "对角的两处紫",
+    "note": "热身回温：对角的两处紫色，各等一对印泥到场。一枚红章够了，另一枚蓝章对称地放。",
+    "hint": "红章要同时够到两处紫和第1行第2列的红——第1行×第5列交点只有一个。蓝章同理：两处紫都够到的只剩第5行第1列。",
+    "clues": [
+      [
+        0,
+        6
+      ],
+      [
+        24,
+        6
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "focusHints": {
+      "r": [
+        0,
+        24
+      ],
+      "b": [
+        0,
+        24
+      ]
+    },
+    "tipHints": {
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位狐狸。",
+        "clues": [
+          0,
+          24,
+          1
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          0,
+          24
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "jiaodian-curve2",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      13,
+      23
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "先看留白",
+    "title": "两处留白夹住交点",
+    "note": "先用留白限制方向，再用混色确定关系，与21的直接定位区别。",
+    "hint": "",
+    "clues": [
+      [
+        8,
+        1
+      ],
+      [
+        16,
+        0
+      ],
+      [
+        18,
+        3
+      ],
+      [
+        19,
+        0
+      ]
+    ],
+    "previousSid": "jiaodian",
+    "revision": 2,
+    "designRole": "先用留白限制方向，再用混色确定关系，与21的直接定位区别。",
+    "focusHints": {
+      "y": [
+        8,
+        18
+      ],
+      "b": [
+        18,
+        16
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          18,
+          8
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮目标需要蓝色，小鸟要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          18
+        ],
+        "type": "combine",
+        "priority": 5
+      }
+    }
+  },
+  {
+    "sid": "jiaxiang",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      8,
+      11
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "假象",
+    "title": "看似该绿，却只有黄",
+    "note": "同行相邻的两处绿把两枚印章请到第2行。可第2行第2列是纯黄——宽宽地摆两端就错了。",
+    "hint": "若黄章在第2行第2列左边更远，蓝章的色带会把那格染绿。黄章只能紧贴它右边，替它挡住蓝章——蓝章自然去最右。",
+    "clues": [
+      [
+        9,
+        3
+      ],
+      [
+        10,
+        3
+      ],
+      [
+        7,
+        1
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        7,
+        9
+      ],
+      "b": [
+        9,
+        10
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          9,
+          10,
+          7
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          9,
+          10
+        ],
+        "type": "combine",
+        "priority": 3
+      }
+    }
+  },
+  {
+    "sid": "zhulie-curve2",
+    "size": 6,
+    "walls": [
+      17,
+      24
+    ],
+    "answer": [
+      7,
+      19
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "墙后关系",
+    "title": "绕不过去的那堵墙",
+    "note": "墙和印章互挡共同限制可达范围，替换先定一枚再逐列扫描。",
+    "hint": "",
+    "clues": [
+      [
+        8,
+        1
+      ],
+      [
+        13,
+        3
+      ],
+      [
+        25,
+        2
+      ],
+      [
+        26,
+        0
+      ],
+      [
+        28,
+        0
+      ]
+    ],
+    "previousSid": "zhulie",
+    "revision": 2,
+    "designRole": "墙和印章互挡共同限制可达范围，替换先定一枚再逐列扫描。",
+    "focusHints": {
+      "y": [
+        13,
+        8,
+        26
+      ],
+      "b": [
+        25,
+        13
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          13,
+          8
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          25,
+          13
+        ],
+        "type": "combine",
+        "priority": 4
+      }
+    }
+  },
+  {
+    "sid": "gongxian-curve2",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      21,
+      23
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "共同留白",
+    "title": "两枚都要避开的地方",
+    "note": "两枚共享留白限制，不以一枚已知为唯一入口。",
+    "hint": "",
+    "clues": [
+      [
+        8,
+        0
+      ],
+      [
+        13,
+        0
+      ],
+      [
+        16,
+        0
+      ],
+      [
+        18,
+        1
+      ],
+      [
+        22,
+        3
+      ]
+    ],
+    "previousSid": "gongxian",
+    "revision": 2,
+    "designRole": "两枚共享留白限制，不以一枚已知为唯一入口。",
+    "focusHints": {
+      "y": [
+        18,
+        8,
+        13
+      ],
+      "b": [
+        22,
+        16
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          22,
+          18
+        ],
+        "type": "combine",
+        "priority": 4
+      },
+      "b": {
+        "text": "高亮目标需要蓝色，小鸟要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          22
+        ],
+        "type": "combine",
+        "priority": 8
+      }
+    }
+  },
+  {
+    "sid": "liubai-curve2",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      22,
+      9,
+      8
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "共用颜色",
+    "title": "两处混色，共用一枚",
+    "note": "把两种混色所共有的颜色变成关系证据，打断两枚逐列扫描的重复。",
+    "hint": "",
+    "clues": [
+      [
+        6,
+        4
+      ],
+      [
+        10,
+        3
+      ],
+      [
+        20,
+        5
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        33,
+        2
+      ]
+    ],
+    "previousSid": "liubai",
+    "revision": 2,
+    "designRole": "把两种混色所共有的颜色变成关系证据，打断两枚逐列扫描的重复。",
+    "focusHints": {
+      "y": [
+        10,
+        20
+      ],
+      "b": [
+        10,
+        33
+      ],
+      "r": [
+        6,
+        20
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          10,
+          20
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          10,
+          33
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          6,
+          20
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "banding-curve2",
+    "size": 5,
+    "walls": [
+      14
+    ],
+    "answer": [
+      18,
+      8
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "小盘相让",
+    "title": "小棋盘也要彼此让位",
+    "note": "回到小盘两枚，维持联合排除而不是继续扩大棋盘。",
+    "hint": "",
+    "clues": [
+      [
+        7,
+        2
+      ],
+      [
+        13,
+        3
+      ],
+      [
+        17,
+        1
+      ],
+      [
+        21,
+        0
+      ]
+    ],
+    "previousSid": "banding",
+    "revision": 2,
+    "designRole": "回到小盘两枚，维持联合排除而不是继续扩大棋盘。",
+    "focusHints": {
+      "y": [
+        13,
+        17,
+        7
+      ],
+      "b": [
+        13,
+        7,
+        17
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          13,
+          17
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          7,
+          13
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "bianyin",
+    "size": 7,
+    "walls": [],
+    "answer": [
+      15,
+      28,
+      19
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "辨因",
+    "title": "少了的颜色去哪了",
+    "note": "第3行第7列是纯红不是橙，第3行第1列是绿不是三色——每处缺失都有原因：谁挡住了谁。",
+    "hint": "三处都要蓝：两绿加一紫——蓝章在第5行×第1列。两处绿要黄：黄章在第3行×第2列。红章由红(第3行第7列)和紫(第5行第6列)定，两个候选里有一个会把绿染坏——排除。放好看看：黄章被红章挡住，那里才没有橙。",
+    "clues": [
+      [
+        14,
+        3
+      ],
+      [
+        20,
+        4
+      ],
+      [
+        29,
+        3
+      ],
+      [
+        33,
+        6
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        14,
+        29
+      ],
+      "b": [
+        14,
+        29
+      ],
+      "r": [
+        20,
+        33
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          14,
+          29
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          14,
+          29,
+          33
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          20,
+          33
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "caipai-curve2",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      24,
+      2,
+      3
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "彩排小歇",
+    "title": "三种配方的小彩排",
+    "note": "明确的休闲彩排，缩小棋盘后让30承担真正收束。",
+    "hint": "",
+    "clues": [
+      [
+        1,
+        2
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        12,
+        2
+      ],
+      [
+        22,
+        3
+      ],
+      [
+        23,
+        5
+      ]
+    ],
+    "previousSid": "caipai",
+    "revision": 2,
+    "designRole": "明确的休闲彩排，缩小棋盘后让30承担真正收束。",
+    "focusHints": {
+      "y": [
+        22,
+        4
+      ],
+      "b": [
+        1,
+        12
+      ],
+      "r": [
+        4,
+        8
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          22,
+          4,
+          23
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          22,
+          1,
+          12
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位狐狸。",
+        "clues": [
+          23,
+          4,
+          8
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "jiaxin",
+    "size": 7,
+    "walls": [],
+    "answer": [
+      22,
+      24,
+      26
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "夹心",
+    "title": "三段颜色中间那枚",
+    "note": "第4行被三枚印章切成几段：两端各自纯色，中间是混色。夹心读法——相邻两段共有的颜色，就是站在它们中间的那枚章。",
+    "hint": "绿(第4行第3列)要黄与蓝，第6行第4列的纯蓝给蓝章定了列→蓝章在第4行第4列。红章候选两个：第4行第6列与第6行第7列——后者的左向色带会把第6行第4列的纯蓝染脏，排除。黄章要同时够到第4行第1列的纯黄与那处绿，只剩第4行第2列。放好看看第4行第7列：还是纯红——黄章向右的色带被蓝章截住了。",
+    "clues": [
+      [
+        21,
+        1
+      ],
+      [
+        23,
+        3
+      ],
+      [
+        27,
+        4
+      ],
+      [
+        38,
+        2
+      ],
+      [
+        40,
+        4
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        21,
+        23
+      ],
+      "b": [
+        23,
+        38
+      ],
+      "r": [
+        27,
+        40
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          21,
+          23
+        ],
+        "type": "combine",
+        "priority": 4
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          23,
+          38
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          27,
+          40
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "rangwei",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      24,
+      4
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "让位",
+    "title": "两枚章抢的那一格",
+    "note": "第四章开场，还是两枚章。这次它们的候选里出现了同一格——那种格子只能属于一枚章，另一枚会被一处颜色立刻否掉。",
+    "hint": "黄章两个候选：第2行第2列、第5行第5列。第1行第2列是纯蓝，黄章若站在第2行第2列，那一条线就会把它染成绿——黄章在第5行第5列。蓝章也剩两格：第2行第2列与第1行第5列。黄章定了之后再看第5行第2列：那里只有纯黄，蓝章若在第2行第2列，第2列一路下来就多出蓝——蓝章在第1行第5列。",
+    "clues": [
+      [
+        1,
+        2
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        21,
+        1
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        9,
+        21,
+        1
+      ],
+      "b": [
+        9,
+        1,
+        21
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          21,
+          9
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          1,
+          9
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "dingsao",
+    "size": 6,
+    "walls": [
+      28
+    ],
+    "answer": [
+      32,
+      25
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "r"
+    ],
+    "tag": "钉一扫余",
+    "title": "钉住一枚，扫掉六格",
+    "note": "红章的候选比黄章多得多。别去猜红章——先把唯一两选一的那枚钉住，再回头看第4列和第3行。",
+    "hint": "黄章：第3行第4列或第6行第3列。第3行第1列是空的，黄章若在第3行第4列，整条第3行都会被染上——黄章在第6行第3列。红章七个候选：第1/2/3/4行的第4列，加第5行的第1/2/3列。第6行第4列是纯黄，黄章向右的色带正好经过它，红章不能再进第4列（第1、2、4行的第4列全部划掉）；第3行第4列已被\"第3行第1列是空的\"判死；第5行第1列同样会染到那个空格，第5行第3列会把第3行第3列的纯黄染成橙——红章只剩第5行第2列。（第5行第5列是墙：印章放不进去，而且红章若在第5行第6列，它向左的色带会被这堵墙截住、够不到第5行第4列的纯红。少了这堵墙，第5行第5列和第5行第6列就也都能收场。）",
+    "clues": [
+      [
+        12,
+        0
+      ],
+      [
+        14,
+        1
+      ],
+      [
+        27,
+        4
+      ],
+      [
+        33,
+        1
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        14,
+        33,
+        12
+      ],
+      "r": [
+        27,
+        33,
+        12
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          14,
+          33
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮目标需要红色，狐狸要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          27
+        ],
+        "type": "combine",
+        "priority": 7
+      }
+    }
+  },
+  {
+    "sid": "sanlie",
+    "size": 7,
+    "walls": [
+      6
+    ],
+    "answer": [
+      15,
+      22,
+      43
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "三章一列",
+    "title": "挤在同一列的三枚",
+    "note": "三枚章都在第2列。第5行第4列与第6行第4列是空的——它们从侧面把这一列切成几段，红章的十个候选一段段掉。",
+    "hint": "黄章：第2行第4列或第3行第2列。第5行第4列是空的，黄章若在第2行第4列，第4列一路往下就染到那里——黄章在第3行第2列。红章十个候选：第6行的第3/5/6/7列与第6行第1列都会沿第6行染到第6行第4列的空格，划掉；第1、3行的第2列会把第2行第2列的纯黄染脏，第4行的第2列与第6行第1列会把第4行第1列的纯蓝染脏，第5行第2列会把第5行第4列那个空格染上——红章只剩第7行第2列。蓝章剩第4行第2列与第6行第1列：后者同样会染到第6行第4列的空格，蓝章在第4行第2列。放好看看：第6行第2列是紫而不是三色，第2行第2列仍是纯黄——同列的三枚章把彼此的色带截住了。",
+    "clues": [
+      [
+        8,
+        1
+      ],
+      [
+        17,
+        1
+      ],
+      [
+        21,
+        2
+      ],
+      [
+        31,
+        0
+      ],
+      [
+        36,
+        6
+      ],
+      [
+        38,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        8,
+        17
+      ],
+      "b": [
+        36,
+        21
+      ],
+      "r": [
+        36,
+        38
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          17,
+          8
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          36,
+          21
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮目标需要红色，狐狸要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          36
+        ],
+        "type": "combine",
+        "priority": 10
+      }
+    }
+  },
+  {
+    "sid": "fanjiao",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      5,
+      1,
+      13
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "角上反推",
+    "title": "从角上的配方反推",
+    "note": "第3行第6列是橙、第1行第5列是绿。混色点说的是\"到这里正好是这两色\"——第三种颜色要是也能到，它就毁了。",
+    "hint": "黄章：第1行第6列或第3行第5列。第3行第4列是纯红，黄章若在（3,5）就会把它染成橙——黄章在第1行第6列。蓝章四个候选都在第1行（第2/3/4/6列）：（1,4）与第3行第4列的纯红同列，划掉；（1,6）会让第3行第6列的橙多出蓝变成三色，划掉；（1,3）会沿第3列染到第5行第3列的空格，划掉——蓝章在第1行第2列。红章四个候选都在第3行：（3,1）会把第1行第1列的纯蓝染成紫，（3,3）染到第5行第3列的空格，（3,5）会把第1行第5列的绿多出红——红章在第3行第2列。放好看看第1行第1列：还是纯蓝，黄章向左的色带被蓝章截在第1行第2列。",
+    "clues": [
+      [
+        0,
+        2
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        15,
+        4
+      ],
+      [
+        17,
+        5
+      ],
+      [
+        26,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        17,
+        4
+      ],
+      "b": [
+        0,
+        15,
+        26
+      ],
+      "r": [
+        17,
+        15,
+        0
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          4,
+          17
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          0,
+          4
+        ],
+        "type": "combine",
+        "priority": 4
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          15,
+          17
+        ],
+        "type": "combine",
+        "priority": 4
+      }
+    }
+  },
+  {
+    "sid": "zhijiao",
+    "size": 7,
+    "walls": [],
+    "answer": [
+      18,
+      14,
+      11
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "直角三章",
+    "title": "两条线上的三个角",
+    "note": "黄章在第3行里排了五个候选。第6行第3列、第5行第7列都是空的——每一枚章站错列，都会惊动其中一个。",
+    "hint": "黄章五个候选（第3行的第1/2/3/5/7列）：第2行第1列是紫＝蓝＋红，黄章进去就成三色，划掉；第2行第2列是纯红，划掉；第6行第3列、第5行第7列是空的，黄章在那两列都会染到它们，划掉——黄章在第3行第5列。红章五个候选都在第2行：（2,3）（2,7）染到那两个空格；（2,4）会把第3行第4列的绿染成三色；（2,6）会把第3行第6列的纯黄染成橙——红章在第2行第5列。蓝章剩（2,4）与（3,1）：前者与第2行第2列的纯红同行，会把那格染脏——蓝章在第3行第1列。放好看看第3行第6列：只有纯黄，蓝章向右的色带被黄章截在第3行第5列。",
+    "clues": [
+      [
+        7,
+        6
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        17,
+        3
+      ],
+      [
+        19,
+        1
+      ],
+      [
+        34,
+        0
+      ],
+      [
+        37,
+        0
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        19,
+        17
+      ],
+      "b": [
+        7,
+        17
+      ],
+      "r": [
+        7,
+        8,
+        17
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          17,
+          19
+        ],
+        "type": "combine",
+        "priority": 5
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          7,
+          17
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          7,
+          8
+        ],
+        "type": "combine",
+        "priority": 5
+      }
+    }
+  },
+  {
+    "sid": "nuanzi",
+    "size": 4,
+    "walls": [],
+    "answer": [
+      15,
+      4
+    ],
+    "count": 2,
+    "inks": [
+      "b",
+      "r"
+    ],
+    "tag": "暖紫小歇",
+    "title": "紫色在哪儿不要紧",
+    "note": "第四章第一次只用蓝和红。第2行第4列是紫——那是蓝与红唯一能同时够到的地方。",
+    "hint": "蓝章：第3行第4列或第4行第4列。第3行第1列是纯红，蓝章若在第3行第4列，整条第3行就被染上，划掉——蓝章在第4行第4列。红章：第2行第1列或第3行第4列。第1行第4列是纯蓝，红章若在第3行第4列，第4列就会一路染到那里，划掉——红章在第2行第1列。放好看看第2行第4列：蓝从下面上来、红从左边过来，正好是紫。",
+    "clues": [
+      [
+        3,
+        2
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        8,
+        4
+      ]
+    ],
+    "focusHints": {
+      "b": [
+        7,
+        8
+      ],
+      "r": [
+        7,
+        8
+      ]
+    },
+    "tipHints": {
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          3,
+          7
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          7,
+          8
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "bianjiao",
+    "size": 7,
+    "walls": [],
+    "answer": [
+      42,
+      5,
+      4
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "边角定章",
+    "title": "角落那枚先落地",
+    "note": "第5行第5列是纯红。它同时管着两条线：一条不许黄章来，一条不许蓝章来。",
+    "hint": "黄章：第4行第5列或第7行第1列。第5行第5列是纯红，黄章若在（4,5），第5列就把它染成橙——黄章在第7行第1列。蓝章五个候选都在第6列（第1/4/5/6/7行）：（5,6）与第5行第5列的纯红同行，划掉；（7,6）会让第7行第5列的橙多出蓝，划掉；（4,6）碰到第4行第1列的纯黄、（6,6）碰到第6行第4列的空格，划掉——蓝章在第1行第6列。红章五个候选都在第5列：（2,5）（3,5）各与第2、3行第6列的纯蓝同行；（4,5）与第4行第1列的纯黄同行；（6,5）染到第6行第4列的空格——红章在第1行第5列。",
+    "clues": [
+      [
+        12,
+        2
+      ],
+      [
+        19,
+        2
+      ],
+      [
+        21,
+        1
+      ],
+      [
+        32,
+        4
+      ],
+      [
+        38,
+        0
+      ],
+      [
+        46,
+        5
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        46,
+        21
+      ],
+      "b": [
+        12,
+        19,
+        21
+      ],
+      "r": [
+        46,
+        32,
+        12
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          46,
+          21
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          12,
+          19
+        ],
+        "type": "combine",
+        "priority": 5
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          32,
+          46
+        ],
+        "type": "combine",
+        "priority": 5
+      }
+    }
+  },
+  {
+    "sid": "chuixin",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      15,
+      24,
+      10
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "对角穿心",
+    "title": "一列里的橙和紫",
+    "note": "第3行第5列是橙、第5行第5列是紫，它们在同一列。谁想穿过这一列，都会被这两格先按住。",
+    "hint": "黄章：第3行第4列或第4行第5列。第5行第5列是紫＝蓝＋红，黄章若在（4,5），第5列就把它染成三色——黄章在第3行第4列。红章四个候选都在第5列：（1,5）会把第1行第6列染上颜色，那里是空的；（4,5）与第4行第4列的纯黄同行；（6,5）与第6行第1列的纯蓝同行——红章在第2行第5列。蓝章剩（5,1）与（6,5）：后者会沿第5列上去，把第3行第5列的橙染成三色——蓝章在第5行第1列。",
+    "clues": [
+      [
+        5,
+        0
+      ],
+      [
+        16,
+        5
+      ],
+      [
+        21,
+        1
+      ],
+      [
+        28,
+        6
+      ],
+      [
+        30,
+        2
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        16,
+        21,
+        28
+      ],
+      "b": [
+        28,
+        30,
+        16
+      ],
+      "r": [
+        16,
+        5,
+        21
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          16,
+          21
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          28,
+          30
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          16,
+          28
+        ],
+        "type": "combine",
+        "priority": 4
+      }
+    }
+  },
+  {
+    "sid": "wuxian",
+    "size": 6,
+    "walls": [
+      28
+    ],
+    "answer": [
+      31,
+      34,
+      25
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "少线三章",
+    "title": "只有五条线索",
+    "note": "第1行第4列是空的，它一个人管着红章的四个候选。第6行两头各截住一条色带。",
+    "hint": "黄章三个候选都在第6行：（6,4）与第5行第4列的纯红同列，划掉；（6,5）把第6行第6列的纯蓝染成绿，划掉——黄章在第6行第2列。蓝章同样三个：（6,2）被第6行第1列的纯黄否掉，（6,4）被第5行第4列的纯红否掉——蓝章在第6行第5列。红章七个候选：第2/3/4/6行的第4列都会沿那条列染到第1行第4列的空格，全部划掉；（5,1）与第6行第1列的纯黄同行；（5,3）会把第6行第3列的绿染成三色——红章在第5行第2列。（还有一格要说清：第5行第5列是墙，印章放不进去；第5行第6列则是被这道墙截住了向左的色带，够不到第5行第4列的纯红。这两格本来是红章的第八、第九个候选。）放好看看两头：第6行第1列只有纯黄，蓝章向左的色带被黄章截住；第6行第6列只有纯蓝，黄章向右的色带被蓝章截住。",
+    "clues": [
+      [
+        3,
+        0
+      ],
+      [
+        27,
+        4
+      ],
+      [
+        30,
+        1
+      ],
+      [
+        32,
+        3
+      ],
+      [
+        35,
+        2
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        30,
+        32
+      ],
+      "b": [
+        35,
+        3
+      ],
+      "r": [
+        27,
+        3,
+        30
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          30,
+          32
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          32,
+          35
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "r": {
+        "text": "高亮目标需要红色，狐狸要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          27
+        ],
+        "type": "combine",
+        "priority": 7
+      }
+    }
+  },
+  {
+    "sid": "jiese",
+    "size": 7,
+    "walls": [
+      38
+    ],
+    "answer": [
+      21,
+      26,
+      40
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "章末·截色",
+    "title": "不该多出来的那两种颜色",
+    "note": "第四章收束。第7行第2列是空的，红章有一整排候选都栽在它手里；第6列上还有两处\"少了颜色\"的地方。",
+    "hint": "黄章：第4行第1列或第5行第2列。第7行第2列是空的，黄章若在（5,2），第2列就一路染到那里——黄章在第4行第1列。蓝章：第2行第2列或第4行第6列，前者同样会把第2列染到那个空格——蓝章在第4行第6列。红章十个候选：第7行的（7,3）（7,4）（7,5）（7,7）都会染到第7行第2列的空格；（1,6）（3,6）（4,6）在第6列上，会把第2行第6列的纯蓝染成紫；（5,6）与（7,1）都在第5行，会把第5行第1列的纯黄染成橙——红章只剩第6行第6列。放好看看第6列：第2行第6列还是纯蓝（红章向上的色带被蓝章截住），第7行第6列还是纯红（蓝章向下的色带被红章截住）；再看第4行第2列：黄与蓝正好在那里碰上，是绿。",
+    "clues": [
+      [
+        12,
+        2
+      ],
+      [
+        22,
+        3
+      ],
+      [
+        28,
+        1
+      ],
+      [
+        43,
+        0
+      ],
+      [
+        47,
+        4
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        22,
+        43
+      ],
+      "b": [
+        12,
+        22
+      ],
+      "r": [
+        47,
+        28
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          22,
+          28
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          12,
+          22
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮目标需要红色，狐狸要与它同行或同列，色带中途不能被挡住。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          47
+        ],
+        "type": "combine",
+        "priority": 10
+      }
+    }
+  },
+  {
+    "sid": "sijiao-curve2",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      12,
+      13
+    ],
+    "count": 2,
+    "inks": [
+      "y",
+      "b"
+    ],
+    "tag": "藏起的蓝",
+    "title": "没有蓝色目标的小鸟",
+    "note": "缺色反推的简单入口：小鸟仍须放齐，但色带不能碰到观察点。",
+    "hint": "",
+    "clues": [
+      [
+        2,
+        1
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        19,
+        0
+      ],
+      [
+        21,
+        0
+      ],
+      [
+        22,
+        1
+      ]
+    ],
+    "previousSid": "sijiao",
+    "revision": 2,
+    "designRole": "缺色反推的简单入口：小鸟仍须放齐，但色带不能碰到观察点。",
+    "focusHints": {
+      "y": [
+        22,
+        2,
+        5
+      ],
+      "b": [
+        5,
+        19,
+        21
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          22,
+          2
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "这关没有含蓝色的目标，小鸟却仍要放下。先确定其他印章，再利用它们挡住这枚印章的色带；高亮的观察点不能多染上蓝色。",
+        "clues": [
+          5,
+          19,
+          21
+        ],
+        "type": "absent",
+        "priority": 20
+      }
+    }
+  },
+  {
+    "sid": "sikong-curve3",
+    "size": 6,
+    "walls": [
+      6,
+      30
+    ],
+    "answer": [
+      9,
+      7,
+      28
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "共蓝交点",
+    "title": "绿与紫，共用哪枚印章",
+    "note": "先由绿与紫共同需要的蓝色定位小鸟，再结合墙和留白确定兔兔与狐狸。",
+    "hint": "",
+    "clues": [
+      [
+        8,
+        3
+      ],
+      [
+        10,
+        5
+      ],
+      [
+        13,
+        2
+      ],
+      [
+        20,
+        0
+      ],
+      [
+        25,
+        6
+      ]
+    ],
+    "previousSid": "sikong",
+    "revision": 3,
+    "designRole": "先由绿与紫共同需要的蓝色定位小鸟，再结合墙和留白确定兔兔与狐狸。",
+    "previousSids": [
+      "sikong-curve2"
+    ],
+    "focusHints": {
+      "y": [
+        10,
+        8
+      ],
+      "b": [
+        8,
+        25
+      ],
+      "r": [
+        10,
+        25
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          8,
+          10
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          8,
+          13,
+          25
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          10,
+          25
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "manpan",
+    "size": 6,
+    "walls": [],
+    "answer": [
+      5,
+      29,
+      35
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "满盘划尽",
+    "title": "整盘都是红章的候选",
+    "note": "红章几乎哪里都能放——三十格。别慌，把它不能站的行和列一条条划掉，比数它还剩下的格子快。",
+    "hint": "黄章：第1行第6列或第2行第3列。第2行第4列是空的，黄章若在（2,3），第2行就染到那里——黄章在第1行第6列。蓝章：第2行第1列或第5行第6列，前者同样在第2行、会染到那个空格——蓝章在第5行第6列。红章三十个候选一条线一条线地划：第1行第3列是纯黄，凡是站在第1行或第3列上的格子都会给它多添一层颜色，一批划掉；第2行第4列、第3行第2列、第3行第5列是三个空格，第2行与第4列、第3行与第2列、第3行与第5列上的候选一起划掉；第5行第1列是纯蓝，第5行与第1列上的候选划掉；剩下的候选全在第6列上，而第2行第6列是绿＝黄＋蓝，红章从（3,6）（4,6）（5,6）都能沿这一列够到那格，把它们划掉；只有第6行第6列够不着——蓝章正好站在第5行第6列替它挡了一下——红章只剩第6行第6列。放好看看第2行第6列：还是绿而不是三色，红章向上的色带正是被蓝章截住的。",
+    "clues": [
+      [
+        2,
+        1
+      ],
+      [
+        9,
+        0
+      ],
+      [
+        11,
+        3
+      ],
+      [
+        13,
+        0
+      ],
+      [
+        16,
+        0
+      ],
+      [
+        24,
+        2
+      ]
+    ],
+    "focusHints": {
+      "y": [
+        11,
+        9
+      ],
+      "b": [
+        11,
+        24
+      ],
+      "r": [
+        2,
+        9,
+        13
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          11,
+          2
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          11,
+          24
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "这关没有含红色的目标，狐狸却仍要放下。先确定其他印章，再利用它们挡住这枚印章的色带；高亮的观察点不能多染上红色。",
+        "clues": [
+          2,
+          9,
+          13
+        ],
+        "type": "absent",
+        "priority": 30
+      }
+    }
+  },
+  {
+    "sid": "liekong-curve2",
+    "size": 6,
+    "walls": [
+      22
+    ],
+    "answer": [
+      13,
+      1,
+      31
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "无蓝反证",
+    "title": "没有蓝色，也要小鸟",
+    "note": "换一个缺失颜色，并与留白和橙色组合，保留43的反证核心。",
+    "hint": "",
+    "clues": [
+      [
+        9,
+        0
+      ],
+      [
+        16,
+        1
+      ],
+      [
+        18,
+        0
+      ],
+      [
+        25,
+        5
+      ],
+      [
+        32,
+        4
+      ],
+      [
+        35,
+        4
+      ]
+    ],
+    "previousSid": "liekong",
+    "revision": 2,
+    "designRole": "换一个缺失颜色，并与留白和橙色组合，保留43的反证核心。",
+    "focusHints": {
+      "y": [
+        25,
+        16
+      ],
+      "b": [
+        9,
+        18,
+        35
+      ],
+      "r": [
+        25,
+        32,
+        35
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位兔兔。",
+        "clues": [
+          16,
+          25
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "b": {
+        "text": "这关没有含蓝色的目标，小鸟却仍要放下。先确定其他印章，再利用它们挡住这枚印章的色带；高亮的观察点不能多染上蓝色。",
+        "clues": [
+          9,
+          18,
+          35
+        ],
+        "type": "absent",
+        "priority": 29
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位狐狸。",
+        "clues": [
+          32,
+          25,
+          35
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "dinglie-curve2",
+    "size": 6,
+    "walls": [
+      2
+    ],
+    "answer": [
+      28,
+      4,
+      22
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "缺色合流",
+    "title": "兔兔不在目标颜色里",
+    "note": "三色前的小收束：缺色、紫色、墙和留白共同限制兔兔。",
+    "hint": "",
+    "clues": [
+      [
+        1,
+        0
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        14,
+        0
+      ],
+      [
+        16,
+        6
+      ],
+      [
+        18,
+        4
+      ],
+      [
+        35,
+        0
+      ]
+    ],
+    "previousSid": "dinglie",
+    "revision": 2,
+    "designRole": "三色前的小收束：缺色、紫色、墙和留白共同限制兔兔。",
+    "focusHints": {
+      "y": [
+        35,
+        18,
+        14
+      ],
+      "b": [
+        16,
+        3,
+        14
+      ],
+      "r": [
+        16,
+        18
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "这关没有含黄色的目标，兔兔却仍要放下。先确定其他印章，再利用它们挡住这枚印章的色带；高亮的观察点不能多染上黄色。",
+        "clues": [
+          35,
+          18,
+          14
+        ],
+        "type": "absent",
+        "priority": 29
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          3,
+          16
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          16,
+          18
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "zidui-curve2",
+    "size": 5,
+    "walls": [],
+    "answer": [
+      9,
+      5,
+      16
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "三色初印",
+    "title": "三条色带，同一个交点",
+    "note": "只教一次新目标：黄蓝红同时到达棕色观察点。",
+    "hint": "",
+    "clues": [
+      [
+        0,
+        2
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        14,
+        1
+      ],
+      [
+        15,
+        6
+      ],
+      [
+        17,
+        4
+      ]
+    ],
+    "previousSid": "zidui",
+    "revision": 2,
+    "designRole": "只教一次新目标：黄蓝红同时到达棕色观察点。",
+    "focusHints": {
+      "y": [
+        6,
+        14
+      ],
+      "b": [
+        6,
+        15
+      ],
+      "r": [
+        6,
+        15
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          6,
+          14
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          15,
+          6,
+          0
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位狐狸。",
+        "clues": [
+          15,
+          6,
+          17
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "konghang-curve2",
+    "size": 6,
+    "walls": [
+      10
+    ],
+    "answer": [
+      31,
+      24,
+      19
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "棕色缺纯色",
+    "title": "没有纯色提示的那一枚",
+    "note": "三色目标与缺少纯色目标组合，不能靠独立纯色线索直接放齐。",
+    "hint": "",
+    "clues": [
+      [
+        7,
+        4
+      ],
+      [
+        12,
+        2
+      ],
+      [
+        15,
+        0
+      ],
+      [
+        25,
+        7
+      ],
+      [
+        30,
+        3
+      ]
+    ],
+    "previousSid": "konghang",
+    "revision": 2,
+    "designRole": "三色目标与缺少纯色目标组合，不能靠独立纯色线索直接放齐。",
+    "focusHints": {
+      "y": [
+        25,
+        30
+      ],
+      "b": [
+        30,
+        25
+      ],
+      "r": [
+        7,
+        12
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          25,
+          30
+        ],
+        "type": "combine",
+        "priority": 2
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位小鸟。",
+        "clues": [
+          12,
+          25,
+          30
+        ],
+        "type": "intersection",
+        "priority": 1
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          7,
+          25
+        ],
+        "type": "combine",
+        "priority": 4
+      }
+    }
+  },
+  {
+    "sid": "suoxing-curve2",
+    "size": 6,
+    "walls": [
+      31,
+      13
+    ],
+    "answer": [
+      2,
+      20,
+      11
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "三色与留白",
+    "title": "交点要三色，旁边要无色",
+    "note": "三色必须汇合，同时保持留白和墙后观察点，突出方向控制。",
+    "hint": "",
+    "clues": [
+      [
+        8,
+        7
+      ],
+      [
+        12,
+        0
+      ],
+      [
+        14,
+        3
+      ],
+      [
+        26,
+        2
+      ],
+      [
+        28,
+        0
+      ],
+      [
+        35,
+        4
+      ]
+    ],
+    "previousSid": "suoxing",
+    "revision": 2,
+    "designRole": "三色必须汇合，同时保持留白和墙后观察点，突出方向控制。",
+    "focusHints": {
+      "y": [
+        8,
+        14
+      ],
+      "b": [
+        26,
+        8
+      ],
+      "r": [
+        8,
+        35
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          14,
+          8
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          14,
+          8,
+          26
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          8,
+          35
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  },
+  {
+    "sid": "shaoxian-curve2",
+    "size": 7,
+    "walls": [
+      8
+    ],
+    "answer": [
+      46,
+      25,
+      31
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "三色互挡",
+    "title": "让颜色停在正确的一边",
+    "note": "缺少纯色锚点，以混色关系、互挡和三色交点共同反推。",
+    "hint": "",
+    "clues": [
+      [
+        4,
+        2
+      ],
+      [
+        10,
+        4
+      ],
+      [
+        11,
+        2
+      ],
+      [
+        16,
+        0
+      ],
+      [
+        32,
+        7
+      ],
+      [
+        39,
+        3
+      ]
+    ],
+    "previousSid": "shaoxian",
+    "revision": 2,
+    "designRole": "缺少纯色锚点，以混色关系、互挡和三色交点共同反推。",
+    "focusHints": {
+      "y": [
+        32,
+        39
+      ],
+      "b": [
+        4,
+        16
+      ],
+      "r": [
+        32,
+        10
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          32,
+          39
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          11,
+          4,
+          32
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。这组线索只留下一个可放的位置，可以先定位狐狸。",
+        "clues": [
+          10,
+          32
+        ],
+        "type": "intersection",
+        "priority": 1
+      }
+    }
+  },
+  {
+    "sid": "zhongju-curve2",
+    "size": 7,
+    "walls": [
+      36,
+      31
+    ],
+    "answer": [
+      26,
+      23,
+      39
+    ],
+    "count": 3,
+    "inks": [
+      "y",
+      "b",
+      "r"
+    ],
+    "tag": "终关·三色合印",
+    "title": "最后一张，三色合印",
+    "note": "综合收束：一处三色交点、两堵墙、留白和两色混色一起解释。",
+    "hint": "",
+    "clues": [
+      [
+        10,
+        0
+      ],
+      [
+        17,
+        0
+      ],
+      [
+        21,
+        2
+      ],
+      [
+        22,
+        2
+      ],
+      [
+        24,
+        3
+      ],
+      [
+        25,
+        7
+      ],
+      [
+        41,
+        4
+      ]
+    ],
+    "previousSid": "zhongju",
+    "revision": 2,
+    "designRole": "综合收束：一处三色交点、两堵墙、留白和两色混色一起解释。",
+    "focusHints": {
+      "y": [
+        24,
+        25,
+        41
+      ],
+      "b": [
+        21,
+        22
+      ],
+      "r": [
+        25,
+        41
+      ]
+    },
+    "tipHints": {
+      "y": {
+        "text": "高亮的观察点都需要黄色。兔兔必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          24,
+          25
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "b": {
+        "text": "高亮的观察点都需要蓝色。小鸟必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          24,
+          21,
+          22
+        ],
+        "type": "combine",
+        "priority": 3
+      },
+      "r": {
+        "text": "高亮的观察点都需要红色。狐狸必须沿行或列同时够到它们；把这些行列的共同位置合起来看。再结合墙和已经确定的印章核对方向，不要只满足其中一个目标。",
+        "clues": [
+          25,
+          41
+        ],
+        "type": "combine",
+        "priority": 2
+      }
+    }
+  }
+]);</script>
+<script>
+if(new URLSearchParams(location.search).get('reset')==='1'){
+  try{['yiji-stamp-progress','stamp-workshop-features-v1','inky-pals-best-moves-v1'].forEach(key=>localStorage.removeItem(key))}catch{}
+  try{const url=new URL(location.href);url.searchParams.delete('reset');history.replaceState(null,'',url.href)}catch{}
+}
+</script>
+<script>const {paint,levels,NAMES,SYMS,BITS}=StampEngine;
+const $=id=>document.getElementById(id);
+const ANIMALS={y:{name:'黄色兔兔',short:'兔兔'},b:{name:'蓝色小鸟',short:'小鸟'},r:{name:'红色小狐',short:'小狐'}};
+const INKNAME={y:'黄',b:'蓝',r:'红'};
+const RECIPE={0:'（不能有任何颜色）',3:'（黄＋蓝交叠）',5:'（红＋黄交叠）',6:'（红＋蓝交叠）',7:'（三色综合）'};
+const VKEY={1:'y',2:'b',3:'g',4:'r',5:'o',6:'p',7:'m'}; // 格值→公式条样式
+
+// ---------- 存档（无权限或坏档时静默降级为不保存；howtoVer=教学版本，旧档自动重看新教学） ----------
+// curveVer=2：进度按 sid（稳定ID）记录，关卡重排/扩关不再迁移；旧档（按索引）加载时一次性映射，进度原样保留。
+const SAVE_KEY='yiji-stamp-progress';
+const HOWTO_VER=2;
+const CURVE_VER=2;
+const LEGACY_INDEX_TO_SID={0:'dingwei',1:'duyin',2:'jiaoda',3:'zhedang',4:'fenduan',5:'dingxian',6:'xiangjia',7:'liubai',8:'quse',9:'danglu',10:'zhulie',11:'hong-jiaoxue',12:'hong-zhedang',13:'hong-paichu',14:'hun-jiaoxue',15:'hun-shizi',16:'hun-dingxian'};
+function newSave(){return {solvedIds:[],demoIds:[],lastId:null,seenHowto:false,howtoVer:0,curveVer:CURVE_VER}}
+function loadSave(){
+  try{const raw=localStorage.getItem(SAVE_KEY);
+    if(raw){const d=JSON.parse(raw);
+      if(d&&typeof d==='object'){
+        if(d.curveVer===CURVE_VER&&Array.isArray(d.solvedIds)&&Array.isArray(d.demoIds)){
+          const s=newSave();
+          s.solvedIds=d.solvedIds.filter(x=>typeof x==='string');
+          s.demoIds=d.demoIds.filter(x=>typeof x==='string');
+          s.lastId=typeof d.lastId==='string'?d.lastId:null;
+          s.seenHowto=d.seenHowto===true;s.howtoVer=typeof d.howtoVer==='number'?d.howtoVer:0;
+          return s;}
+        if(Array.isArray(d.solved)&&Array.isArray(d.demo)&&typeof d.last==='number'){
+          // v1 旧档：索引→sid 一次性迁移（未知索引安全丢弃）
+          const s=newSave();
+          d.solved.forEach(i=>{const sid=LEGACY_INDEX_TO_SID[i];if(sid&&!s.solvedIds.includes(sid))s.solvedIds.push(sid)});
+          d.demo.forEach(i=>{const sid=LEGACY_INDEX_TO_SID[i];if(sid&&!s.demoIds.includes(sid)&&!s.solvedIds.includes(sid))s.demoIds.push(sid)});
+          s.lastId=LEGACY_INDEX_TO_SID[d.last]||null;
+          s.seenHowto=d.seenHowto===true;s.howtoVer=typeof d.howtoVer==='number'?d.howtoVer:0;
+          return s;}
+      }}
+  }catch(e){}
+  return newSave();
+}
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save))}catch(e){}}
+let save=loadSave();
+function idxOfSid(sid){return sid==null?-1:levels.findIndex(l=>l.sid===sid||l.previousSid===sid||l.previousSids?.includes(sid))}
+const isMain=i=>i>=0&&i<levels.length&&!levels[i].group;
+// 「继续游戏」的目标：上次看的主线关；若上次停在练习/暂存（不占编号的组），则回到主线第一个没打通的关卡。
+// 第七轮必需：旧30「截流」移入暂存且已在存档里通关，若按“最大索引”会继续到已通关的暂存题，看不到新30。
+function lastLevelIndex(){
+  const i=idxOfSid(save.lastId);
+  if(isMain(i))return i;
+  const main=levels.map((l,idx)=>idx).filter(isMain);
+  const next=main.find(idx=>!save.solvedIds.includes(levels[idx].sid));
+  return next!==undefined?next:main.length?main[main.length-1]:0;
+}
+
+const RINGC={y:'#c99a1e',b:'#4a8dbb',r:'#d8542f'};
+const BODY={
+ y:'<ellipse cx="18" cy="12.5" rx="4" ry="8" fill="#fff6d9" stroke="#8e7955" stroke-width="2"/><ellipse cx="30" cy="12.5" rx="4" ry="8" fill="#fff6d9" stroke="#8e7955" stroke-width="2"/><circle cx="24" cy="28" r="11.5" fill="#fff6d9" stroke="#8e7955" stroke-width="2"/><circle cx="20" cy="26" r="1.7" fill="#5c4a33"/><circle cx="28" cy="26" r="1.7" fill="#5c4a33"/><path d="M22.5 30.5h3" stroke="#c98d7a" stroke-width="2" stroke-linecap="round"/>',
+ b:'<circle cx="23" cy="26" r="12" fill="#d5e9ed" stroke="#647e83" stroke-width="2"/><path d="M33.5 24.5l6.5 1.8-6.5 2z" fill="#e8a53c" stroke="#b07a24" stroke-width="1.5"/><circle cx="27" cy="22.5" r="1.8" fill="#47585c"/><path d="M16 27q7-4.5 9 3.5" fill="none" stroke="#86adb4" stroke-width="2.4" stroke-linecap="round"/>',
+ r:'<path d="M14.5 17L11 7.5 22 13z" fill="#f9ddd0" stroke="#a05a3c" stroke-width="2" stroke-linejoin="round"/><path d="M33.5 17L37 7.5 26 13z" fill="#f9ddd0" stroke="#a05a3c" stroke-width="2" stroke-linejoin="round"/><circle cx="24" cy="28.5" r="11.5" fill="#f9ddd0" stroke="#a05a3c" stroke-width="2"/><circle cx="19.5" cy="27" r="1.7" fill="#5c3a28"/><circle cx="28.5" cy="27" r="1.7" fill="#5c3a28"/><path d="M24 31.5L21.8 34.5h4.4z" fill="#c96a4a"/>'};
+function icon(c){
+  return `<span class="stamp"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="#fffdf6" stroke="${RINGC[c]}" stroke-width="4.5"/>${BODY[c]}</svg></span>`;
+}
+
+</script>
+<script>// UI teaching and hint state live separately from the engine and old save loader.
+NAMES[7]='棕色';
+RECIPE[7]='（黄＋蓝＋红叠加，游戏规则）';
+const FEATURE_KEY='stamp-workshop-features-v1';
+let featureProgress={seen:[],unlocked:[]};
+try{
+  const stored=JSON.parse(localStorage.getItem(FEATURE_KEY)||'null');
+  if(stored&&typeof stored==='object')featureProgress={seen:Array.isArray(stored.seen)?stored.seen.filter(x=>typeof x==='string'):[],unlocked:Array.isArray(stored.unlocked)?stored.unlocked.filter(x=>typeof x==='string'):[]};
+}catch{}
+function persistFeatures(){try{localStorage.setItem(FEATURE_KEY,JSON.stringify(featureProgress))}catch{}}
+const BEST_KEY='inky-pals-best-moves-v1',bestMoves=Object.create(null);
+try{
+  const stored=JSON.parse(localStorage.getItem(BEST_KEY)||'null');
+  if(stored&&typeof stored==='object'&&!Array.isArray(stored))for(const l of levels){
+    const n=stored[l.sid];if(Number.isInteger(n)&&n>=l.count)bestMoves[l.sid]=n;
+  }
+}catch{}
+function persistBest(){try{localStorage.setItem(BEST_KEY,JSON.stringify(bestMoves))}catch{}}
+function hasPerfect(l){return save.solvedIds.includes(l.sid)&&bestMoves[l.sid]===l.count}
+const SVG_PATHS={
+ back:'<path d="m14 6-6 6 6 6"/>',
+ home:'<path d="m3 10 9-7 9 7M5 9v11h5v-6h4v6h5V9"/>',
+ grid:'<rect x="3.5" y="3.5" width="6" height="6" rx="1.2"/><rect x="14.5" y="3.5" width="6" height="6" rx="1.2"/><rect x="3.5" y="14.5" width="6" height="6" rx="1.2"/><rect x="14.5" y="14.5" width="6" height="6" rx="1.2"/>',
+ undo:'<path d="m8 5-5 5 5 5M3 10h10a6 6 0 0 1 0 12" transform="translate(0 -2)"/>',
+ reset:'<path d="M20 5v6h-6M20 11a8 8 0 1 0-1.7 6.2"/>',
+ bulb:'<path d="M9 18h6M9.5 21h5M8 14.5a6 6 0 1 1 8 0c-1 .8-1.5 1.6-1.5 3.5h-5c0-1.9-.5-2.7-1.5-3.5Z"/>',
+ close:'<path d="m6 6 12 12M18 6 6 18"/>',
+ check:'<path d="m5 12 4.5 4.5L19 7"/>'
+ ,next:'<path d="M4 12h16m-6-6 6 6-6 6"/>'
+};
+function uiIcon(name){return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">${SVG_PATHS[name]||''}</svg>`}
+document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=uiIcon(el.dataset.icon));
+
+let level=0,pos=[],selected=0,history=[],demoViewed=false,prevInk=null,prevP=null,moves=0,hintsUsed=0;
+let winTimer=null,winToken=0,completed=false,toastTimer=null,hintTimer=null,lastHint=-1;
+let pendingHint=null;
+let modalOpener=null;
+const TOTAL_GOAL=50;
+const chapterNames=['读懂痕迹','颜色相遇','位置关系','精巧布局','最后的印画'];
+function toolOrder(l){
+  const rank={y:0,b:1,r:2},inks=l.inks||['y','b'];
+  return Array.from({length:l.count},(_,k)=>k).sort((a,b)=>rank[inks[a]]-rank[inks[b]]);
+}
+const screenName=()=>document.querySelector('.screen.active')?.id;
+function closeDialogs(restore=true){
+  document.querySelectorAll('.dialog').forEach(el=>el.hidden=true);
+  $('app').inert=false;
+  if(restore){
+    const target=modalOpener?.isConnected&&modalOpener!==document.body&&!modalOpener.disabled&&modalOpener.getClientRects().length?modalOpener:document.querySelector('.screen.active button:not(:disabled)');
+    target?.focus({preventScroll:true});
+  }
+  modalOpener=null;
+}
+function openDialog(id){
+  stopHint();
+  const opener=document.activeElement;
+  closeDialogs(false);modalOpener=opener;
+  $(id).hidden=false;$('app').inert=true;
+  const first=$(id).querySelector('button:not(:disabled)');
+  if(first)first.focus({preventScroll:true});
+}
+document.querySelectorAll('[data-close]').forEach(el=>el.onclick=()=>closeDialogs());
+document.querySelectorAll('.dialog').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)closeDialogs()}));
+document.addEventListener('keydown',e=>{
+  const modal=[...document.querySelectorAll('.dialog')].find(d=>!d.hidden);
+  if(!modal)return;
+  if(e.key==='Escape'){e.preventDefault();closeDialogs();return}
+  if(e.key==='Tab'){
+    const controls=[...modal.querySelectorAll('button:not(:disabled)')].filter(x=>x.getClientRects().length);
+    const first=controls[0],last=controls[controls.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}
+  }
+});
+function cancelCompletion(){clearTimeout(winTimer);winTimer=null;winToken++}
+function message(text){
+  clearTimeout(toastTimer);$('message').textContent=text;$('message').hidden=!text;
+  if(text)toastTimer=setTimeout(()=>$('message').hidden=true,2600);
+}
+function showScreen(name){
+  cancelCompletion();stopHint();closeDialogs(false);message('');
+  for(const s of ['home','select','game'])$(s).classList.toggle('active',s===name);
+  document.body.dataset.screen=name;
+  if(name==='home')renderHome();
+  if(name==='select')renderSelect();
+  if(name==='game')requestAnimationFrame(fitBoard);
+}
+function renderHome(){
+  $('home-art').innerHTML=['y','b','r'].map(icon).join('');
+  const main=levels.filter(l=>!l.group),done=main.filter(l=>save.solvedIds.includes(l.sid)).length;
+  $('btn-continue').textContent=hasPlayed()?'继续游戏':'开始游戏';
+  $('home-progress').textContent=done?`已完成 ${done} / ${main.length} 张印画`:'';
+}
+function hasPlayed(){return idxOfSid(save.lastId)>=0||save.solvedIds.length>0||save.demoIds.length>0}
+function renderSelect(){
+  const main=levels.filter(l=>!l.group),done=main.filter(l=>save.solvedIds.includes(l.sid)).length;
+  const perfect=main.filter(hasPerfect).length;
+  $('select-progress').textContent=`已完成 ${done} / ${main.length} · ★ 最少步 ${perfect} / ${main.length}`;
+  const groups=chapterNames.map((name,i)=>({name:`第 ${i+1} 章 · ${name}`,items:main.slice(i*10,i*10+10)}));
+  $('select-groups').innerHTML=groups.filter(g=>g.items.length).map(g=>{
+    const solved=g.items.filter(l=>save.solvedIds.includes(l.sid)).length;
+    return `<section class="select-group${g.extra?' extra':''}"><h3>${g.name}<small>${solved} / ${g.items.length}</small></h3><div class="select-grid">${g.items.map((l,ix)=>{
+      const i=levels.indexOf(l),num=l.group?`练${ix+1}`:main.indexOf(l)+1;
+      const ok=save.solvedIds.includes(l.sid),demo=save.demoIds.includes(l.sid),star=hasPerfect(l);
+      return `<button class="lv${ok?' done':demo?' demo':''}${star?' perfect':''}${save.lastId===l.sid?' current':''}" data-level="${i}" aria-label="第${num}关${star?'，最少步通关':ok?'，已完成':''}" title="${star?'最少步通关 · ':''}${l.tag}">${num}</button>`;
+    }).join('')}</div></section>`;
+  }).join('');
+}
+function chip(v){return `<i class="color-chip b${v}" aria-label="${NAMES[v]}">${SYMS[v]}</i>`}
+function formula(a,b,r){return `<span class="recipe" role="img" aria-label="${NAMES[a]}加${NAMES[b]}等于${NAMES[r]}">${chip(a)}<span class="op">＋</span>${chip(b)}<span class="op">＝</span>${chip(r)}</span>`}
+function recipesHTML(l){
+  const inks=l.inks||['y','b'],pairs=[],ordinal=levels.filter(x=>!x.group).indexOf(l)+1;
+  if(ordinal>=3&&inks.includes('y')&&inks.includes('b'))pairs.push(formula(1,2,3));
+  if(ordinal>=11&&inks.includes('r')&&inks.includes('b'))pairs.push(formula(4,2,6));
+  if(ordinal>=12&&inks.includes('r')&&inks.includes('y'))pairs.push(formula(4,1,5));
+  if(l.clues.some(c=>c[1]===7))pairs.push(brownFormula());
+  return (pairs.length?`<div class="recipe-row">${pairs.join('')}</div>`:'')+`<div class="rule-summary"><span class="legend-cell" aria-hidden="true"></span><span>上目标 · 下当前</span><span class="rule-dot">·</span><span>普通格随意</span><button id="rule-help" class="rule-help" aria-label="查看图示规则">?</button></div>`;
+}
+function load(i,options={}){
+  level=Math.min(Math.max(Math.trunc(Number(i))||0,0),levels.length-1);
+  pos=Array(levels[level].count).fill(null);selected=toolOrder(levels[level])[0];history=[];demoViewed=false;
+  prevInk=null;prevP=null;completed=false;moves=0;hintsUsed=0;lastHint=-1;
+  $('board').classList.remove('celebrate','perfect');
+  save.lastId=levels[level].sid;persist();showScreen('game');render();
+  showNewFeature(options);
+}
+function fitBoard(){
+  if(screenName()!=='game')return;
+  const rect=$('board-space').getBoundingClientRect();
+  const side=Math.max(0,Math.floor(Math.min(rect.width,rect.height,480)));
+  if($('board').style.getPropertyValue('--board-side')!==side+'px')$('board').style.setProperty('--board-side',side+'px');
+}
+new ResizeObserver(fitBoard).observe($('board-space'));
+window.addEventListener('resize',()=>{stopHint();fitBoard()});
+window.visualViewport?.addEventListener('resize',()=>{stopHint();fitBoard()});
+function updateGameMeta(){
+  $('move-count').textContent=moves;
+  $('minimum-count').textContent=levels[level].count;
+  $('level-next').hidden=!completed||nextIndex(level)<0;
+  $('btn-hint').disabled=completed;
+}
+function render(){
+  const l=levels[level],ink=paint(l,pos),inks=l.inks||['y','b'];
+  const main=levels.filter(x=>!x.group),ordinal=main.indexOf(l)+1;
+  $('game-title').textContent=l.group?'附加练习':`第 ${ordinal} 关`;
+  updateGameMeta();
+  $('tools').innerHTML=toolOrder(l).map(k=>{
+    const p=pos[k],c=inks[k];
+    return `<button class="tool${selected===k?' selected':''}${p===null?'':' placed'}" data-tool="${k}" aria-pressed="${selected===k}" aria-label="${ANIMALS[c].name}${p===null?'，待放':'，已放'}${selected===k?'，选中':''}">${icon(c)}<span><strong>${c==='r'?'狐狸':ANIMALS[c].short}</strong><small>${p===null?'待放':'已放'}</small></span></button>`;
+  }).join('');
+  $('recipes').innerHTML=recipesHTML(l);
+  $('board').style.gridTemplateColumns=`repeat(${l.size},minmax(0,1fr))`;
+  $('board').style.gridTemplateRows=`repeat(${l.size},minmax(0,1fr))`;
+  const clues=new Map(l.clues),walls=new Set(l.walls);
+  $('board').innerHTML=ink.map((v,i)=>{
+    const clue=clues.has(i),target=clues.get(i),wall=walls.has(i),stamp=pos.indexOf(i);
+    const pop=prevInk&&prevInk[i]!==v?' pop':'',dropped=stamp>=0&&prevP&&!prevP.includes(i)?' dropped':'';
+    const label=`第${Math.floor(i/l.size)+1}行第${i%l.size+1}列${wall?'，障碍，挡色带':clue?`，观察点，目标${NAMES[target]}，目前${NAMES[v]}`:stamp>=0?`，${ANIMALS[inks[stamp]].name}`:`，普通格，目前${NAMES[v]}`}`;
+    return `<button class="cell ink${v}${wall?' wall':''}${clue?' clue':''}${pop}${dropped}" data-cell="${i}" aria-label="${label}">${clue?`<span class="band b${target}" aria-hidden="true">${SYMS[target]}</span>`:''}${stamp>=0?icon(inks[stamp]):''}</button>`;
+  }).join('');
+  $('undo').disabled=!history.length;$('reset').disabled=pos.every(x=>x===null)&&moves===0;
+  prevInk=ink;prevP=[...pos];fitBoard();requestAnimationFrame(fitBoard);
+}
+function commit(countMove=true){
+  cancelCompletion();stopHint();completed=false;
+  history.push({p:[...pos],s:selected,moves});
+  if(countMove)moves++;
+  $('board').classList.remove('celebrate','perfect');message('');
+}
+function validLayout(){
+  const l=levels[level];
+  if(pos.length!==l.count||pos.some(x=>x===null)||new Set(pos).size!==l.count)return false;
+  if(pos.some(x=>x<0||x>=l.size*l.size||l.walls.includes(x)||l.clues.some(c=>c[0]===x)))return false;
+  const ink=paint(l,pos);return l.clues.every(([i,v])=>ink[i]===v);
+}
+function checkCompletion(){
+  cancelCompletion();
+  if(completed||screenName()!=='game'||!validLayout())return;
+  const token=winToken;
+  const perfect=!demoViewed&&moves===levels[level].count;
+  stopHint();
+  $('board').classList.remove('celebrate','perfect');void $('board').offsetWidth;$('board').classList.add('celebrate');
+  $('board').classList.toggle('perfect',perfect);
+  winTimer=setTimeout(()=>{
+    if(token!==winToken||screenName()!=='game'||!validLayout())return;
+    completed=true;winTimer=null;
+    const sid=levels[level].sid;
+    if(demoViewed){
+      if(!save.solvedIds.includes(sid)&&!save.demoIds.includes(sid))save.demoIds.push(sid);
+    }else{
+      if(!save.solvedIds.includes(sid))save.solvedIds.push(sid);
+      save.demoIds=save.demoIds.filter(x=>x!==sid);
+      bestMoves[sid]=Math.min(bestMoves[sid]??Infinity,moves);persistBest();
+    }
+    persist();
+    updateGameMeta();
+    $('success').classList.toggle('perfect',perfect);
+    $('success-confetti').hidden=!perfect;
+    $('success-confetti').innerHTML=perfect?Array.from({length:16},(_,i)=>`<i style="--i:${i};--x:${8+(i*37)%85}%;--spin:${i%2?150:-180}deg"></i>`).join(''):'';
+    $('success-title').textContent=perfect?'最少步通关！':demoViewed?'演示完成':'恭喜通关！';
+    $('success-copy').textContent=`${moves} 步完成 · 最少 ${levels[level].count} 步${hintsUsed?' · 已用提示':''}`;
+    $('success-stay').textContent=nextIndex(level)<0?'恭喜全部通关！':'留在这关';
+    $('success-next').hidden=nextIndex(level)<0;
+    openDialog('success');
+  },420);
+}
+function nextIndex(i){const g=levels[i].group||null;for(let k=i+1;k<levels.length;k++)if((levels[k].group||null)===g)return k;return -1}
+$('board').onclick=e=>{
+  const b=e.target.closest('[data-cell]');if(!b)return;
+  const i=+b.dataset.cell,l=levels[level];
+  if(l.walls.includes(i)){message('障碍挡住色带，也不能放印章。');return}
+  const clue=l.clues.find(c=>c[0]===i);
+  if(clue){
+    const cur=paint(l,pos)[i];
+    $('cell-info-title').textContent=`第 ${Math.floor(i/l.size)+1} 行，第 ${i%l.size+1} 列`;
+    $('cell-info-text').textContent=`上方目标：${NAMES[clue[1]]}${RECIPE[clue[1]]||''}。下方当前：${NAMES[cur]}。${clue[1]===0?'这个观察点要保持无色。':'让下方颜色与上方目标一致。'}观察点不能放印章。`;
+    openDialog('cell-info');return;
+  }
+  const occ=pos.indexOf(i);commit();
+  if(occ>=0){pos[occ]=null;selected=occ}
+  else{pos[selected]=i;if(pos.includes(null))selected=toolOrder(l).find(k=>pos[k]===null)}
+  render();checkCompletion();
+};
+$('tools').onclick=e=>{const b=e.target.closest('[data-tool]');if(b){stopHint();selected=+b.dataset.tool;render()}};
+$('recipes').onclick=e=>{if(e.target.closest('#rule-help'))showHowto(null,level)};
+$('undo').onclick=()=>{if(!history.length)return;cancelCompletion();stopHint();completed=false;$('board').classList.remove('celebrate','perfect');const h=history.pop();pos=h.p;selected=h.s;moves=h.moves;render();message('');checkCompletion()};
+$('reset').onclick=()=>{if(pos.every(x=>x===null)&&moves===0)return;commit(false);pos=pos.map(()=>null);selected=toolOrder(levels[level])[0];moves=0;render()};
+$('game-back').onclick=()=>showScreen('home');
+$('game-levels').onclick=()=>showScreen('select');
+$('select-back').onclick=()=>showScreen('home');
+$('btn-levels').onclick=()=>showScreen('select');
+$('select-groups').onclick=e=>{const b=e.target.closest('[data-level]');if(b)load(+b.dataset.level,{replayLesson:true})};
+$('success-stay').onclick=()=>{if(nextIndex(level)<0)showScreen('home');else closeDialogs()};
+$('success-next').onclick=()=>{const i=nextIndex(level);i>=0?load(i):showScreen('select')};
+$('level-next').onclick=()=>{const i=nextIndex(level);if(completed&&i>=0)load(i)};
+$('cell-info-ok').onclick=()=>closeDialogs();
+$('btn-continue').onclick=()=>{
+  const i=lastLevelIndex();
+  if(!hasPlayed()){load(i);return}
+  if(level===i&&pos.length===levels[i].count){showScreen('game');render();checkCompletion()}
+  else load(i,{skipLesson:true});
+};
+
+// Timers clear only the picture. Actual play cancels the logical hint stage.
+function clearHintVisuals(){
+  clearTimeout(hintTimer);hintTimer=null;
+  $('hint-ghost').hidden=true;$('hint-ghost').innerHTML='';
+  delete $('hint-ghost').dataset.hintTool;delete $('hint-ghost').dataset.hintCell;
+  document.querySelectorAll('.hint-target,.hint-source,.hint-focus,.hint-intersection').forEach(el=>el.classList.remove('hint-target','hint-source','hint-focus','hint-intersection'));
+  document.querySelectorAll('.hint-ray,.hint-meet').forEach(el=>el.remove());
+}
+function stopHint(){clearHintVisuals();pendingHint=null}
+function hintObservations(l,k){
+  const clues=new Set(l.clues.map(c=>c[0])),color=(l.inks||['y','b'])[k];
+  const supplied=l.focusHints?.[color];
+  const valid=Array.isArray(supplied)?[...new Set(supplied)].filter(i=>clues.has(i)):[];
+  if(valid.length)return valid;
+  const bit={y:1,b:2,r:4}[color];
+  return [...l.clues.filter(c=>c[1]&bit),...l.clues.filter(c=>!(c[1]&bit))].slice(0,3).map(c=>c[0]);
+}
+function drawHintLines(l,k,focus){
+  const bit={y:1,b:2,r:4}[l.inks[k]],clues=new Map(l.clues),walls=new Set(l.walls);
+  // Only confirmed stamps are reliable blockers for this logical demonstration.
+  const blockers=new Set(pos.filter((p,j)=>j!==k&&p>=0&&p===l.answer[j]));
+  const positive=focus.filter(i=>clues.get(i)&bit),supports=[];
+  focus.forEach((origin,group)=>{
+    const isPositive=!!(clues.get(origin)&bit),support=new Set();
+    $('board').querySelector(`[data-cell="${origin}"]`)?.classList.add('hint-focus');
+    [[0,1],[0,-1],[1,0],[-1,0]].forEach(([dr,dc])=>{
+      let r=Math.floor(origin/l.size),c=origin%l.size,distance=0;
+      while(true){
+        r+=dr;c+=dc;distance++;
+        if(r<0||c<0||r>=l.size||c>=l.size)break;
+        const i=r*l.size+c;if(walls.has(i)||blockers.has(i))break;
+        support.add(i);
+        const cell=$('board').querySelector(`[data-cell="${i}"]`),line=document.createElement('span');
+        line.className=`hint-ray ${dr?'col-ray':'row-ray'}${isPositive?'':' hint-exclusion'}`;
+        line.style.setProperty('--ray-delay',`${group*.32+distance*.055}s`);
+        line.setAttribute('aria-hidden','true');cell?.appendChild(line);
+      }
+    });
+    if(isPositive)supports.push(support);
+  });
+  // Show common legal cells derived from sight lines, never substitute the saved answer.
+  if(positive.length){
+    [...supports[0]].filter(i=>!clues.has(i)&&!walls.has(i)&&!blockers.has(i)&&supports.every(s=>s.has(i))).forEach(i=>{
+      const cell=$('board').querySelector(`[data-cell="${i}"]`),ring=document.createElement('span');
+      cell?.classList.add('hint-intersection');ring.className='hint-meet';
+      ring.style.setProperty('--meet-delay',`${focus.length*.32+l.size*.055+.15}s`);
+      ring.setAttribute('aria-hidden','true');cell?.appendChild(ring);
+    });
+  }
+}
+function showAnimatedHint(){
+  if(screenName()!=='game'||completed||validLayout())return;
+  const l=levels[level],wrong=pos.map((p,k)=>p!==l.answer[k]?k:-1).filter(k=>k>=0);
+  if(!wrong.length)return;
+  clearHintVisuals();hintsUsed++;
+  if(!pendingHint||pendingHint.sid!==l.sid||!wrong.includes(pendingHint.tool)){
+    const k=toolOrder(l).filter(x=>wrong.includes(x)).sort((a,b)=>(l.tipHints?.[l.inks[a]]?.priority??99)-(l.tipHints?.[l.inks[b]]?.priority??99))[0];
+    selected=k;pendingHint={sid:l.sid,tool:k,stage:1};render();
+    const tip=l.tipHints?.[l.inks[k]];
+    drawHintLines(l,k,tip?.clues||hintObservations(l,k));
+    return;
+  }
+  const k=pendingHint.tool;pendingHint.stage=2;lastHint=k;
+  const target=$('board').querySelector(`[data-cell="${l.answer[k]}"]`),source=$('tools').querySelector(`[data-tool="${k}"]`);
+  if(!target||!source)return;
+  const start=source.querySelector('.stamp').getBoundingClientRect(),end=target.getBoundingClientRect();
+  const size=Math.min(54,end.width*.9),x=start.x+start.width/2-size/2,y=start.y+start.height/2-size/2;
+  const ghost=$('hint-ghost');
+  ghost.style.cssText=`left:${x}px;top:${y}px;width:${size}px;height:${size}px;--hint-dx:${end.x+end.width/2-size/2-x}px;--hint-dy:${end.y+end.height/2-size/2-y}px`;
+  ghost.innerHTML=icon((l.inks||['y','b'])[k]);
+  ghost.dataset.hintTool=k;ghost.dataset.hintCell=l.answer[k];ghost.hidden=false;
+  source.classList.add('hint-source');target.classList.add('hint-target');
+  hintTimer=setTimeout(clearHintVisuals,3400);
+}
+$('btn-hint').onclick=showAnimatedHint;
+
+function miniGrid(size,cells,px=28){
+  return `<div class="mini-board" style="grid-template-columns:repeat(${size},${px}px);--mini-cell:${px}px">${cells.map(c=>`<span class="cell ink${c.ink||0}${c.wall?' wall':''}${c.band!==undefined?' clue':''}">${c.flow?`<span class="teach-ink b${c.flow}" style="--flow-delay:${c.delay||0}s" aria-hidden="true"></span>`:''}${c.band!==undefined?`<span class="band b${c.band}">${SYMS[c.band]}</span>`:''}${c.stamp?icon(c.stamp):''}</span>`).join('')}</div>`;
+}
+function flowExample(blocking=false){
+  const placements=blocking?[['y',7],['b',17]]:[['y',12]],walls=blocking?[]:[2];
+  const l={size:5,inks:placements.map(x=>x[0]),count:placements.length,walls,clues:[]},ink=paint(l,placements.map(x=>x[1]));
+  return miniGrid(5,ink.map((v,i)=>({flow:v,delay:Math.min(...placements.map(([,p])=>Math.abs(Math.floor(i/5)-Math.floor(p/5))+Math.abs(i%5-p%5)))*.15,wall:walls.includes(i),stamp:placements.find(x=>x[1]===i)?.[0]})));
+}
+function drawMini(size,placements,walls=[],clues=[]){
+  const l={size,inks:placements.map(x=>x[0]),count:placements.length,walls,clues};
+  const positions=placements.map(x=>x[1]),ink=paint(l,positions);
+  return miniGrid(size,ink.map((v,i)=>({ink:v,wall:walls.includes(i),stamp:placements.find(p=>p[1]===i)?.[0],band:clues.find(p=>p[0]===i)?.[1]})));
+}
+function brownFormula(){return `<span class="recipe" role="img" aria-label="黄加蓝加红等于棕色">${chip(1)}<span class="op">＋</span>${chip(2)}<span class="op">＋</span>${chip(4)}<span class="op">＝</span>${chip(7)}</span>`}
+function featureArt(recipe,placements,target){return `<div class="feature-example"><div class="howto-recipes">${recipe}</div>${drawMini(5,placements,[],[[12,target]])}<div class="mini-caption">色带在同一个观察点相遇</div></div>`}
+const FEATURE_STEPS={
+ basics:{title:'放下印章，对上颜色',art:()=>`<div class="feature-example">${drawMini(3,[['y',4]],[],[[0,0],[1,1]])}<div class="mini-caption">选印章 → 点普通格 · 色带向四周延伸</div><div class="cell-examples"><div class="cell-example"><span class="cell ink1 clue"><span class="band b1">●</span></span><span>观察点<br>上目标，下当前</span></div><div class="cell-example"><span class="cell ink1"></span><span>普通格<br>可放印章，颜色随意</span></div></div></div>`,text:'让观察点<b>上下同色</b>，<b>○ 保持无色</b>。观察点不能放印章；放齐印章即可通关。'},
+ wall:{title:'障碍会截断色带',art:()=>`<div>${flowExample()}<div class="mini-caption">色带停在灰色障碍前</div></div>`,text:'色带遇到<b>障碍或边界</b>就停止。灰色障碍不能放印章。'},
+ blocking:{title:'印章也会挡住色带',art:()=>`<div>${flowExample(true)}<div class="mini-caption">中间混色 · 两端保持单色</div></div>`,text:'两枚印章在同一列，<b>色带到另一枚印章处就停止</b>。中间收到两种颜色，两端各自只有一种。'},
+ green:{title:'黄与蓝相遇，变成绿',art:()=>featureArt(formula(1,2,3),[['y',10],['b',2]],3),text:'<b>黄＋蓝＝绿</b>。两条色带在同一格相遇，颜色就会叠加；顺序不影响结果。'},
+ purple:{title:'红与蓝相遇，变成紫',art:()=>featureArt(formula(4,2,6),[['r',10],['b',2]],6),text:'<b>红＋蓝＝紫</b>。让两条色带在同一个观察点相遇，就能对上紫色目标。'},
+ orange:{title:'红与黄相遇，变成橙',art:()=>featureArt(formula(4,1,5),[['r',10],['y',2]],5),text:'<b>红＋黄＝橙</b>。本关用到的配方会留在棋盘上方，随时可以查看。'},
+ absent:{title:'没有目标，也要放齐',art:()=>`<div>${drawMini(5,[['y',12],['b',2],['r',14]],[],[[11,1],[7,3]])}<div class="mini-caption">狐狸也要放下 · 色带被兔兔挡住</div></div>`,text:'有的印章颜色<b>不在任何目标中，但仍要放齐</b>。让它的色带避开观察点；必要时，用其他印章挡住色带。'},
+ brown:{title:'三色同格，叠成棕色',art:()=>featureArt(brownFormula(),[['y',10],['b',2],['r',14]],7),text:'从这里开始，<b>黄＋蓝＋红在同一格叠加＝棕色</b>。这是本游戏的固定规则；让三条色带到达同一个观察点。'}
+};
+const LESSON_LEVELS={1:'basics',2:'wall',3:'green',4:'blocking',11:'purple',12:'orange',41:'absent',46:'brown'};
+function lessonAt(i){
+  const l=levels[i],ordinal=levels.filter(x=>!x.group).indexOf(l)+1;
+  return LESSON_LEVELS[ordinal]||(l.clues.some(c=>c[1]===7)?'brown':ordinal>=41&&ordinal<=45&&l.inks.some(c=>!l.clues.some(([,v])=>v&({y:1,b:2,r:4}[c])))?'absent':null);
+}
+function showLesson(id,review=false){
+  const step=FEATURE_STEPS[id];if(!step)return;
+  $('feature-title').textContent=step.title;$('feature-art').innerHTML=step.art();$('feature-text').innerHTML=step.text;
+  $('feature-intro').dataset.feature=id;$('feature-skip').hidden=review;
+  $('feature-start').textContent=review?'回到游戏':'开始';openDialog('feature-intro');
+}
+function showNewFeature({replayLesson=false,skipLesson=false}={}){
+  const l=levels[level],ordinal=levels.filter(x=>!x.group).indexOf(l)+1;
+  const unlock=id=>{if(!featureProgress.unlocked.includes(id))featureProgress.unlocked.push(id)};
+  unlock('basics');if(ordinal>=2)unlock('wall');if(ordinal>=3)unlock('green');if(ordinal>=4)unlock('blocking');if(ordinal>=11)unlock('purple');if(ordinal>=12)unlock('orange');
+  const triple=l.clues.some(c=>c[1]===7);
+  const absent=ordinal>=41&&ordinal<=45&&(l.inks||[]).some(c=>!l.clues.some(([,v])=>v&({y:1,b:2,r:4}[c])));
+  if(absent)unlock('absent');if(triple)unlock('brown');
+  const id=lessonAt(level);
+  if(!skipLesson&&id&&(!featureProgress.seen.includes(id)||(replayLesson&&LESSON_LEVELS[ordinal]))){
+    if(!featureProgress.seen.includes(id))featureProgress.seen.push(id);
+    showLesson(id);
+  }
+  persistFeatures();
+}
+function showHowto(then,target=level){
+  const l=levels[target],ordinal=levels.filter(x=>!x.group).indexOf(l)+1;
+  const id=lessonAt(target)||(ordinal>=12&&l.inks.includes('y')&&l.inks.includes('r')?'orange':ordinal>=11&&l.inks.includes('b')&&l.inks.includes('r')?'purple':ordinal>=4?'blocking':ordinal>=3?'green':'basics');
+  showLesson(id,true);
+}
+$('feature-start').onclick=()=>closeDialogs();
+showScreen('home');
+</script>
+</body></html>
