@@ -167,6 +167,8 @@ button:active:not(:disabled){transform:scale(.96)}
 @media(max-height:480px){.screen{gap:5px}.tool{min-height:46px}.tool small{display:none}.tool .stamp{width:32px;height:32px}.actions{padding:0;gap:24px}.actions .icon-btn{width:42px;height:42px}.recipes{padding:0;gap:1px}.howto-step{min-height:105px}.howto-body{gap:8px}.mini-board .cell{width:22px;height:22px}.howto-text{font-size:11px!important}.howto-header{min-height:32px}#howto .dialog-card{gap:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media(prefers-reduced-motion:reduce){.hint-ghost{opacity:.85;transform:translate(var(--hint-dx),var(--hint-dy))}.success-confetti{display:none}}
+
+.rules-card{max-width:430px;overflow:hidden;gap:14px}.rules-card>.dialog-head,.rules-card>.rules-tabs,.rules-card>.btn{flex:none}.rules-tabs{display:flex;gap:5px;border-bottom:1px solid var(--line);padding-bottom:10px}.rules-tabs button{flex:1;min-width:0;min-height:42px;padding:7px 3px;font:600 12px/1.4 inherit;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);cursor:pointer}.rules-tabs button[aria-selected=true]{background:#e4ecd9;border-color:var(--ink)}#rules-panel{overflow:auto;min-height:0;padding:0 3px 0 0}#rules-panel p{font-size:12px;line-height:1.8;margin:12px 0 0}#rules-panel .feature-example{gap:12px}#rules-panel .mini-caption{font-size:10px}.rules-art{display:flex;justify-content:center;margin:10px 0 15px}.rules-flow-caption{text-align:center;font-weight:600}.rules-animals{display:flex;justify-content:center;gap:25px;margin:6px 0 22px}.rules-animals>span{display:flex;align-items:center;flex-direction:column;gap:5px}.rules-animals .stamp{width:44px;height:44px}.rules-animals small{font-size:11px}.rules-formulas{display:flex;flex-direction:column;align-items:center;gap:15px}.rules-formulas .recipe{gap:8px}.rules-formulas .color-chip{width:26px;height:26px;font-size:13px}.rules-basic-art .cell-examples{gap:12px}.rules-tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}@media(max-width:370px){.rules-card{padding:16px}.rules-tabs button{font-size:11px}.rules-animals{gap:18px}}
 </style></head>
 <body>
 <main id="app">
@@ -197,6 +199,7 @@ button:active:not(:disabled){transform:scale(.96)}
 <section id="feature-intro" class="dialog" hidden role="dialog" aria-modal="true" aria-labelledby="feature-title" aria-describedby="feature-text">
   <div class="dialog-card feature-card"><div class="dialog-head"><h2 id="feature-title"></h2><button class="close-btn" data-close="feature-intro" aria-label="关闭教学" data-icon="close"></button></div><div id="feature-art"></div><p id="feature-text"></p><div class="dialog-actions"><button id="feature-skip" class="btn" data-close="feature-intro">跳过</button><button id="feature-start" class="btn primary">开始</button></div></div>
 </section>
+<section id="rules-guide" class="dialog" hidden role="dialog" aria-modal="true" aria-labelledby="rules-title"><div class="dialog-card rules-card"><div class="dialog-head"><h2 id="rules-title">玩法规则</h2><button class="close-btn" data-close="rules-guide" aria-label="关闭规则" data-icon="close"></button></div><div class="rules-tabs" role="tablist" aria-label="规则分类"><button id="rules-tab-basics" role="tab" aria-controls="rules-panel" data-rule="basics">放置与目标</button><button id="rules-tab-flow" role="tab" aria-controls="rules-panel" data-rule="flow">色带与遮挡</button><button id="rules-tab-colors" role="tab" aria-controls="rules-panel" data-rule="colors">颜色配方</button></div><div id="rules-panel" role="tabpanel"></div><button class="btn primary" data-close="rules-guide">回到游戏</button></div></section>
 <section id="cell-info" class="dialog" hidden role="dialog" aria-modal="true" aria-labelledby="cell-info-title"><div class="dialog-card"><div class="dialog-head"><h2 id="cell-info-title">观察点</h2><button class="close-btn" data-close="cell-info" aria-label="关闭说明" data-icon="close"></button></div><p id="cell-info-text"></p><button id="cell-info-ok" class="btn">知道了</button></div></section>
 <section id="success" class="dialog" hidden role="dialog" aria-modal="true" aria-labelledby="success-title">
   <div class="dialog-card success-card">
@@ -4502,7 +4505,7 @@ $('board').onclick=e=>{
   render();checkCompletion();
 };
 $('tools').onclick=e=>{const b=e.target.closest('[data-tool]');if(b){stopHint();selected=+b.dataset.tool;render()}};
-$('recipes').onclick=e=>{if(e.target.closest('#rule-help'))showHowto(null,level)};
+$('recipes').onclick=e=>{if(e.target.closest('#rule-help'))showRulesGuide()};
 $('undo').onclick=()=>{if(!history.length)return;cancelCompletion();stopHint();completed=false;$('board').classList.remove('celebrate','perfect');const h=history.pop();pos=h.p;selected=h.s;moves=h.moves;render();message('');checkCompletion()};
 $('reset').onclick=()=>{if(pos.every(x=>x===null)&&moves===0)return;commit(false);pos=pos.map(()=>null);selected=toolOrder(levels[level])[0];moves=0;render()};
 $('game-back').onclick=()=>showScreen('home');
@@ -4654,5 +4657,25 @@ function showHowto(then,target=level){
 }
 $('feature-start').onclick=()=>closeDialogs();
 showScreen('home');
+
+// Manual rule reference, independent of the per-level lessons and save state.
+const RULE_PAGES={
+ basics:()=>'<div class="rules-basic-art">'+FEATURE_STEPS.basics.art()+'</div><p>选印章，点普通格放下。<b>放齐印章，让所有观察点上下同色。</b></p><p>○ 留白观察点不能染色。普通格颜色随意。观察点、灰色障碍都不能放印章。</p><p>即使没有对应颜色的目标，印章也要放齐。</p>',
+ flow:()=>'<p class="rules-flow-caption">向四周延伸，遇到障碍或边界停止</p><div class="rules-art">'+flowExample()+'</div><p class="rules-flow-caption">印章也会挡住色带，中间混色、两端单色</p><div class="rules-art">'+flowExample(true)+'</div><p>印章所在格不染色。移动或取下印章后，色带重新计算；摆放顺序不影响最终结果。</p>',
+ colors:()=>'<div class="rules-animals">'+['y','b','r'].map(c=>'<span>'+icon(c)+'<small>'+ANIMALS[c].name+'</small></span>').join('')+'</div><div class="rules-formulas">'+formula(1,2,3)+formula(4,2,6)+formula(4,1,5)+brownFormula()+'</div><p>只有到达<b>同一格</b>的色带才会混色。目标颜色必须完全一致，多一种或少一种都不满足。</p><p>三色混棕是本游戏的固定规则。本关用到的配方也会显示在棋盘上方。</p>'
+};
+function renderRulesPage(key){
+ if(!RULE_PAGES[key])return;
+ document.querySelectorAll('[data-rule]').forEach(b=>{const on=b.dataset.rule===key;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
+ const panel=$('rules-panel');panel.innerHTML=RULE_PAGES[key]();panel.setAttribute('aria-labelledby','rules-tab-'+key);panel.scrollTop=0;
+}
+function showRulesGuide(){renderRulesPage('basics');openDialog('rules-guide')}
+$('rules-guide').addEventListener('click',e=>{const b=e.target.closest('[data-rule]');if(b)renderRulesPage(b.dataset.rule)});
+document.querySelector('.rules-tabs').addEventListener('keydown',e=>{
+ if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+ const tabs=[...document.querySelectorAll('[data-rule]')],at=tabs.indexOf(document.activeElement);if(at<0)return;e.preventDefault();
+ const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(at+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+ renderRulesPage(tabs[next].dataset.rule);tabs[next].focus();
+});
 </script>
 </body></html>
